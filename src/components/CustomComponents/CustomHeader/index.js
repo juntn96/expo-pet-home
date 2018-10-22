@@ -37,7 +37,7 @@ class CustomHeader extends Component {
     }
     return (
       <Button transparent onPress={this._actionLeft}>
-        <Icon name={buttonLeft} style={{ color: "#EC466A" }} />
+        <Icon name={buttonLeft} style={{ color: "#EC466A", fontSize: 26 }} />
       </Button>
     );
   };
@@ -49,7 +49,7 @@ class CustomHeader extends Component {
     }
     return (
       <Button transparent onPress={this._actionRight}>
-        <Icon name={buttonRight} style={{ color: "#EC466A" }} />
+        <Icon name={buttonRight} style={{ color: "#EC466A", fontSize: 26 }} />
       </Button>
     );
   };

@@ -24,23 +24,7 @@ const HomeRoute = createStackNavigator(
         textAlign: "center",
         flexGrow: 1,
         alignSelf: "center",
-      },
-      headerRight: (
-        <Button transparent style={{ height: 56 }}>
-          <Icon name="search" style={{ color: "#000" }} />
-        </Button>
-      ),
-      headerLeft: (
-        <Button
-          transparent
-          style={{ height: 56 }}
-          onPress={() => {
-            navigation.openDrawer();
-          }}
-        >
-          <Icon name="menu" style={{ color: "#000" }} />
-        </Button>
-      ),
+      }
     }),
   }
 );

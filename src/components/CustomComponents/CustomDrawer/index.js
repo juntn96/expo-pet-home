@@ -1,16 +1,14 @@
 import React, { Component } from "react";
 import { View, Text, Dimensions, StyleSheet, TouchableOpacity } from "react-native";
 import { Icon } from "native-base";
+import CustomTouchable from '../CustomTouchable'
 
 export default class extends Component {
   render() {
     console.log(this.props)
     return (
       <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => {
-            this.props.navigation.navigate('AuthRoute')
-          }}
+        <CustomTouchable
           activeOpacity={0.7}
           style={{
             flex: 1,
@@ -24,7 +22,7 @@ export default class extends Component {
               color: "#B5B5B5",
             }}
           />
-        </TouchableOpacity>
+        </CustomTouchable>
         <View
           style={{
             flex: 4,
