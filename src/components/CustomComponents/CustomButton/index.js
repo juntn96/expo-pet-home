@@ -1,7 +1,5 @@
-import React, { Component } from 'react'
-import { Button } from 'native-base';
-
-import { loginFb } from '../../../services/LoginFacebook'
+import React, { Component } from "react";
+import { Button } from "native-base";
 
 import { loginFb } from "../../../services/LoginFacebook";
 
@@ -9,24 +7,29 @@ import { login, logout } from "../../../redux/actions/AuthActions";
 
 import { connect } from "react-redux";
 
+import PropTypes from "prop-types";
+
 class CustomButton extends Component {
-  
-  _onPress = () => {
-    const { data } = this.props;
-    if (!data.userData) {
+  _onPress = async () => {
+    const { data, onCustomPress, login, loginRequired } = this.props;
+    if (!data.userData && loginRequired) {
       const userData = await loginFb();
       if (userData) {
-        this.props.login(data);
+        login(userData);
       }
     } else {
-      this.props.logout();
+      if (onCustomPress) {
+        onCustomPress();
+      }
     }
-  }
-  
+  };
+
   render() {
-    <Button onPress={this._onPress} >
-      {this.props.children}
-    </Button>
+    return (
+      <Button onPress={this._onPress} {...this.props}>
+        {this.props.children}
+      </Button>
+    );
   }
 }
 
@@ -45,6 +48,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(logout());
     },
   };
+};
+
+CustomButton.propTypes = {
+  loginRequired: PropTypes.bool.isRequired,
 };
 
 export default connect(

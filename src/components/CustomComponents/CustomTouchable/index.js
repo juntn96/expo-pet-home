@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { TouchableOpacity } from "react-native";
+import PropTypes from 'prop-types'
 
 import { loginFb } from "../../../services/LoginFacebook";
 
@@ -8,15 +9,18 @@ import { login, logout } from "../../../redux/actions/AuthActions";
 import { connect } from "react-redux";
 
 class CustomTouchable extends Component {
+  
   _onPress = async () => {
-    const { data } = this.props;
-    if (!data.userData) {
+    const { data, onCustomPress, login, loginRequired } = this.props;
+    if (!data.userData && loginRequired) {
       const userData = await loginFb();
       if (userData) {
-        this.props.login(data);
+        login(userData);
       }
     } else {
-      this.props.logout();
+      if (onCustomPress) {
+        onCustomPress();
+      }
     }
   };
 
@@ -45,6 +49,10 @@ const mapDispatchToProps = dispatch => {
     },
   };
 };
+
+CustomTouchable.propTypes = {
+  loginRequired: PropTypes.bool.isRequired
+}
 
 export default connect(
   mapStateToProps,

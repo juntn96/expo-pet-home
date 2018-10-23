@@ -1,6 +1,15 @@
 import React, { Component } from "react";
 import { View, Text } from "react-native";
-import { Header, Left, Right, Body, Title, Button, Icon } from "native-base";
+import {
+  Header,
+  Left,
+  Right,
+  Body,
+  Title,
+  Button,
+  Icon,
+  Badge,
+} from "native-base";
 
 class CustomHeader extends Component {
   constructor(props) {
@@ -31,25 +40,50 @@ class CustomHeader extends Component {
   };
 
   _buttonLeft = () => {
-    const { buttonLeft } = this.props;
+    const { buttonLeft, badgeNumberLeft } = this.props;
     if (!buttonLeft) {
       return null;
     }
     return (
-      <Button transparent onPress={this._actionLeft}>
+      <Button vertical badge transparent onPress={this._actionLeft} style={{marginLeft: 4}} >
+        {badgeNumberLeft ? (
+          <Badge
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              width: 16,
+              height: 16
+            }}
+          >
+            <Text style={{fontSize: 8, color: '#FFF'}} >{badgeNumberLeft}</Text>
+          </Badge>
+        ) : null}
         <Icon name={buttonLeft} style={{ color: "#EC466A", fontSize: 26 }} />
       </Button>
     );
   };
 
   _buttonRight = () => {
-    const { buttonRight } = this.props;
+    const { buttonRight, badgeNumberRight } = this.props;
     if (!buttonRight) {
       return null;
     }
     return (
-      <Button transparent onPress={this._actionRight}>
-        <Icon name={buttonRight} style={{ color: "#EC466A", fontSize: 26 }} />
+      <Button vertical badge transparent onPress={this._actionRight}>
+        {badgeNumberRight ? (
+          <Badge
+            style={{
+              position: 'absolute',
+              right: 10,
+              top: 0,
+              height: 16
+            }}
+          >
+            <Text style={{fontSize: 8, color: '#FFF'}} >{badgeNumberRight}</Text>
+          </Badge>
+        ) : null}
+        <Icon name={buttonRight} style={{ color: "#EC466A"}} />
       </Button>
     );
   };
@@ -67,13 +101,15 @@ class CustomHeader extends Component {
           shadowOpacity: 0,
           shadowColor: "transparent",
           shadowOffset: { height: 0, width: 0 },
-          justifyContent: 'center',
-          alignItems: 'center'
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <Left>{this._buttonLeft()}</Left>
         <Body>
-          <Title style={{ color: "#EC466A", textAlign: 'center' }}>{title}</Title>
+          <Title style={{ color: "#EC466A", textAlign: "center" }}>
+            {title}
+          </Title>
         </Body>
         <Right>{this._buttonRight()}</Right>
       </Header>

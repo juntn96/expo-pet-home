@@ -13,9 +13,13 @@ import {
   Left,
   Body,
   Right,
+  FooterTab,
+  Footer,
+  Badge
 } from "native-base";
 import TagList from "../TagList";
 import CustomHeader from "../CustomComponents/CustomHeader";
+import AddPostModal from '../../components/CustomComponents/AddPostModal';
 
 export default class extends Component {
   render() {
@@ -27,6 +31,8 @@ export default class extends Component {
           actionLeft={() => {
             this.props.navigation.openDrawer();
           }}
+          buttonRight="ios-notifications-outline"
+          badgeNumberRight="9"
         />
         <View>
           <TagList navigation={this.props.navigation} />
@@ -88,6 +94,18 @@ export default class extends Component {
             </Card>
           </View>
         </Content>
+        <Footer>
+          <FooterTab>
+            <Button vertical>
+              <Icon name="ios-home-outline" />
+            </Button>
+            <AddPostModal/>
+            <Button vertical>
+              <Icon name="ios-search-outline" />
+            </Button>
+          </FooterTab>
+        </Footer>
+        
       </Container>
     );
   }
