@@ -4,15 +4,14 @@ import {
   Container,
   Content,
   Text,
-  Button,
   Icon,
-  FooterTab,
-  Footer,
   List,
+  Tabs,
+  Tab,
+  TabHeading,
 } from "native-base";
 import TagList from "../TagList";
 import CustomHeader from "../CustomComponents/CustomHeader";
-import AddPostModal from "../../components/CustomComponents/AddPostModal";
 
 import "../CustomComponents/PostOptionModal";
 
@@ -22,29 +21,18 @@ import ActivityModal from "../CustomComponents/ActivityModal";
 
 import PostItem from "../CustomComponents/PostItem";
 
+import AddPostTab from '../CustomComponents/AddPostTab'
+
 import { postData } from "../../utils/fakeData";
 
 export default class extends Component {
-  
-  _openModel = postData => {
+  _openModel = () => {
     this.optionModal.open();
   };
 
   render() {
     return (
       <Container>
-        <CustomHeader
-          title="Pet Home"
-          buttonLeft="menu"
-          actionLeft={() => {
-            this.props.navigation.openDrawer();
-          }}
-          buttonRight="ios-notifications-outline"
-          badgeNumberRight="9"
-          actionRight={() => {
-            this.activityModal.open();
-          }}
-        />
         <ActivityModal
           ref={ref => {
             this.activityModal = ref;
@@ -65,33 +53,67 @@ export default class extends Component {
         >
           <Text>modal</Text>
         </Modal>
-        <View>
-          <TagList navigation={this.props.navigation} />
-        </View>
-        <Content>
-          <View style={{ margin: 10 }}>
-            <List
-              showsVerticalScrollIndicator={false}
-              dataArray={postData}
-              renderRow={item => {
-                return (
-                  <PostItem postData={item} optionPress={this._openModel} />
-                );
+        <Tabs tabBarPosition="bottom" locked={true} >
+          <Tab
+            heading={
+              <TabHeading>
+                <Icon name="ios-home-outline" />
+              </TabHeading>
+            }
+          >
+            <CustomHeader
+              title="Pet Home"
+              buttonLeft="menu"
+              actionLeft={() => {
+                this.props.navigation.openDrawer();
+              }}
+              buttonRight="ios-notifications-outline"
+              badgeNumberRight="9"
+              actionRight={() => {
+                this.activityModal.open();
               }}
             />
-          </View>
-        </Content>
-        <Footer style={{ backgroundColor: "#EC466A" }}>
-          <FooterTab style={{ backgroundColor: "#EC466A" }}>
-            <Button vertical>
-              <Icon name="ios-search-outline" style={{ color: "#FFF" }} />
-            </Button>
-            <AddPostModal />
-            <Button vertical>
-              <Icon name="ios-bookmark-outline" style={{ color: "#FFF" }} />
-            </Button>
-          </FooterTab>
-        </Footer>
+            <View>
+              <TagList navigation={this.props.navigation} />
+            </View>
+            <Content>
+              <View style={{ margin: 10 }}>
+                <List
+                  showsVerticalScrollIndicator={false}
+                  dataArray={postData}
+                  renderRow={item => {
+                    return (
+                      <PostItem postData={item} optionPress={this._openModel} />
+                    );
+                  }}
+                />
+              </View>
+            </Content>
+          </Tab>
+          <Tab
+            heading={
+              <TabHeading>
+                <Icon name="ios-search" />
+              </TabHeading>
+            }
+          />
+          <Tab
+            heading={
+              <TabHeading>
+                <Icon name="ios-add-circle-outline" />
+              </TabHeading>
+            }
+          >
+            <AddPostTab navigation={this.props.navigation} />
+          </Tab>
+          <Tab
+            heading={
+              <TabHeading>
+                <Icon name="ios-bookmark-outline" />
+              </TabHeading>
+            }
+          />
+        </Tabs>
       </Container>
     );
   }

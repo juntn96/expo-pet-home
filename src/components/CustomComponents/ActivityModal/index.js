@@ -30,6 +30,7 @@ class ActivityModal extends Component {
     return (
       <View>
         <Modal
+          
           animationType="slide"
           transparent={false}
           visible={modalVisible}

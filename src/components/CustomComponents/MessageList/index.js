@@ -14,6 +14,8 @@ import {
 
 const data = [1, 2, 3, 4, 5, 6, 7, 8];
 
+import ChatModal from '../ChatModal'
+
 class MessageList extends Component {
   constructor(props) {
     super(props);
@@ -22,7 +24,7 @@ class MessageList extends Component {
 
   _renderItem = item => {
     return (
-      <ListItem avatar>
+      <ListItem avatar onPress={() => {this.chatModel.open()}} >
         <Left>
           <Thumbnail
             circular
@@ -51,7 +53,12 @@ class MessageList extends Component {
   };
 
   render() {
-    return <List dataArray={data} renderRow={item => this._renderItem(item)} />;
+    return (
+      <View>
+        <ChatModal ref={ref => {this.chatModel = ref}} />
+        <List dataArray={data} renderRow={item => this._renderItem(item)} />
+      </View>
+    );
   }
 }
 
