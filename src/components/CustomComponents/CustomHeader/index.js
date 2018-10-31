@@ -105,13 +105,13 @@ class CustomHeader extends Component {
           alignItems: "center",
         }}
       >
-        <Left>{this._buttonLeft()}</Left>
-        <Body>
+        <Left style={{flex: 1}} >{this._buttonLeft()}</Left>
+        <Body style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Title style={{ color: "#EC466A", textAlign: "center" }}>
             {title}
           </Title>
         </Body>
-        <Right>{this._buttonRight()}</Right>
+        <Right style={{flex: 1}}>{this._buttonRight()}</Right>
       </Header>
     );
   }

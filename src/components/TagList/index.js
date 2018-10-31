@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { View, Text, FlatList } from "react-native";
+import { List } from 'native-base'
 
 const data = [1, 2, 3, 4];
 
 export default class extends Component {
-  _renderItem = ({ item }) => {
+  _renderItem = (item) => {
     switch (item) {
       case 1: {
         return (
@@ -129,12 +130,12 @@ export default class extends Component {
 
   render() {
     return (
-      <FlatList
-        renderItem={this._renderItem}
-        data={data}
-        horizontal={true}
+      <List
+        horizontal
+        dataArray={data}
+        renderRow={item => this._renderItem(item)}
         style={{
-          marginTop: 10,
+          marginTop: 10
         }}
       />
     );

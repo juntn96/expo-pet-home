@@ -94,8 +94,8 @@ export default class extends Component {
             </Card>
           </View>
         </Content>
-        <Footer>
-          <FooterTab>
+        <Footer style={{backgroundColor: '#FFF'}} >
+          <FooterTab style={{backgroundColor: '#FFF', borderTopWidth: 0.5}} >
             <Button vertical>
               <Icon name="ios-home-outline" />
             </Button>
