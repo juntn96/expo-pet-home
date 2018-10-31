@@ -159,7 +159,7 @@ class AddPostModal extends Component {
           vertical
           onCustomPress={this._setModalVisible}
         >
-          <Icon name="ios-add-circle-outline" />
+          <Icon name="ios-add-circle-outline" style={{color: "#FFF"}} />
         </CustomButton>
       </View>
     );

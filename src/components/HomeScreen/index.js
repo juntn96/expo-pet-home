@@ -1,27 +1,35 @@
 import React, { Component } from "react";
-import { View, Dimensions, Image } from "react-native";
+import { View } from "react-native";
 import {
   Container,
-  Header,
   Content,
-  Card,
-  CardItem,
-  Thumbnail,
   Text,
   Button,
   Icon,
-  Left,
-  Body,
-  Right,
   FooterTab,
   Footer,
-  Badge
+  List,
 } from "native-base";
 import TagList from "../TagList";
 import CustomHeader from "../CustomComponents/CustomHeader";
-import AddPostModal from '../../components/CustomComponents/AddPostModal';
+import AddPostModal from "../../components/CustomComponents/AddPostModal";
+
+import "../CustomComponents/PostOptionModal";
+
+import Modal from "react-native-modalbox";
+
+import ActivityModal from "../CustomComponents/ActivityModal";
+
+import PostItem from "../CustomComponents/PostItem";
+
+import { postData } from "../../utils/fakeData";
 
 export default class extends Component {
+  
+  _openModel = postData => {
+    this.optionModal.open();
+  };
+
   render() {
     return (
       <Container>
@@ -33,79 +41,57 @@ export default class extends Component {
           }}
           buttonRight="ios-notifications-outline"
           badgeNumberRight="9"
+          actionRight={() => {
+            this.activityModal.open();
+          }}
         />
+        <ActivityModal
+          ref={ref => {
+            this.activityModal = ref;
+          }}
+        />
+        <Modal
+          ref={ref => {
+            this.optionModal = ref;
+          }}
+          position={"bottom"}
+          swipeToClose={true}
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            height: 300,
+            backgroundColor: "red",
+          }}
+        >
+          <Text>modal</Text>
+        </Modal>
         <View>
           <TagList navigation={this.props.navigation} />
         </View>
         <Content>
           <View style={{ margin: 10 }}>
-            <Card>
-              <CardItem>
-                <Left>
-                  <Thumbnail source={require("../../assets/images/bg1.png")} />
-                  <Body>
-                    <Text>NativeBase</Text>
-                    <Text note style={{ fontSize: 12 }}>
-                      April 15, 2016
-                    </Text>
-                  </Body>
-                </Left>
-                <Right style={{ alignSelf: "flex-start" }}>
-                  <Icon name="ios-more" style={{ color: "#000" }} />
-                </Right>
-              </CardItem>
-              <CardItem>
-                <Body>
-                  <Text>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry. Lorem Ipsum has been the industry's
-                    standard dummy text ever since the 1500s,
-                  </Text>
-                </Body>
-              </CardItem>
-              <CardItem cardBody>
-                <Image
-                  source={require("../../assets/images/bg3.png")}
-                  style={{ height: 200, width: null, flex: 1 }}
-                />
-              </CardItem>
-              <CardItem>
-                <Left>
-                  <Button transparent textStyle={{ color: "#FF8EBC" }}>
-                    <Icon name="ios-arrow-up" style={{ color: "#FF8EBC" }} />
-                    <Text>10k</Text>
-                  </Button>
-                  <Button transparent textStyle={{ color: "#00E7C3" }}>
-                    <Icon
-                      name="ios-chatbubbles-outline"
-                      style={{ color: "#00E7C3" }}
-                    />
-                    <Text>392</Text>
-                  </Button>
-                </Left>
-
-                <Right>
-                  <Button transparent textStyle={{ color: "#EC466A" }}>
-                    <Icon name="ios-arrow-down" style={{ color: "#EC466A" }} />
-                    <Text>10</Text>
-                  </Button>
-                </Right>
-              </CardItem>
-            </Card>
+            <List
+              showsVerticalScrollIndicator={false}
+              dataArray={postData}
+              renderRow={item => {
+                return (
+                  <PostItem postData={item} optionPress={this._openModel} />
+                );
+              }}
+            />
           </View>
         </Content>
-        <Footer style={{backgroundColor: '#FFF'}} >
-          <FooterTab style={{backgroundColor: '#FFF', borderTopWidth: 0.5}} >
+        <Footer style={{ backgroundColor: "#EC466A" }}>
+          <FooterTab style={{ backgroundColor: "#EC466A" }}>
             <Button vertical>
-              <Icon name="ios-home-outline" />
+              <Icon name="ios-search-outline" style={{ color: "#FFF" }} />
             </Button>
-            <AddPostModal/>
+            <AddPostModal />
             <Button vertical>
-              <Icon name="ios-search-outline" />
+              <Icon name="ios-bookmark-outline" style={{ color: "#FFF" }} />
             </Button>
           </FooterTab>
         </Footer>
-        
       </Container>
     );
   }

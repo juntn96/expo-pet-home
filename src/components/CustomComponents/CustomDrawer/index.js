@@ -56,9 +56,6 @@ class CustomDrawer extends Component {
           <CustomTouchable loginRequired={true} style={styles.buttonBody}>
             <Icon name="ios-chatbubbles-outline" style={styles.iconBody} />
           </CustomTouchable>
-          <CustomTouchable loginRequired={true} style={styles.buttonBody}>
-            <Icon name="ios-bookmark-outline" style={styles.iconBody} />
-          </CustomTouchable>
         </View>
         <View style={styles.under}>
           {this.props.data.userData ? (

@@ -1,56 +1,86 @@
-import React from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
-import { Camera, Permissions } from 'expo';
+import React from "react";
+import { Text, View, TouchableOpacity, Dimensions, Image } from "react-native";
 
-export default class extends React.Component {
-  state = {
-    hasCameraPermission: null,
-    type: Camera.Constants.Type.back,
-  };
+import {
+  Container,
+  Content,
+  Header,
+  Left,
+  Body,
+  Right,
+  Title,
+} from "native-base";
 
-  async componentWillMount() {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    this.setState({ hasCameraPermission: status === 'granted' });
-  }
+import { connect } from 'react-redux'
 
+class ProfileScreen extends React.Component {
   render() {
-    const { hasCameraPermission } = this.state;
-    if (hasCameraPermission === null) {
-      return <View />;
-    } else if (hasCameraPermission === false) {
-      return <Text>No access to camera</Text>;
-    } else {
-      return (
-        <View style={{ flex: 1 }}>
-          <Camera style={{ flex: 1 }} type={this.state.type}>
+    const {userData} = this.props.data
+    console.log(userData)
+    return (
+      <Container>
+        <Content>
+          <View
+            style={{
+              height: 300,
+            }}
+          >
             <View
               style={{
-                flex: 1,
-                backgroundColor: 'transparent',
-                flexDirection: 'row',
-              }}>
-              <TouchableOpacity
+                height: 200,
+                backgroundColor: "#000",
+              }}
+            >
+              <Image
+                source={require('../../assets/images/bg2.png')}
                 style={{
-                  flex: 0.1,
-                  alignSelf: 'flex-end',
-                  alignItems: 'center',
+                  width: '100%',
+                  height: '100%'
                 }}
-                onPress={() => {
-                  this.setState({
-                    type: this.state.type === Camera.Constants.Type.back
-                      ? Camera.Constants.Type.front
-                      : Camera.Constants.Type.back,
-                  });
-                }}>
-                <Text
-                  style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
-                  {' '}Flip{' '}
-                </Text>
-              </TouchableOpacity>
+              />
             </View>
-          </Camera>
-        </View>
-      );
-    }
+            <View 
+              style={{
+                width: 80,
+                height: 80,
+                borderRadius: 80,
+                backgroundColor: '#FFF',
+                position: 'absolute',
+                top: 140,
+                alignSelf: 'center',
+                overflow: 'hidden',
+                borderWidth: 2,
+                borderColor: '#FFF'
+              }}
+            >
+              <Image 
+                source={{uri: userData.largePicture.data.url}}
+                style={{
+                  width: '100%',
+                  height: '100%'
+                }}
+              />
+            </View>
+            <Text
+              style={{
+                marginTop: 28,
+                fontSize: 20,
+                fontWeight: 'bold',
+                alignSelf: 'center',
+                color: '#00000090'
+              }}
+            >{userData.name}</Text>
+          </View>
+        </Content>
+      </Container>
+    );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    data: state.userData
+  }
+}
+
+export default connect(mapStateToProps)(ProfileScreen);
