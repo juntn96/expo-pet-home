@@ -1,17 +1,19 @@
 import { createStackNavigator } from "react-navigation";
 import HomeScreen from "../../containers/Home";
-import { Button, Icon } from "native-base";
-import React from "react";
+import CommentScreen from "../../components/CommentScreen";
 
 const HomeRoute = createStackNavigator(
   {
     Home: {
       screen: HomeScreen,
     },
+    Comment: {
+      screen: CommentScreen
+    }
   },
   {
     initialRouteName: "Home",
-    navigationOptions: ({ navigation }) => ({
+    navigationOptions: () => ({
       header: null,
       headerStyle: {
         shadowOpacity: 0,
@@ -24,7 +26,7 @@ const HomeRoute = createStackNavigator(
         textAlign: "center",
         flexGrow: 1,
         alignSelf: "center",
-      }
+      },
     }),
   }
 );

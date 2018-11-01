@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View } from "react-native";
+import { View, FlatList } from "react-native";
 import {
   Container,
   Content,
@@ -10,7 +10,7 @@ import {
   Tab,
   TabHeading,
 } from "native-base";
-import TagList from "../TagList";
+import TagList from "../CustomComponents/TagList";
 import CustomHeader from "../CustomComponents/CustomHeader";
 
 import "../CustomComponents/PostOptionModal";
@@ -21,7 +21,9 @@ import ActivityModal from "../CustomComponents/ActivityModal";
 
 import PostItem from "../CustomComponents/PostItem";
 
-import AddPostTab from '../CustomComponents/AddPostTab'
+import AddPostTab from "../CustomComponents/AddPostTab";
+
+import HomeTab from '../CustomComponents/HomeTab'
 
 import { postData } from "../../utils/fakeData";
 
@@ -33,11 +35,6 @@ export default class extends Component {
   render() {
     return (
       <Container>
-        <ActivityModal
-          ref={ref => {
-            this.activityModal = ref;
-          }}
-        />
         <Modal
           ref={ref => {
             this.optionModal = ref;
@@ -53,7 +50,7 @@ export default class extends Component {
         >
           <Text>modal</Text>
         </Modal>
-        <Tabs tabBarPosition="bottom" locked={true} >
+        <Tabs tabBarPosition="bottom" locked={true}>
           <Tab
             heading={
               <TabHeading>
@@ -61,34 +58,7 @@ export default class extends Component {
               </TabHeading>
             }
           >
-            <CustomHeader
-              title="Pet Home"
-              buttonLeft="menu"
-              actionLeft={() => {
-                this.props.navigation.openDrawer();
-              }}
-              buttonRight="ios-notifications-outline"
-              badgeNumberRight="9"
-              actionRight={() => {
-                this.activityModal.open();
-              }}
-            />
-            <View>
-              <TagList navigation={this.props.navigation} />
-            </View>
-            <Content>
-              <View style={{ margin: 10 }}>
-                <List
-                  showsVerticalScrollIndicator={false}
-                  dataArray={postData}
-                  renderRow={item => {
-                    return (
-                      <PostItem postData={item} optionPress={this._openModel} />
-                    );
-                  }}
-                />
-              </View>
-            </Content>
+            <HomeTab navigation={this.props.navigation}/>
           </Tab>
           <Tab
             heading={

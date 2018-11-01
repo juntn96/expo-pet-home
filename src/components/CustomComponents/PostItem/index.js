@@ -69,7 +69,7 @@ class PostItem extends Component {
               <Icon name="ios-arrow-up" style={{ color: "#FF8EBC" }} />
               <Text>{postData.interactive.upvote}</Text>
             </Button>
-            <Button transparent textStyle={{ color: "#00E7C3" }}>
+            <Button transparent textStyle={{ color: "#00E7C3" }} onPress={() => {this.props.navigation.navigate("Comment")}} >
               <Icon
                 name="ios-chatbubbles-outline"
                 style={{ color: "#00E7C3" }}
