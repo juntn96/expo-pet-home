@@ -10,7 +10,6 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "splash": {
-      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -21,7 +20,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.weteam.pethome",
+      "supportsTablet": false,
+      "config": {
+        "googleMapsApiKey": "AIzaSyDeAEP1N5-BeI_GIzMB4zn7JYuT5sez7JE"
+      }
+    },
+    "android": {
+      "package": "com.weteam.pethome",
+      "config": {
+        "googleMaps": { "apiKey": "AIzaSyDezNPzfDktkCPsaYjw6nCzCqvRUkrKjio" }   
+      }
     }
   }
 }
