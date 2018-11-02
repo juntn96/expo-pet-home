@@ -4,9 +4,9 @@ import { MapView, Constants, Location, Permissions } from "expo";
 
 import * as Strings from "../../../constants/strings";
 
-const { Marker, Polyline } = MapView;
+import { GoogleMap } from "../../../services/Map";
 
-const data = [1, 2, 3, 4, 5];
+const { Marker, Polyline } = MapView;
 
 export default class extends Component {
   constructor(props) {
@@ -14,8 +14,12 @@ export default class extends Component {
 
     this.state = {
       location: {},
-      coords: []
+      coords: [],
     };
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextState !== this.state
   }
 
   componentDidMount() {
@@ -30,27 +34,10 @@ export default class extends Component {
   }
 
   _getDirections = async (startLoc, destinationLoc) => {
-    try {
-      let resp = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?
-        origin=${startLoc}&
-        destination=${destinationLoc}&
-        key=${Strings.MAP_API_KEY}`
-      );
-      let respJson = await resp.json();
-      console.log(respJson);
-      let points = Polyline.decode(respJson.routes[0].overview_polyline.points);
-      let coords = points.map((point, index) => {
-          return  {
-              latitude : point[0],
-              longitude : point[1]
-          }
-      })
-      this.setState({coords: coords})
-      return coords
-    } catch (error) {
-      alert(error);
-      return error
+    const result = await GoogleMap.getDirections(startLoc, destinationLoc);
+    console.log(result);
+    if (result) {
+      this.setState({ coords: result });
     }
   };
 
@@ -63,88 +50,19 @@ export default class extends Component {
     }
   };
 
-  _renderItem = ({ item }) => {
-    return (
-      <View
-        style={{
-          backgroundColor: "#c5c5c590",
-          marginLeft: 10,
-          marginRight: 20,
-          padding: 8,
-          borderRadius: 8,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 14,
-            fontWeight: "bold",
-            marginBottom: 4,
-          }}
-        >
-          Day la ten location
-        </Text>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <View
-            style={{
-              width: 10,
-              height: 10,
-              borderRadius: 10,
-              backgroundColor: "#00cc99",
-              marginRight: 4,
-            }}
-          />
-          <View
-            style={{
-              width: 10,
-              height: 10,
-              borderRadius: 10,
-              backgroundColor: "#00cc99",
-              marginRight: 4,
-            }}
-          />
-          <View
-            style={{
-              width: 10,
-              height: 10,
-              borderRadius: 10,
-              backgroundColor: "#00cc99",
-              marginRight: 4,
-            }}
-          />
-          <View
-            style={{
-              width: 10,
-              height: 10,
-              borderRadius: 10,
-              backgroundColor: "#00cc99",
-              marginRight: 4,
-            }}
-          />
-          <View
-            style={{
-              width: 10,
-              height: 10,
-              borderRadius: 10,
-              backgroundColor: "#615c70",
-              marginRight: 10,
-            }}
-          />
-          <Text style={{ fontSize: 12 }}>4.5/5 - Cách bạn 1.2Km</Text>
-        </View>
-      </View>
-    );
-  };
+  _onMapPress = (event) => {
+    const { onMapPress } = this.props
+    if (onMapPress) {
+      onMapPress()
+    }
+  }
 
   render() {
     const { location } = this.state;
     return (
       <View style={styles.container}>
         <MapView
+          onPress={this._onMapPress}
           showsUserLocation={true}
           minZoomLevel={15}
           maxZoomLevel={18}
@@ -160,23 +78,13 @@ export default class extends Component {
           {location ? (
             <Marker coordinate={location} title="User" description="Dia chi" />
           ) : null}
-          <Polyline 
+          <Polyline
             coordinates={this.state.coords}
             strokeWidth={2}
-            strokeColor="red"/>
+            strokeColor="red"
+          />
         </MapView>
-        <FlatList
-          style={{
-            position: "absolute",
-            top: 8,
-            left: 0,
-            right: 0,
-          }}
-          data={data}
-          renderItem={this._renderItem}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        />
+        
       </View>
     );
   }
