@@ -1,40 +1,19 @@
 import React, { Component } from "react";
 import {
-  StyleSheet,
   Animated,
   Easing,
   View,
   LayoutAnimation,
-  TouchableOpacity,
-  Text,
-  TextInput,
   Dimensions,
-  StatusBar
+  StatusBar,
 } from "react-native";
-import {
-  Tabs,
-  Container,
-  Header,
-  Body,
-  Left,
-  Right,
-  Icon,
-  Title,
-  Button,
-} from "native-base";
+import { Container } from "native-base";
 
 import TabBar from "./TabBar";
 import LocationMapTab from "../CustomComponents/LocationMapTab";
 import SimpleHeader from "./SimpleHeader";
 import DirectionHeader from "./DirectionHeader";
 import LocationSmallList from "./LocationSmallList";
-
-const AnimatedTab = Animated.createAnimatedComponent(TabBar);
-const AnimatedSimpleHeader = Animated.createAnimatedComponent(SimpleHeader);
-const AnimatedDirectionHeader = Animated.createAnimatedComponent(
-  DirectionHeader
-);
-const AnimatedSmallList = Animated.createAnimatedComponent(LocationSmallList)
 
 const CustomLayoutAnimation = {
   duration: 200,
@@ -51,55 +30,39 @@ export default class extends Component {
     super(props);
 
     this.state = {
-      animateToHide: new Animated.Value(1),
-      animateDirectionHeader: new Animated.Value(0),
-      animateSmallList: new Animated.Value(0),
       hiddenAll: false,
       tabIndex: 2,
-      enableAnimate: true,
       hiddenDirection: true,
     };
-    StatusBar.setBackgroundColor("#00cc99")
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { animateToHide, hiddenAll, tabIndex } = this.state;
+    const { tabIndex } = this.state;
     if (tabIndex === nextState.tabIndex) {
       return false;
     }
     return true;
-    
   }
 
   _onMapPress = () => {
-    if (!this.state.enableAnimate) {
-      return;
-    }
     if (!this.state.hiddenAll) {
-      this._setAnimatedState(this.state.animateToHide, 0);
-      this._setAnimatedState(this.state.animateDirectionHeader, 0);
-      this._setAnimatedState(this.state.animateSmallList, 1, 800)
+      this.directionHeader.animateHide();
+      this.simpleHeader.animateHide();
+      this.tabBar.animateHide();
+      this.smallList.moveDown();
     } else {
       if (!this.state.hiddenDirection) {
-        this._setAnimatedState(this.state.animateDirectionHeader, 1);
-        this._setAnimatedState(this.state.animateSmallList, 1)
+        this.directionHeader.animateShow();
+        this.smallList.moveDown();
       } else {
-        this._setAnimatedState(this.state.animateToHide, 1);
-        this._setAnimatedState(this.state.animateSmallList, 0), 800
+        this.simpleHeader.animateShow();
+        this.tabBar.animateShow();
+        this.smallList.moveUp();
       }
     }
     this.setState({
       hiddenAll: !this.state.hiddenAll,
     });
-  };
-
-  _setAnimatedState = (animated, value, duration = 200) => {
-    Animated.timing(animated, {
-      toValue: value,
-      duration: duration,
-      Easing: Easing,
-      useNativeDriver: true,
-    }).start();
   };
 
   _onTabPress = index => {
@@ -110,13 +73,15 @@ export default class extends Component {
 
   _showDirectionHeader = () => {
     if (this.state.hiddenDirection) {
-      this._setAnimatedState(this.state.animateDirectionHeader, 1);
-      this._setAnimatedState(this.state.animateToHide, 0);
-      this._setAnimatedState(this.state.animateSmallList, 1, 800)
+      this.directionHeader.animateShow();
+      this.simpleHeader.animateHide();
+      this.tabBar.animateHide();
+      this.smallList.moveDown();
     } else {
-      this._setAnimatedState(this.state.animateDirectionHeader, 0);
-      this._setAnimatedState(this.state.animateToHide, 1);
-      this._setAnimatedState(this.state.animateSmallList, 0, 800)
+      this.directionHeader.animateHide();
+      this.simpleHeader.animateShow();
+      this.tabBar.animateShow();
+      this.smallList.moveUp();
     }
     this.setState({
       hiddenDirection: !this.state.hiddenDirection,
@@ -142,56 +107,22 @@ export default class extends Component {
   };
 
   render() {
-    console.log("render");
-
-    let tabTranslateY = this.state.animateToHide.interpolate({
-      inputRange: [0, 1],
-      outputRange: [56, 0],
-    });
-
-    let headerTranslateY = this.state.animateToHide.interpolate({
-      inputRange: [0, 1],
-      outputRange: [-80, 0],
-    });
-
-    let directionTranslateY = this.state.animateDirectionHeader.interpolate({
-      inputRange: [0, 1],
-      outputRange: [-150, 0],
-    });
-
-    let smallListTranslateY = this.state.animateSmallList.interpolate({
-      inputRange: [0, 0.25, 0.75, 1],
-      outputRange: [0, -200, Dimensions.get("screen").height + 150, Dimensions.get("screen").height - 150]
-    })
-
-    let listOpacity = this.state.animateSmallList.interpolate({
-      inputRange: [0, 0.25, 0.5, 0.75, 1],
-      outputRange: [1, 0, 0, 0, 1]
-    })
-
-    let tabTransform = [{ translateY: tabTranslateY }];
-    let headerTransform = [{ translateY: headerTranslateY }];
-    let directionTransform = [{ translateY: directionTranslateY }];
-    let smallListTransform = [{translateY: smallListTranslateY}]
-
     return (
       <Container>
         {this._renderTab()}
-        <AnimatedSimpleHeader
-          style={{ transform: headerTransform }}
+        <SimpleHeader
+          ref={ref => (this.simpleHeader = ref)}
           onDirectionPress={this._showDirectionHeader}
         />
-        <AnimatedDirectionHeader
-          style={{ transform: directionTransform }}
+        <DirectionHeader
+          ref={ref => (this.directionHeader = ref)}
           onDirectionPress={this._showDirectionHeader}
         />
-        <AnimatedSmallList 
-          style={{ transform: smallListTransform, opacity: listOpacity }}
-        />
-        <AnimatedTab
-          style={{ transform: tabTransform }}
+        <TabBar
+          ref={ref => (this.tabBar = ref)}
           onTabPress={this._onTabPress}
         />
+        <LocationSmallList ref={ref => (this.smallList = ref)} />
       </Container>
     );
   }

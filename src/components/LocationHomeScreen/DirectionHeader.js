@@ -2,21 +2,49 @@ import React, { Component } from "react";
 import { View, Text, TouchableOpacity, Animated } from "react-native";
 import { Container, Button, Icon } from "native-base";
 
+const transAnimation = (animated, value) => {
+  Animated.timing(animated, {
+    toValue: value,
+    duration: 300,
+    useNativeDriver: true,
+  }).start();
+};
 class DirectionHeader extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      animateTrans: new Animated.Value(0),
+    };
+  }
+
+  animateShow = () => {
+    const { animateTrans } = this.state;
+    transAnimation(animateTrans, 1);
+  };
+
+  animateHide = () => {
+    const { animateTrans } = this.state;
+    transAnimation(animateTrans, 0);
+  };
+
   render() {
-    console.log(this.props);
+    let transY = this.state.animateTrans.interpolate({
+      inputRange: [0, 1],
+      outputRange: [-150, 0],
+    });
+
+    let transform = [{ translateY: transY }];
+
     return (
-      <View
-        style={[
-          {
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: "#00cc99",
-          },
-          this.props.style,
-        ]}
+      <Animated.View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: "#00cc99",
+          transform: transform,
+        }}
       >
         <View
           style={{
@@ -93,7 +121,7 @@ class DirectionHeader extends Component {
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </Animated.View>
     );
   }
 }

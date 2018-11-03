@@ -1,26 +1,49 @@
 import React, { Component } from "react";
-import { View } from "react-native";
+import { View, Animated } from "react-native";
 import { Header, Body, Left, Right, Icon, Title, Button } from "native-base";
 
+const transAnimation = (animated, value) => {
+  Animated.timing(animated, {
+    toValue: value,
+    duration: 300,
+    useNativeDriver: true,
+  }).start();
+};
 class SimpleHeader extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      animateTrans: new Animated.Value(1),
+    };
   }
 
+  animateShow = () => {
+    const { animateTrans } = this.state;
+    transAnimation(animateTrans, 1);
+  };
+
+  animateHide = () => {
+    const { animateTrans } = this.state;
+    transAnimation(animateTrans, 0);
+  };
+
   render() {
-    console.log(this.props);
+    let transY = this.state.animateTrans.interpolate({
+      inputRange: [0, 1],
+      outputRange: [-80, 0],
+    });
+
+    let transform = [{ translateY: transY }];
+
     return (
-      <View
-        style={[
-          {
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-          },
-          this.props.style,
-        ]}
+      <Animated.View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          transform: transform,
+        }}
       >
         <Header>
           <Left>
@@ -40,7 +63,7 @@ class SimpleHeader extends Component {
             </Button>
           </Right>
         </Header>
-      </View>
+      </Animated.View>
     );
   }
 }

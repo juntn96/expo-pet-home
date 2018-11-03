@@ -15,6 +15,7 @@ export const GoogleMap = {
       });
       return coords;
     } catch (error) {
+      console.log("Map Error")
       console.log(error)
       return null;
     }

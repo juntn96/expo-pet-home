@@ -35,7 +35,6 @@ export default class extends Component {
 
   _getDirections = async (startLoc, destinationLoc) => {
     const result = await GoogleMap.getDirections(startLoc, destinationLoc);
-    console.log(result);
     if (result) {
       this.setState({ coords: result });
     }

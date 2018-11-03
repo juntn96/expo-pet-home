@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Platform, StyleSheet, Text, View, SafeAreaView } from "react-native";
+import { Platform, StyleSheet, Text, View, SafeAreaView, Dimensions } from "react-native";
 import { Font, AppLoading } from 'expo'
 import DrawerRoute from "./src/routes/DrawerRoute";
 
@@ -22,6 +22,8 @@ export default class App extends Component {
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
     this.setState({ loading: false });
+    // console.log(Dimensions.get('screen'))
+    // console.log(Dimensions.get('window'))
   }
 
   render() {
