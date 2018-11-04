@@ -42,13 +42,12 @@ class LocationSmallList extends Component {
   };
 
   _setScrollEnable = enable => {
-    console.log(enable);
     this.setState({
       scrollEnabled: enable,
     });
   };
 
-  _renderItem = ({ item }) => {
+  _renderItem = ({ item, index }) => {
     return (
       <LocationItem
         onItemMove={this._setScrollEnable}

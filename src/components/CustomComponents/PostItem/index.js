@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Dimensions, Image, TouchableOpacity } from "react-native";
+import ReactNative, { View, Dimensions, Image, TouchableOpacity, UIManager } from "react-native";
 import {
   Container,
   Header,

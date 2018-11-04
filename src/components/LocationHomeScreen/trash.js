@@ -7,10 +7,10 @@ import ReactNative, {
   TouchableOpacity,
   Easing,
   Dimensions,
-  Modal,
-  UIManager,
+  Modal, 
+  UIManager
 } from "react-native";
-import DetailModal from "./DetailModal";
+
 const AnimatedView = Animated.createAnimatedComponent(View);
 
 class LocationItem extends Component {
@@ -19,62 +19,62 @@ class LocationItem extends Component {
     this.state = {
       pan: new Animated.ValueXY(),
     };
-    // this._setPanResponder();
+    this._setPanResponder();
     this.lastTap = null;
   }
 
-  // _setPanResponder = () => {
-  //   this.panResponder = PanResponder.create({
-  //     onMoveShouldSetPanResponder: (evt, gestureState) => {
-  //       if (this.props.isAnimated) {
-  //         return false;
-  //       }
-  //       if (
-  //         gestureState.dx < -30 ||
-  //         gestureState.dx > 30 ||
-  //         gestureState.dy < -10 ||
-  //         gestureState.dy > 10
-  //       ) {
-  //         this.props.onItemMove(false);
-  //         return true;
-  //       }
-  //       return false;
-  //     },
-  //     onPanResponderGrant: (evt, gestureState) => {
-  //       this.state.pan.setOffset({
-  //         x: this.state.pan.x._value,
-  //         y: this.state.pan.y._value,
-  //       });
-  //       this.state.pan.setOffset({ x: 0, y: 0 });
-  //     },
-  //     onPanResponderMove: Animated.event([
-  //       null,
-  //       {
-  //         dx: this.state.pan.x,
-  //         dy: this.state.pan.y,
-  //       },
-  //     ]),
-  //     onPanResponderRelease: (evt, gestureState) => {
-  //       console.log(gestureState.dx)
-  //       console.log(gestureState.dy)
-  //       this._returnPosition();
-  //     },
-  //     onPanResponderTerminate: () => {
-  //       this._returnPosition();
-  //     },
-  //   });
-  // };
+  _setPanResponder = () => {
+    this.panResponder = PanResponder.create({
+      onMoveShouldSetPanResponder: (evt, gestureState) => {
+        if (this.props.isAnimated) {
+          return false;
+        }
+        if (
+          gestureState.dx < -30 ||
+          gestureState.dx > 30 ||
+          gestureState.dy < -10 ||
+          gestureState.dy > 10
+        ) {
+          this.props.onItemMove(false);
+          return true;
+        }
+        return false;
+      },
+      onPanResponderGrant: (evt, gestureState) => {
+        this.state.pan.setOffset({
+          x: this.state.pan.x._value,
+          y: this.state.pan.y._value,
+        });
+        this.state.pan.setOffset({ x: 0, y: 0 });
+      },
+      onPanResponderMove: Animated.event([
+        null,
+        {
+          dx: this.state.pan.x,
+          dy: this.state.pan.y,
+        },
+      ]),
+      onPanResponderRelease: (evt, gestureState) => {
+        console.log(gestureState.dx)
+        console.log(gestureState.dy)
+        this._returnPosition();
+      },
+      onPanResponderTerminate: () => {
+        this._returnPosition();
+      },
+    });
+  };
 
-  // _returnPosition = () => {
-  //   Animated.timing(this.state.pan, {
-  //     toValue: { x: 0, y: 0 },
-  //     duration: 100,
-  //     Easing: Easing,
-  //     useNativeDriver: true,
-  //   }).start(() => {
-  //     this.props.onItemMove(true);
-  //   });
-  // };
+  _returnPosition = () => {
+    Animated.timing(this.state.pan, {
+      toValue: { x: 0, y: 0 },
+      duration: 100,
+      Easing: Easing,
+      useNativeDriver: true,
+    }).start(() => {
+      this.props.onItemMove(true);
+    });
+  };
 
   handleDoubleTap = () => {
     const now = Date.now();
@@ -83,36 +83,22 @@ class LocationItem extends Component {
       console.log("double");
     } else {
       this.lastTap = now;
-      setTimeout(() => {
-        this.locationItem.measureInWindow((x, y, w, h) => {
-          this.props.onItemMove(false);
-          this.modal.showModal({
-            x: x,
-            y: y,
-          });
-        });
-      }, 10);
-    }
-  };
-
-  _onHide = () => {
-    setTimeout(() => {
       this.locationItem.measureInWindow((x, y, w, h) => {
-        this.props.onItemMove(true);
-        this.modal.hideModal({
-          x: x,
-          y: y,
-        });
-      });
-    }, 10);
+        console.log(x, y, w, h)
+      })
+    }
   };
 
   render() {
     return (
       <Animated.View
-        // onLayout={event => console.log(event.nativeEvent)}
         style={[
           {
+            backgroundColor: "#c5c5c590",
+            marginLeft: 10,
+            marginRight: 10,
+            padding: 10,
+            borderRadius: 10,
             transform: [
               {
                 translateX: this.state.pan.x,
@@ -123,26 +109,14 @@ class LocationItem extends Component {
             ],
           },
         ]}
-        // {...this.panResponder.panHandlers}
+        {...this.panResponder.panHandlers}
+        ref = { ref => this.mView = ref}
       >
-        <DetailModal
-          ref={ref => {
-            this.modal = ref;
-          }}
-          onHide={this._onHide}
-        />
-        <TouchableOpacity
-          delayPressIn={1000}
-          onPressOut={this.handleDoubleTap}
-          ref={ref => (this.locationItem = ref)}
-          style={{
-            backgroundColor: "#c5c5c590",
-            marginLeft: 10,
-            marginRight: 10,
-            padding: 10,
-            borderRadius: 10,
-          }}
-        >
+        {/* <Modal
+          visible={true}
+          transparent={false}
+        /> */}
+        <TouchableOpacity onPressOut={this.handleDoubleTap} ref={ref => this.locationItem = ref} >
           <Text
             style={{
               fontSize: 14,
