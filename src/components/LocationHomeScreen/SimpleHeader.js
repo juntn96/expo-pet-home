@@ -47,10 +47,12 @@ class SimpleHeader extends Component {
       >
         <Header>
           <Left>
-            <Icon name="md-more" />
+            <Button transparent >
+              <Icon name="menu" />
+            </Button>
           </Left>
           <Body>
-            <Title>Location</Title>
+            <Title>Địa điểm</Title>
           </Body>
           <Right>
             <Button

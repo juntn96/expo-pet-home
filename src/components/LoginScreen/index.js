@@ -52,7 +52,7 @@ export default class extends Component {
             style={styles.body}
           >
             <Image
-              source={require("../../assets/images/pet_house.png")}
+              source={require("../../assets/images/icon.png")}
               style={styles.icon}
             />
             <Text style={styles.textDescription}>

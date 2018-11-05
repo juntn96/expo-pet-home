@@ -1,73 +1,64 @@
 import React, { Component } from "react";
-import {
-  View,
-  Text,
-  Animated,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, TouchableOpacity, Animated } from "react-native";
 
-
-class LocationItem extends Component {
+class AnimateItem extends Component {
   constructor(props) {
     super(props);
+
+    const { fromPos, toPos } = this.props;
+
     this.state = {
-      pan: new Animated.ValueXY(),
+      animatedTrans: new Animated.ValueXY({ x: fromPos.x, y: fromPos.y }),
+      canRender: true,
     };
-    this.lastTap = null;
+
+    this.show();
   }
 
-  _onPress = () => {
-    this.props.onPress(this.props.item)
-  }
+  show = () => {
+    const { fromPos, toPos, onAnimationDone } = this.props;
+    Animated.timing(this.state.animatedTrans, {
+      toValue: { x: toPos.x, y: toPos.y },
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      onAnimationDone()
+      this.setState({ canRender: false });
+    });
+  };
 
-  _onLongPress = () => {
-    this.props.onLongPress(this.props.item.id)
-  }
-
-  _onHide = () => {
-    setTimeout(() => {
-      this.locationItem.measureInWindow((x, y) => {
-        this.props.onItemMove(true);
-        this.modal.hideModal({
-          x: x,
-          y: y,
+  hide = (fromPos, toPos, onAnimationDone) => {
+    this.setState(
+      {
+        canRender: true,
+      },
+      () => {
+        this.state.animatedTrans.setValue({ x: fromPos.x, y: fromPos.y });
+        Animated.timing(this.state.animatedTrans, {
+          toValue: { x: toPos.x, y: toPos.y },
+          duration: 300,
+          useNativeDriver: true,
+        }).start(() => {
+          onAnimationDone();
         });
-      });
-    }, 10);
+      }
+    );
   };
 
   render() {
 
     const { item } = this.props
 
-    return (
-      <Animated.View
-        style={[
-          {
-            transform: [
-              {
-                translateX: this.state.pan.x,
-              },
-              {
-                translateY: this.state.pan.y,
-              },
-            ],
-          },
-        ]}
-      >
+    if (this.state.canRender) {
+      return (
         <TouchableOpacity
-          delayPressIn={200}
-          delayPressOut={200}
-          activeOpacity={0.7}
-          onPress={this._onPress}
-          onLongPress={this._onLongPress}
-          ref={ref => (this.locationItem = ref)}
+          ref={ref => (this.locItem = ref)}
           style={{
-            backgroundColor: "#c5c5c590",
-            marginLeft: 10,
-            marginRight: 10,
-            padding: 10,
             borderRadius: 10,
+            transform: [...this.state.animatedTrans.getTranslateTransform()],
+            justifyContent: "center",
+            padding: 10,
+            position: "absolute",
           }}
         >
           <Text
@@ -133,9 +124,11 @@ class LocationItem extends Component {
             <Text style={{ fontSize: 12 }}>{`${item.rating}/5 - Cách bạn 1.2Km`}</Text>
           </View>
         </TouchableOpacity>
-      </Animated.View>
-    );
+      );
+    } else {
+      return null;
+    }
   }
 }
 
-export default LocationItem;
+export default AnimateItem;

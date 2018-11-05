@@ -14,10 +14,11 @@ class DirectionHeader extends Component {
     super(props);
     this.state = {
       animateTrans: new Animated.Value(0),
+      locationItem: null,
     };
   }
 
-  animateShow = () => {
+  animateShow = locationItem => {
     const { animateTrans } = this.state;
     transAnimation(animateTrans, 1);
   };
@@ -25,7 +26,23 @@ class DirectionHeader extends Component {
   animateHide = () => {
     const { animateTrans } = this.state;
     transAnimation(animateTrans, 0);
+    this.setState({
+      locationItem: null,
+    });
   };
+
+  setItemLocation = locationItem => {
+    this.setState({
+      locationItem: locationItem,
+    });
+  };
+
+  _onStartDirection = () => {
+    const { onStartDirection } = this.props
+    if (onStartDirection) {
+      onStartDirection(null, this.state.locationItem.coordinate)
+    }
+  }
 
   render() {
     let transY = this.state.animateTrans.interpolate({
@@ -34,6 +51,8 @@ class DirectionHeader extends Component {
     });
 
     let transform = [{ translateY: transY }];
+
+    const { locationItem } = this.state;
 
     return (
       <Animated.View
@@ -54,7 +73,7 @@ class DirectionHeader extends Component {
           <Button
             transparent
             onPress={() => {
-              this.props.onDirectionPress();
+              this.props.onBackPress();
             }}
           >
             <Icon name="ios-arrow-back-outline" style={{ color: "#FFF" }} />
@@ -76,11 +95,12 @@ class DirectionHeader extends Component {
               }}
             >
               <Text
+                numberOfLines={1}
                 style={{
                   color: "#FFF",
                 }}
               >
-                Your Location
+                Vị trí của bạn
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -94,15 +114,17 @@ class DirectionHeader extends Component {
               }}
             >
               <Text
+                numberOfLines={1}
                 style={{
                   color: "#FFF",
                 }}
               >
-                Location direction
+                {locationItem ? locationItem.name : "Vị trí dẫn đường"}
               </Text>
             </TouchableOpacity>
           </View>
           <TouchableOpacity
+            onPress={this._onStartDirection}
             activeOpacity={0.7}
             style={{
               backgroundColor: "transparent",

@@ -65,6 +65,14 @@ export default class extends Component {
     });
   };
 
+  _onMarkerPress = (locationItem) => {
+    this.mapView.moveToCoordinate(locationItem.coordinate);
+    this.directionHeader.setItemLocation(locationItem);
+    if (this.state.hiddenDirection) {
+      this._showDirectionHeader(locationItem);
+    }
+  }
+
   _onTabPress = index => {
     this.setState({
       tabIndex: index,
@@ -88,6 +96,24 @@ export default class extends Component {
     });
   };
 
+  _onSmallItemPress = locationItem => {
+    console.log(locationItem);
+    this.mapView.moveToCoordinate(locationItem.coordinate);
+    this.directionHeader.setItemLocation(locationItem);
+    if (this.state.hiddenDirection) {
+      this._showDirectionHeader(locationItem);
+    }
+  };
+
+  _onDirectionBackPress = () => {
+    this.mapView.clearDirection()
+    this._showDirectionHeader()
+  }
+
+  _startDirection = (fromLocation, toLocation) => {
+    this.mapView.startDirection(fromLocation, toLocation)
+  }
+
   _renderTab = () => {
     LayoutAnimation.configureNext(CustomLayoutAnimation);
     switch (this.state.tabIndex) {
@@ -95,7 +121,13 @@ export default class extends Component {
         return <View />;
       }
       case 2: {
-        return <LocationMapTab onMapPress={this._onMapPress} />;
+        return (
+          <LocationMapTab
+            ref={ref => (this.mapView = ref)}
+            onMapPress={this._onMapPress}
+            onMarkerPress={this._onMarkerPress}
+          />
+        );
       }
       case 3: {
         return <View />;
@@ -117,12 +149,17 @@ export default class extends Component {
         <DirectionHeader
           ref={ref => (this.directionHeader = ref)}
           onDirectionPress={this._showDirectionHeader}
+          onStartDirection={this._startDirection}
+          onBackPress={this._onDirectionBackPress}
         />
         <TabBar
           ref={ref => (this.tabBar = ref)}
           onTabPress={this._onTabPress}
         />
-        <LocationSmallList ref={ref => (this.smallList = ref)} />
+        <LocationSmallList
+          onItemPress={this._onSmallItemPress}
+          ref={ref => (this.smallList = ref)}
+        />
       </Container>
     );
   }

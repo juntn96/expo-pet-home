@@ -89,7 +89,6 @@ class HomeTab extends Component {
   };
 
   render() {
-    console.log("aaa");
     return (
       <View>
         <ActivityModal

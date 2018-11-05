@@ -45,13 +45,13 @@ class ActivityModal extends Component {
           />
           <Tabs>
             <Tab
-              heading="Activity"
+              heading="Thông báo"
             >
               <NotificationList/>
             </Tab>
 
             <Tab
-              heading="Messaging"
+              heading="Tin nhắn"
             >
               <MessageList/>
             </Tab>

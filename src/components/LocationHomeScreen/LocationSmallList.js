@@ -6,11 +6,14 @@ import {
   Animated,
   Dimensions,
   Modal,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import LocationItem from "./LocationItem";
+import DetailModal from "./DetailModal";
 
-const data = [1, 2, 3, 4, 5];
+import { locationData } from "../../utils/fakeData";
+
+// const data = [1, 2, 3, 4, 5];
 
 const AnimatedList = Animated.createAnimatedComponent(FlatList);
 
@@ -29,6 +32,7 @@ class LocationSmallList extends Component {
       animateTrans: new Animated.Value(0),
       scrollEnabled: true,
     };
+    this.items = {};
   }
 
   moveDown = () => {
@@ -47,12 +51,40 @@ class LocationSmallList extends Component {
     });
   };
 
+  _onLongPress = id => {
+    setTimeout(() => {
+      this.items[id].ref.measureInWindow((x, y) => {
+        this.modal.showModal({ x, y }, this.items[id].item);
+      });
+    }, 0);
+  };
+
+  _onPress = (item) => {
+    const { onItemPress } = this.props
+    if (onItemPress) {
+      onItemPress(item)
+    }
+  }
+
+  _onHideModal = id => {
+    setTimeout(() => {
+      this.items[id].ref.measureInWindow((x, y) => {
+        this.modal.hideModal({ x, y });
+      });
+    }, 0);
+  };
+
   _renderItem = ({ item, index }) => {
     return (
-      <LocationItem
-        onItemMove={this._setScrollEnable}
-        isAnimated={!this.state.scrollEnabled}
-      />
+      <View ref={ref => (this.items[item.id] = { ref, item })}>
+        <LocationItem
+          item={item}
+          onLongPress={this._onLongPress}
+          onPress={this._onPress}
+          onItemMove={this._setScrollEnable}
+          isAnimated={!this.state.scrollEnabled}
+        />
+      </View>
     );
   };
 
@@ -75,7 +107,14 @@ class LocationSmallList extends Component {
     let transform = [{ translateY: transY }];
 
     return (
-      <AnimatedList
+      <View>
+        <DetailModal
+          ref={ref => {
+            this.modal = ref;
+          }}
+          onHide={this._onHideModal}
+        />
+        <AnimatedList
           style={[
             {
               position: "absolute",
@@ -87,13 +126,14 @@ class LocationSmallList extends Component {
               overflow: "visible",
             },
           ]}
-          // contentContainerStyle={ {...this.state.stateStyle}}
           scrollEnabled={this.state.scrollEnabled}
-          data={data}
+          data={locationData}
           renderItem={this._renderItem}
           horizontal
           showsHorizontalScrollIndicator={false}
+          keyExtractor={item => item.id}
         />
+      </View>
     );
   }
 }
