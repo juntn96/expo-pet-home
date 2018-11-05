@@ -34,6 +34,8 @@ export default class extends Component {
       tabIndex: 2,
       hiddenDirection: true,
     };
+
+    console.log('navigation: ', this.props.navigation)
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -145,6 +147,7 @@ export default class extends Component {
         <SimpleHeader
           ref={ref => (this.simpleHeader = ref)}
           onDirectionPress={this._showDirectionHeader}
+          navigation={this.props.navigation}
         />
         <DirectionHeader
           ref={ref => (this.directionHeader = ref)}

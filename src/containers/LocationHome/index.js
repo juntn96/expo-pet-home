@@ -10,7 +10,7 @@ class LocationHome extends Component {
 
   render() {
     return (
-      <LocationHomeScreen/>
+      <LocationHomeScreen navigation={this.props.navigation} />
     );
   }
 }
