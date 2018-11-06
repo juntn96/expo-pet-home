@@ -27,13 +27,12 @@ class LocationItem extends Component {
   _onHide = () => {
     setTimeout(() => {
       this.locationItem.measureInWindow((x, y) => {
-        this.props.onItemMove(true);
         this.modal.hideModal({
           x: x,
           y: y,
         });
       });
-    }, 10);
+    }, 0);
   };
 
   render() {

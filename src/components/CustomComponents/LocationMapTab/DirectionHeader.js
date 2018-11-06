@@ -39,7 +39,8 @@ class DirectionHeader extends Component {
 
   _onStartDirection = () => {
     const { onStartDirection } = this.props
-    if (onStartDirection) {
+    const { locationItem } = this.state
+    if (onStartDirection && locationItem) {
       onStartDirection(null, this.state.locationItem.coordinate)
     }
   }

@@ -1,19 +1,11 @@
 import React, { Component } from "react";
-import {
-  Animated,
-  Easing,
-  View,
-  LayoutAnimation,
-  Dimensions,
-  StatusBar,
-} from "react-native";
+import { View, LayoutAnimation } from "react-native";
 import { Container } from "native-base";
 
 import TabBar from "./TabBar";
 import LocationMapTab from "../CustomComponents/LocationMapTab";
-import SimpleHeader from "./SimpleHeader";
-import DirectionHeader from "./DirectionHeader";
-import LocationSmallList from "./LocationSmallList";
+
+import { locationData } from "../../utils/fakeData";
 
 const CustomLayoutAnimation = {
   duration: 200,
@@ -30,12 +22,8 @@ export default class extends Component {
     super(props);
 
     this.state = {
-      hiddenAll: false,
       tabIndex: 2,
-      hiddenDirection: true,
     };
-
-    console.log('navigation: ', this.props.navigation)
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -46,75 +34,19 @@ export default class extends Component {
     return true;
   }
 
-  _onMapPress = () => {
-    if (!this.state.hiddenAll) {
-      this.directionHeader.animateHide();
-      this.simpleHeader.animateHide();
+  _showTabBar = show => {
+    if (!show) {
       this.tabBar.animateHide();
-      this.smallList.moveDown();
     } else {
-      if (!this.state.hiddenDirection) {
-        this.directionHeader.animateShow();
-        this.smallList.moveDown();
-      } else {
-        this.simpleHeader.animateShow();
-        this.tabBar.animateShow();
-        this.smallList.moveUp();
-      }
+      this.tabBar.animateShow();
     }
-    this.setState({
-      hiddenAll: !this.state.hiddenAll,
-    });
   };
-
-  _onMarkerPress = (locationItem) => {
-    this.mapView.moveToCoordinate(locationItem.coordinate);
-    this.directionHeader.setItemLocation(locationItem);
-    if (this.state.hiddenDirection) {
-      this._showDirectionHeader(locationItem);
-    }
-  }
 
   _onTabPress = index => {
     this.setState({
       tabIndex: index,
     });
   };
-
-  _showDirectionHeader = () => {
-    if (this.state.hiddenDirection) {
-      this.directionHeader.animateShow();
-      this.simpleHeader.animateHide();
-      this.tabBar.animateHide();
-      this.smallList.moveDown();
-    } else {
-      this.directionHeader.animateHide();
-      this.simpleHeader.animateShow();
-      this.tabBar.animateShow();
-      this.smallList.moveUp();
-    }
-    this.setState({
-      hiddenDirection: !this.state.hiddenDirection,
-    });
-  };
-
-  _onSmallItemPress = locationItem => {
-    console.log(locationItem);
-    this.mapView.moveToCoordinate(locationItem.coordinate);
-    this.directionHeader.setItemLocation(locationItem);
-    if (this.state.hiddenDirection) {
-      this._showDirectionHeader(locationItem);
-    }
-  };
-
-  _onDirectionBackPress = () => {
-    this.mapView.clearDirection()
-    this._showDirectionHeader()
-  }
-
-  _startDirection = (fromLocation, toLocation) => {
-    this.mapView.startDirection(fromLocation, toLocation)
-  }
 
   _renderTab = () => {
     LayoutAnimation.configureNext(CustomLayoutAnimation);
@@ -125,9 +57,9 @@ export default class extends Component {
       case 2: {
         return (
           <LocationMapTab
-            ref={ref => (this.mapView = ref)}
-            onMapPress={this._onMapPress}
-            onMarkerPress={this._onMarkerPress}
+            showTabBar={this._showTabBar}
+            locationData={locationData}
+            navigation={this.props.navigation}
           />
         );
       }
@@ -144,24 +76,9 @@ export default class extends Component {
     return (
       <Container>
         {this._renderTab()}
-        <SimpleHeader
-          ref={ref => (this.simpleHeader = ref)}
-          onDirectionPress={this._showDirectionHeader}
-          navigation={this.props.navigation}
-        />
-        <DirectionHeader
-          ref={ref => (this.directionHeader = ref)}
-          onDirectionPress={this._showDirectionHeader}
-          onStartDirection={this._startDirection}
-          onBackPress={this._onDirectionBackPress}
-        />
         <TabBar
           ref={ref => (this.tabBar = ref)}
           onTabPress={this._onTabPress}
-        />
-        <LocationSmallList
-          onItemPress={this._onSmallItemPress}
-          ref={ref => (this.smallList = ref)}
         />
       </Container>
     );

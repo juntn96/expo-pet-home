@@ -1,158 +1,145 @@
 import React, { Component } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Platform,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-import { MapView, Constants, Location, Permissions } from "expo";
-import { Icon } from "native-base";
-
-import * as Strings from "../../../constants/strings";
-
-import { GoogleMap } from "../../../services/Map";
-
-const { Marker, Polyline } = MapView;
-
-import { locationData, markerType } from "../../../utils/fakeData";
+import { View, StyleSheet } from "react-native";
+import { locationData } from "../../../utils/fakeData";
+import SimpleHeader from "./SimpleHeader";
+import DirectionHeader from "./DirectionHeader";
+import LocationSmallList from "./LocationSmallList";
+import DetailModal from "./DetailModal";
+import Map from "./Map";
 
 export default class extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      location: {
-        latitude: 21.015806,
-        longitude: 105.516287,
-        latitudeDelta: 0.09,
-        longitudeDelta: 0.09,
-      },
-      coords: null,
+      isHideAll: false,
+      isHideDirection: true,
     };
   }
 
-  componentDidMount() {
-    if (Platform.OS === "android" && !Constants.isDevice) {
-      console.log(
-        "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
-      );
+  _onMapPress = () => {
+    const { showTabBar } = this.props;
+    const { isHideAll, isHideDirection } = this.state;
+    if (!isHideAll) {
+      this.directionHeader.animateHide();
+      this.simpleHeader.animateHide();
+      this.smallList.moveDown();
+      showTabBar(isHideAll);
     } else {
-      this._getLocationAsync();
-    }
-  }
-
-  _getDirections = async (startLoc, destinationLoc) => {
-    const result = await GoogleMap.getDirections(startLoc, destinationLoc);
-    if (result) {
-      this.setState({ coords: result });
-      this.mapView.fitToCoordinates([startLoc, destinationLoc], {
-        edgePadding: { top: 30, right: 30, bottom: 30, left: 30 },
-        animated: true,
-      });
-    }
-  };
-
-  _getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status === "granted") {
-      let location = await Location.getCurrentPositionAsync({});
-      this.mapView.animateToRegion(
-        {
-          ...location.coords,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        },
-        0
-      );
-      this.setState({
-        location: {
-          ...location.coords,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        },
-      });
-    }
-  };
-
-  _onMapPress = event => {
-    // const coord = event.nativeEvent.coordinate;
-    // console.log(event.nativeEvent);
-    // if (event.nativeEvent.action === "marker-press") {
-    //   // const { location } = this.state;
-    //   // this._getDirections(location, coord);
-    //   this.moveToCoordinate(coord);
-    // }
-    if (!event.nativeEvent.action) {
-      const { onMapPress } = this.props;
-      if (onMapPress) {
-        onMapPress();
+      if (!isHideDirection) {
+        this.directionHeader.animateShow();
+        this.smallList.moveDown();
+      } else {
+        this.simpleHeader.animateShow();
+        this.smallList.moveUp();
+        showTabBar(isHideAll);
       }
     }
-  };
-
-  _onMarkerPress = locationItem => {
-    const { onMarkerPress } = this.props;
-    if (onMarkerPress) {
-      onMarkerPress(locationItem);
-    }
-  };
-
-  moveToCoordinate = coordinate => {
-    this.mapView.animateToCoordinate(coordinate, 300);
-  };
-
-  startDirection = (fromLocation, toLocation) => {
-    this._getDirections(
-      fromLocation ? fromLocation : this.state.location,
-      toLocation
-    );
-  };
-
-  clearDirection = () => {
     this.setState({
-      coords: null,
+      isHideAll: !isHideAll,
     });
   };
 
+  _onMarkerPress = locationItem => {
+    let itemIndex = locationData.indexOf(locationItem);
+    this.mapView.moveToCoordinate(locationItem.coordinate);
+    this.directionHeader.setItemLocation(locationItem);
+    this.smallList.scrollToIndex(itemIndex);
+    this.simpleHeader.setLocationItem(locationItem);
+  };
+
+  _showDirectionHeader = () => {
+    const { showTabBar } = this.props;
+    const { isHideDirection } = this.state;
+    if (isHideDirection) {
+      this.directionHeader.animateShow();
+      this.simpleHeader.animateHide();
+      this.smallList.moveDown();
+      showTabBar(false);
+    } else {
+      this.directionHeader.animateHide();
+      this.simpleHeader.animateShow();
+      this.smallList.moveUp();
+      showTabBar(true);
+    }
+    this.setState({
+      isHideDirection: !isHideDirection,
+    });
+  };
+
+  _onSmallItemPress = locationItem => {
+    this.mapView.moveToCoordinate(locationItem.coordinate);
+    this.simpleHeader.setLocationItem(locationItem);
+    this.directionHeader.setItemLocation(locationItem);
+  };
+
+  _onSmallItemLongPress = (ref, locationItem) => {
+    setTimeout(() => {
+      ref.measureInWindow((x, y) => {
+        this.modal.showModal({ x, y }, ref, locationItem);
+      });
+    }, 0);
+  };
+
+  _onHideModal = ref => {
+    setTimeout(() => {
+      ref.measureInWindow((x, y) => {
+        this.modal.hideModal({ x, y });
+      });
+    }, 0);
+  };
+
+  _onDirectionBackPress = () => {
+    this._clearLocationItem();
+    this.mapView.clearDirection();
+    this._showDirectionHeader();
+  };
+
+  _clearLocationItem = () => {
+    this.simpleHeader.setLocationItem(null);
+    this.directionHeader.setItemLocation(null);
+  };
+
+  _startDirection = (fromLocation, toLocation) => {
+    if (toLocation) {
+      this.mapView.startDirection(fromLocation, toLocation);
+    }
+  };
+
   render() {
-    const { location, coords } = this.state;
     return (
       <View style={styles.container}>
-        <MapView
+        <DetailModal
+          ref={ref => {
+            this.modal = ref;
+          }}
+          onHide={this._onHideModal}
+        />
+        <Map
           ref={ref => (this.mapView = ref)}
-          onPress={this._onMapPress}
-          showsUserLocation={true}
-          provider={"google"}
-          style={styles.map}
-          initialRegion={location}
-        >
-          {locationData.map(marker => {
-            const markerImage = markerType[marker.type];
-            return (
-              <Marker
-                coordinate={marker.coordinate}
-                title={marker.name}
-                key={marker.id}
-                identifier={marker.id + ""}
-                onPress={() => {
-                  this._onMarkerPress(marker);
-                }}
-              >
-                <Image source={markerImage} />
-              </Marker>
-            );
-          })}
-          {coords ? (
-            <Polyline
-              coordinates={coords}
-              strokeWidth={6}
-              strokeColor="#CA9DF7"
-            />
-          ) : null}
-        </MapView>
+          onMapPress={this._onMapPress}
+          onMarkerPress={this._onMarkerPress}
+        />
+        <SimpleHeader
+          ref={ref => (this.simpleHeader = ref)}
+          onDirectionPress={this._showDirectionHeader}
+          navigation={this.props.navigation}
+          onBackPress={this._clearLocationItem}
+        />
+        <DirectionHeader
+          ref={ref => (this.directionHeader = ref)}
+          onDirectionPress={this._showDirectionHeader}
+          onStartDirection={this._startDirection}
+          onBackPress={this._onDirectionBackPress}
+        />
+        <View style={styles.containerList}>
+          <LocationSmallList
+            onItemPress={this._onSmallItemPress}
+            onItemLongPress={this._onSmallItemLongPress}
+            ref={ref => (this.smallList = ref)}
+            locationData={this.props.locationData}
+          />
+        </View>
       </View>
     );
   }
@@ -171,5 +158,11 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+  },
+  containerList: {
+    position: "absolute",
+    top: 70,
+    left: 0,
+    right: 0,
   },
 });

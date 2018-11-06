@@ -45,7 +45,7 @@ class CustomHeader extends Component {
       return null;
     }
     return (
-      <Button vertical badge transparent onPress={this._actionLeft} style={{marginLeft: 4}} >
+      <Button vertical badge iconRight transparent onPress={this._actionLeft} style={{marginLeft: 4}} >
         {badgeNumberLeft ? (
           <Badge
             style={{
@@ -70,7 +70,7 @@ class CustomHeader extends Component {
       return null;
     }
     return (
-      <Button vertical badge transparent onPress={this._actionRight}>
+      <Button vertical badge iconLeft transparent onPress={this._actionRight}>
         {badgeNumberRight ? (
           <Badge
             style={{
@@ -83,7 +83,7 @@ class CustomHeader extends Component {
             <Text style={{fontSize: 8, color: '#FFF'}} >{badgeNumberRight}</Text>
           </Badge>
         ) : null}
-        <Icon name={buttonRight} style={{ color: "#EC466A"}} />
+        <Icon name={buttonRight} style={{ color: "#EC466A", fontSize: 26 }} />
       </Button>
     );
   };

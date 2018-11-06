@@ -7,10 +7,9 @@ import {
   Animated,
   FlatList,
   Dimensions,
-  Image
+  Image,
 } from "react-native";
 import { Button, Icon, List, TabHeading } from "native-base";
-import TagList from "../../CustomComponents/TagList";
 import StaticItem from "./StaticItem";
 import AnimateItem from "./AnimateItem";
 
@@ -28,30 +27,38 @@ export default class extends Component {
     };
   }
 
-  showModal = (curPos, item) => {
-    this.setState({ item }, () => {
-      this.setState(
-        {
-          modalVisible: true,
+  showModal = (curPos, ref, locationItem) => {
+    this.setState(
+      {
+        item: {
+          data: locationItem,
+          ref: ref,
         },
-        () => {
-          this.fromPos = curPos;
-          Animated.timing(this.state.animateValue, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: true,
-          }).start();
-          setTimeout(() => {
-            this.tempView.measureInWindow((tempX, tempY) => {
-              this.toPos = { x: tempX, y: tempY };
-              this.setState({
-                canRenderAnimate: true,
+      },
+      () => {
+        this.setState(
+          {
+            modalVisible: true,
+          },
+          () => {
+            this.fromPos = curPos;
+            Animated.timing(this.state.animateValue, {
+              toValue: 1,
+              duration: 500,
+              useNativeDriver: true,
+            }).start();
+            setTimeout(() => {
+              this.tempView.measureInWindow((tempX, tempY) => {
+                this.toPos = { x: tempX, y: tempY };
+                this.setState({
+                  canRenderAnimate: true,
+                });
               });
-            });
-          }, 10);
-        }
-      );
-    });
+            }, 0);
+          }
+        );
+      }
+    );
   };
 
   hideModal = curPos => {
@@ -86,7 +93,7 @@ export default class extends Component {
     });
   };
 
-  _renderItem = (imageItem) => {
+  _renderItem = imageItem => {
     return (
       <View
         style={{
@@ -94,10 +101,13 @@ export default class extends Component {
           height: Dimensions.get("window").height / 3,
           backgroundColor: "#000",
           borderWidth: 2,
-          borderColor: '#FFF'
+          borderColor: "#FFF",
         }}
       >
-        <Image source={{uri: imageItem.url}} style={{width: '100%', height: '100%'}} />
+        <Image
+          source={{ uri: imageItem.url }}
+          style={{ width: "100%", height: "100%" }}
+        />
       </View>
     );
   };
@@ -110,7 +120,7 @@ export default class extends Component {
           fromPos={this.fromPos}
           toPos={this.toPos}
           onAnimationDone={this._showStaticItem}
-          item={this.state.item}
+          item={this.state.item.data}
         />
       );
     }
@@ -126,15 +136,13 @@ export default class extends Component {
 
     const { item } = this.state;
 
-    console.log("item > ", item);
-
     return (
       <Modal
         visible={this.state.modalVisible}
         transparent={true}
         animationType="none"
       >
-        {this.state.item ? (
+        {item ? (
           <Animated.View
             style={{
               flex: 1,
@@ -145,19 +153,21 @@ export default class extends Component {
           >
             <View>
               <List
-                dataArray={item.images}
+                dataArray={item.data.images}
                 horizontal
-                renderRow={(item) => this._renderItem(item)}
+                renderRow={item => this._renderItem(item)}
                 showsHorizontalScrollIndicator={false}
               />
             </View>
             <View ref={ref => (this.tempView = ref)}>
-              {this.state.showStaticItem ? <StaticItem item={item} /> : null}
+              {this.state.showStaticItem ? (
+                <StaticItem item={item.data} />
+              ) : null}
             </View>
             <Button
               transparent
               onPress={() => {
-                this.props.onHide(item.id);
+                this.props.onHide(item.ref);
               }}
               style={{
                 position: "absolute",

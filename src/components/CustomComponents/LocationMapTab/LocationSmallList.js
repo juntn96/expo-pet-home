@@ -1,21 +1,7 @@
 import React, { Component } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  Animated,
-  Dimensions,
-  Modal,
-  TouchableOpacity,
-} from "react-native";
+import { View, FlatList, Animated, Dimensions } from "react-native";
 import LocationItem from "./LocationItem";
 import DetailModal from "./DetailModal";
-
-import { locationData } from "../../utils/fakeData";
-
-// const data = [1, 2, 3, 4, 5];
-
-const AnimatedList = Animated.createAnimatedComponent(FlatList);
 
 const animationMove = (animated, value) => {
   Animated.timing(animated, {
@@ -30,7 +16,6 @@ class LocationSmallList extends Component {
     super(props);
     this.state = {
       animateTrans: new Animated.Value(0),
-      scrollEnabled: true,
     };
     this.items = {};
   }
@@ -45,43 +30,36 @@ class LocationSmallList extends Component {
     animationMove(animateTrans, 0);
   };
 
-  _setScrollEnable = enable => {
-    this.setState({
-      scrollEnabled: enable,
+  _onLongPress = id => {
+    const { onItemLongPress } = this.props;
+    if (onItemLongPress) {
+      onItemLongPress(this.items[id].ref, this.items[id].item);
+    }
+  };
+
+  _onPress = item => {
+    const { onItemPress } = this.props;
+    this.scrollToIndex(this.props.locationData.indexOf(item));
+    if (onItemPress) {
+      onItemPress(item);
+    }
+  };
+
+  scrollToIndex = index => {
+    this.locationList.scrollToIndex({
+      animated: true,
+      index: index,
+      viewPosition: 0.5,
     });
   };
 
-  _onLongPress = id => {
-    setTimeout(() => {
-      this.items[id].ref.measureInWindow((x, y) => {
-        this.modal.showModal({ x, y }, this.items[id].item);
-      });
-    }, 0);
-  };
-
-  _onPress = (item) => {
-    const { onItemPress } = this.props
-    if (onItemPress) {
-      onItemPress(item)
-    }
-  }
-
-  _onHideModal = id => {
-    setTimeout(() => {
-      this.items[id].ref.measureInWindow((x, y) => {
-        this.modal.hideModal({ x, y });
-      });
-    }, 0);
-  };
-
-  _renderItem = ({ item, index }) => {
+  _renderItem = ({ item }) => {
     return (
       <View ref={ref => (this.items[item.id] = { ref, item })}>
         <LocationItem
           item={item}
           onLongPress={this._onLongPress}
           onPress={this._onPress}
-          onItemMove={this._setScrollEnable}
           isAnimated={!this.state.scrollEnabled}
         />
       </View>
@@ -108,31 +86,24 @@ class LocationSmallList extends Component {
 
     return (
       <View>
-        <DetailModal
-          ref={ref => {
-            this.modal = ref;
-          }}
-          onHide={this._onHideModal}
-        />
-        <AnimatedList
+        <Animated.View
           style={[
             {
-              position: "absolute",
-              top: 70,
-              left: 0,
-              right: 0,
               opacity: opacity,
               transform: transform,
               overflow: "visible",
             },
           ]}
-          scrollEnabled={this.state.scrollEnabled}
-          data={locationData}
-          renderItem={this._renderItem}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={item => item.id}
-        />
+        >
+          <FlatList
+            ref={ref => (this.locationList = ref)}
+            data={this.props.locationData}
+            renderItem={this._renderItem}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={item => item.id}
+          />
+        </Animated.View>
       </View>
     );
   }
