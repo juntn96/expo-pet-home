@@ -107,7 +107,7 @@ class Map extends Component {
         initialRegion={location}
       >
         {locationData.map(marker => {
-          const markerImage = markerType[marker.type];
+          const markerImage = markerType[marker.type].marker;
           return (
             <Marker
               coordinate={marker.coordinate}

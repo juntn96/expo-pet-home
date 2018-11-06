@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { View, Animated, TouchableOpacity } from "react-native";
+import {
+  View,
+  Animated,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+} from "react-native";
 import { Header, Body, Left, Right, Icon, Title, Button } from "native-base";
 
 const transAnimation = (animated, value) => {
@@ -54,12 +60,15 @@ class SimpleHeader extends Component {
           transform: transform,
         }}
       >
-        <Header>
+        <Header transparent style={{
+          marginTop: 10
+        }} >
           <View
             style={{
               flex: 1,
               flexDirection: "row",
               alignItems: "center",
+              backgroundColor: "transparent",
             }}
           >
             {locationItem ? (
@@ -80,6 +89,10 @@ class SimpleHeader extends Component {
               </Button>
             )}
             <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() =>
+                this.props.onSearchPress()
+              }
               style={{
                 flex: 1,
                 justifyContent: "center",

@@ -33,9 +33,9 @@ export default class App extends Component {
     return (
       <Provider store={store}>
         <PersistGate persistor={persistor}>
-          <SafeAreaView style={styles.container}>
+          <View style={styles.container}>
             <DrawerRoute />
-          </SafeAreaView>
+          </View>
         </PersistGate>
       </Provider>
     );

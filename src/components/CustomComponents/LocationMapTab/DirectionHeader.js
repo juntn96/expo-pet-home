@@ -64,6 +64,7 @@ class DirectionHeader extends Component {
           right: 0,
           backgroundColor: "#00cc99",
           transform: transform,
+          paddingTop:20
         }}
       >
         <View

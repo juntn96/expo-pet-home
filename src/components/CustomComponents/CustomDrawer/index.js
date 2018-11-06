@@ -26,7 +26,7 @@ class CustomDrawer extends Component {
           activeOpacity={0.7}
           style={styles.profile}
         >
-          <Icon name="ios-settings-outline" style={styles.icon} />
+          <Icon name="ios-contact-outline" style={styles.icon} />
         </CustomTouchable>
         <View style={styles.body}>
           <CustomTouchable loginRequired={false} style={styles.buttonBody}>

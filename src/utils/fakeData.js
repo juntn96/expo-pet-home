@@ -270,8 +270,20 @@ export const locationData = [
 
 
 export const markerType = {
-  hospital: require('../assets/icons/marker_hospital.png'),
-  sos: require('../assets/icons/marker_sos.png'),
-  store: require('../assets/icons/marker_store.png'),
-  home: require("../assets/icons/marker_home.png")
+  hospital: {
+    marker: require('../assets/icons/marker_hospital.png'),
+    thumbnail: require('../assets/images/thumbnail_hospital.png')
+  },
+  sos: {
+    marker: require('../assets/icons/marker_sos.png'),
+    thumbnail: require('../assets/images/thumbnail_sos.png')
+  },
+  store: {
+    marker: require('../assets/icons/marker_store.png'),
+    thumbnail: require('../assets/images/thumbnail_store.png')
+  },
+  home: {
+    marker: require("../assets/icons/marker_home.png"),
+    thumbnail: require('../assets/images/thumbnail_home.png')
+  }
 }

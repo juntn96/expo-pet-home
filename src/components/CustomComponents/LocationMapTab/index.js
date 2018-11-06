@@ -5,7 +5,9 @@ import SimpleHeader from "./SimpleHeader";
 import DirectionHeader from "./DirectionHeader";
 import LocationSmallList from "./LocationSmallList";
 import DetailModal from "./DetailModal";
+import SimpleSearchModal from "./SimpleSearchModal";
 import Map from "./Map";
+import FilterModal from "./FilterModal";
 
 export default class extends Component {
   constructor(props) {
@@ -76,7 +78,7 @@ export default class extends Component {
   _onSmallItemLongPress = (ref, locationItem) => {
     setTimeout(() => {
       ref.measureInWindow((x, y) => {
-        this.modal.showModal({ x, y }, ref, locationItem);
+        this.detailModal.showModal({ x, y }, ref, locationItem);
       });
     }, 0);
   };
@@ -84,9 +86,13 @@ export default class extends Component {
   _onHideModal = ref => {
     setTimeout(() => {
       ref.measureInWindow((x, y) => {
-        this.modal.hideModal({ x, y });
+        this.detailModal.hideModal({ x, y });
       });
     }, 0);
+  };
+
+  _onSearchPress = () => {
+    this.searchModal.setModalVisible(true);
   };
 
   _onDirectionBackPress = () => {
@@ -110,11 +116,10 @@ export default class extends Component {
     return (
       <View style={styles.container}>
         <DetailModal
-          ref={ref => {
-            this.modal = ref;
-          }}
+          ref={ref => (this.detailModal = ref)}
           onHide={this._onHideModal}
         />
+        <SimpleSearchModal ref={ref => (this.searchModal = ref)}/>
         <Map
           ref={ref => (this.mapView = ref)}
           onMapPress={this._onMapPress}
@@ -125,6 +130,7 @@ export default class extends Component {
           onDirectionPress={this._showDirectionHeader}
           navigation={this.props.navigation}
           onBackPress={this._clearLocationItem}
+          onSearchPress={this._onSearchPress}
         />
         <DirectionHeader
           ref={ref => (this.directionHeader = ref)}
@@ -161,7 +167,7 @@ const styles = StyleSheet.create({
   },
   containerList: {
     position: "absolute",
-    top: 70,
+    top: 90,
     left: 0,
     right: 0,
   },

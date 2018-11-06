@@ -57,7 +57,7 @@ class TabBar extends Component {
           left: 0,
           right: 0,
           flexDirection: "row",
-          backgroundColor: "#CECECE",
+          backgroundColor: "transparent",
           transform: transform,
         }}
       >

@@ -78,7 +78,7 @@ class LocationSmallList extends Component {
         0,
         -200,
         Dimensions.get("screen").height + 100,
-        Dimensions.get("screen").height - 150,
+        Dimensions.get("screen").height - 160,
       ],
     });
 

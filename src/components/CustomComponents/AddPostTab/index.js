@@ -44,7 +44,7 @@ class AddPostModal extends Component {
 
   _snapPicture = async () => {
     const { Permissions } = Expo;
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (status === "granted") {
       let result = await ImagePicker.launchCameraAsync();
       if (!result.cancelled) {
