@@ -103,6 +103,7 @@ class CustomHeader extends Component {
           shadowOffset: { height: 0, width: 0 },
           justifyContent: "center",
           alignItems: "center",
+          marginTop: 10,
         }}
       >
         <Left style={{flex: 1}} >{this._buttonLeft()}</Left>

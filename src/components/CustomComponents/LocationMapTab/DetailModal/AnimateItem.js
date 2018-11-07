@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, TouchableOpacity, Animated } from "react-native";
 
+const AnimatedTouch = Animated.createAnimatedComponent(TouchableOpacity)
 class AnimateItem extends Component {
   constructor(props) {
     super(props);
@@ -15,6 +16,14 @@ class AnimateItem extends Component {
     this.show();
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.canRender === this.state.canRender) {
+      return false;
+    }
+
+    return true;
+  }
+
   show = () => {
     const { fromPos, toPos, onAnimationDone } = this.props;
     Animated.timing(this.state.animatedTrans, {
@@ -22,7 +31,7 @@ class AnimateItem extends Component {
       duration: 300,
       useNativeDriver: true,
     }).start(() => {
-      onAnimationDone()
+      onAnimationDone();
       this.setState({ canRender: false });
     });
   };
@@ -46,12 +55,11 @@ class AnimateItem extends Component {
   };
 
   render() {
-
-    const { item } = this.props
+    const { item } = this.props;
 
     if (this.state.canRender) {
       return (
-        <TouchableOpacity
+        <AnimatedTouch
           ref={ref => (this.locItem = ref)}
           style={{
             borderRadius: 10,
@@ -121,9 +129,11 @@ class AnimateItem extends Component {
                 marginRight: 10,
               }}
             />
-            <Text style={{ fontSize: 12 }}>{`${item.rating}/5 - Cách bạn 1.2Km`}</Text>
+            <Text style={{ fontSize: 12 }}>{`${
+              item.rating
+            }/5 - Cách bạn 1.2Km`}</Text>
           </View>
-        </TouchableOpacity>
+        </AnimatedTouch>
       );
     } else {
       return null;

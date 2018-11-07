@@ -73,15 +73,7 @@ class HomeTab extends Component {
       return null;
     } else {
       return (
-        <View
-          style={{
-            backgroundColor: "#FFF",
-            position: "absolute",
-            top: 74,
-            left: 0,
-            right: 0,
-          }}
-        >
+        <View>
           <TagList navigation={this.props.navigation} />
         </View>
       );
@@ -105,29 +97,34 @@ class HomeTab extends Component {
           buttonRight="ios-notifications-outline"
           badgeNumberRight="9"
           actionRight={() => {
-            this.activityModal.open();
+            this.activityModal.setVisible(true);
           }}
         />
-
-        <View style={{ margin: 10 }}>
-          <FlatList
-            onScroll={this._onScroll}
-            scrollEventThrottle={200}
-            showsVerticalScrollIndicator={false}
-            data={postData}
-            renderItem={({ item }) => {
-              return (
-                <PostItem
-                  postData={item}
-                  optionPress={this._openModel}
-                  navigation={this.props.navigation}
-                />
-              );
-            }}
-            keyExtractor={item => item.id}
-          />
-        </View>
         {this._renderTagList()}
+        {/* <View style={{ margin: 10 }}>
+          
+        </View> */}
+        <FlatList
+          onScroll={this._onScroll}
+          scrollEventThrottle={200}
+          showsVerticalScrollIndicator={false}
+          data={postData}
+          renderItem={({ item }) => {
+            return (
+              <PostItem
+                postData={item}
+                optionPress={this._openModel}
+                navigation={this.props.navigation}
+              />
+            );
+          }}
+          keyExtractor={item => item.postId + ""}
+          contentContainerStyle={{
+            paddingBottom: 70,
+            paddingLeft: 10,
+            paddingRight: 10
+          }}
+        />
       </View>
     );
   }

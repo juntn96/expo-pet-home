@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { Icon } from "native-base";
 import CustomTouchable from "../CustomTouchable";
+import ActivityModal from "../ActivityModal";
 
 import { connect } from "react-redux";
 import { logout } from "../../../redux/actions/AuthActions";
@@ -29,31 +30,51 @@ class CustomDrawer extends Component {
           <Icon name="ios-contact-outline" style={styles.icon} />
         </CustomTouchable>
         <View style={styles.body}>
-          <CustomTouchable loginRequired={false} style={styles.buttonBody}>
-            <Icon
-              onPress={() => {
-                this.props.navigation.navigate("HomeRoute");
-              }}
-              name="ios-home-outline"
-              style={styles.iconBody}
-            />
+          <CustomTouchable
+            loginRequired={false}
+            style={styles.buttonBody}
+            onCustomPress={() => {
+              this.props.navigation.navigate("HomeRoute");
+            }}
+          >
+            <Icon name="ios-home-outline" style={styles.iconBody} />
           </CustomTouchable>
-          <CustomTouchable loginRequired={false} style={styles.buttonBody}>
-            <Icon
-              onPress={() => {
-                this.props.navigation.navigate("LocationRoute");
-              }}
-              name="ios-map-outline"
-              style={styles.iconBody}
-            />
+          <CustomTouchable
+            loginRequired={false}
+            style={styles.buttonBody}
+            onCustomPress={() => {
+              this.props.navigation.navigate("LocationRoute");
+            }}
+          >
+            <Icon name="ios-map-outline" style={styles.iconBody} />
           </CustomTouchable>
-          <CustomTouchable loginRequired={true} style={styles.buttonBody}>
-            <Icon name="ios-heart-outline" style={styles.iconBody} />
+          <CustomTouchable
+            loginRequired={true}
+            style={styles.buttonBody}
+            onCustomPress={() => {
+              this.props.navigation.navigate("PetRoute");
+            }}
+          >
+            <Icon name="ios-paw-outline" style={styles.iconBody} />
           </CustomTouchable>
-          <CustomTouchable loginRequired={true} style={styles.buttonBody}>
+          <CustomTouchable
+            loginRequired={true}
+            style={styles.buttonBody}
+            onCustomPress={() => {
+              this.props.navigation.closeDrawer();
+              this.activityModal.setVisible(true, 0);
+            }}
+          >
             <Icon name="ios-notifications-outline" style={styles.iconBody} />
           </CustomTouchable>
-          <CustomTouchable loginRequired={true} style={styles.buttonBody}>
+          <CustomTouchable
+            loginRequired={true}
+            style={styles.buttonBody}
+            onCustomPress={() => {
+              this.props.navigation.closeDrawer();
+              this.activityModal.setVisible(true, 1);
+            }}
+          >
             <Icon name="ios-chatbubbles-outline" style={styles.iconBody} />
           </CustomTouchable>
         </View>
@@ -64,13 +85,18 @@ class CustomDrawer extends Component {
               style={styles.buttonBody}
               onPress={() => {
                 this.props.logout();
-                this.props.navigation.navigate('HomeRoute')
+                this.props.navigation.navigate("HomeRoute");
               }}
             >
               <Icon name="md-log-out" style={styles.icon} />
             </CustomTouchable>
           ) : null}
         </View>
+        <ActivityModal
+          ref={ref => {
+            this.activityModal = ref;
+          }}
+        />
       </View>
     );
   }
@@ -86,6 +112,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 40,
   },
   icon: {
     color: "#B5B5B5",

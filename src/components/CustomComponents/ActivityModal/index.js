@@ -1,63 +1,54 @@
 import React, { Component } from "react";
 import { View, Text, Modal } from "react-native";
-import { Tabs, Tab } from 'native-base'
-import CustomHeader from '../CustomHeader'
-import NotificationList from '../NotificationList'
-import MessageList from '../MessageList'
+import { Tabs, Tab } from "native-base";
+import CustomHeader from "../CustomHeader";
+import NotificationList from "../NotificationList";
+import MessageList from "../MessageList";
 
 class ActivityModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
+      initPage: null
     };
   }
 
-  open = () => {
+  setVisible = (visible, initPage) => {
     this.setState({
-      modalVisible: true
-    })
-  }
-
-  close = () => {
-    this.setState({
-      modalVisible: false
-    })
-  }
+      modalVisible: visible,
+      initPage: initPage ? initPage : null
+    });
+  };
 
   render() {
-    const { modalVisible } = this.state;
+    const { modalVisible, initPage } = this.state;
     return (
-      <View>
-        <Modal
-          
-          animationType="slide"
-          transparent={false}
-          visible={modalVisible}
-          onRequestClose={() => {}}
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={modalVisible}
+        onRequestClose={() => {}}
+      >
+        <CustomHeader
+          title="Hoạt động"
+          buttonLeft="md-close"
+          actionLeft={() => {
+            this.setVisible(false);
+          }}
+        />
+        <Tabs
+          page={initPage ? initPage : 0}
         >
-          <CustomHeader
-            title="Hoạt động"
-            buttonLeft="md-close"
-            actionLeft={() => {
-              this.close()
-            }}
-          />
-          <Tabs>
-            <Tab
-              heading="Thông báo"
-            >
-              <NotificationList/>
-            </Tab>
+          <Tab heading="Thông báo">
+            <NotificationList />
+          </Tab>
 
-            <Tab
-              heading="Tin nhắn"
-            >
-              <MessageList/>
-            </Tab>
-          </Tabs>
-        </Modal>
-      </View>
+          <Tab heading="Tin nhắn">
+            <MessageList />
+          </Tab>
+        </Tabs>
+      </Modal>
     );
   }
 }

@@ -1,32 +1,20 @@
 import React, { Component } from "react";
-import { View, FlatList } from "react-native";
 import {
   Container,
-  Content,
   Text,
   Icon,
-  List,
   Tabs,
   Tab,
   TabHeading,
 } from "native-base";
-import TagList from "../CustomComponents/TagList";
-import CustomHeader from "../CustomComponents/CustomHeader";
 
 import "../CustomComponents/PostOptionModal";
 
 import Modal from "react-native-modalbox";
 
-import ActivityModal from "../CustomComponents/ActivityModal";
-
-import PostItem from "../CustomComponents/PostItem";
-
 import AddPostTab from "../CustomComponents/AddPostTab";
 
 import HomeTab from '../CustomComponents/HomeTab'
-
-import { postData } from "../../utils/fakeData";
-
 export default class extends Component {
   _openModel = () => {
     this.optionModal.open();

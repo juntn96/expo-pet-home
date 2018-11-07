@@ -5,7 +5,8 @@ import HomeRoute from "../HomeRoute";
 import AuthRoute from "../AuthRoute";
 import LocationRoute from "../LocationRoute";
 import CustomDrawer from "../../components/CustomComponents/CustomDrawer";
-import ProfileRoute from '../ProfileRoute'
+import ProfileRoute from "../ProfileRoute";
+import PetRoute from "../PetRoute";
 
 const DrawerRoute = createDrawerNavigator(
   {
@@ -16,11 +17,14 @@ const DrawerRoute = createDrawerNavigator(
       screen: HomeRoute,
     },
     LocationRoute: {
-      screen: LocationRoute
+      screen: LocationRoute,
     },
     ProfileRoute: {
-      screen: ProfileRoute
-    }
+      screen: ProfileRoute,
+    },
+    PetRoute: {
+      screen: PetRoute,
+    },
   },
   {
     contentComponent: CustomDrawer,
