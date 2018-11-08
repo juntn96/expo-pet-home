@@ -34,7 +34,7 @@ export default class extends Component {
               </TabHeading>
             }
           >
-            <MatchPetTab />
+            <MatchPetTab navigation={this.props.navigation}/>
           </Tab>
           <Tab
             heading={
@@ -43,7 +43,7 @@ export default class extends Component {
               </TabHeading>
             }
           >
-            <EditPetTab/>
+            <EditPetTab navigation={this.props.navigation}/>
           </Tab>
           <Tab
             heading={

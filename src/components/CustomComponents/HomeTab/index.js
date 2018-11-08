@@ -6,6 +6,7 @@ import {
   NativeModules,
   LayoutAnimation,
 } from "react-native";
+import { Button, List, Text } from "native-base";
 import TagList from "../TagList";
 
 import CustomHeader from "../CustomHeader";
@@ -19,6 +20,10 @@ import { postData } from "../../../utils/fakeData";
 import ActivityModal from "../ActivityModal";
 
 const { UIManager } = NativeModules;
+
+import Modal from "react-native-modalbox";
+
+const BUTTON_HEIGHT = 45;
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -67,6 +72,10 @@ class HomeTab extends Component {
     }
   };
 
+  _openModel = () => {
+    this.optionModal.open();
+  };
+
   _renderTagList = () => {
     LayoutAnimation.configureNext(CustomLayoutAnimation);
     if (this.state.scrollDown) {
@@ -83,6 +92,30 @@ class HomeTab extends Component {
   render() {
     return (
       <View>
+        <Modal
+          ref={ref => {
+            this.optionModal = ref;
+          }}
+          position={"bottom"}
+          swipeToClose={true}
+          style={{
+            height: BUTTON_HEIGHT * 3,
+            backgroundColor: "transparent",
+            paddingBottom: 280
+          }}
+        >
+          <List>
+            <Button full success>
+              <Text>Lưu bài viết</Text>
+            </Button>
+            <Button full warning>
+              <Text>Ẩn bài viết</Text>
+            </Button>
+            <Button full danger>
+              <Text>Báo cáo bài viết</Text>
+            </Button>
+          </List>
+        </Modal>
         <ActivityModal
           ref={ref => {
             this.activityModal = ref;
@@ -122,7 +155,7 @@ class HomeTab extends Component {
           contentContainerStyle={{
             paddingBottom: 70,
             paddingLeft: 10,
-            paddingRight: 10
+            paddingRight: 10,
           }}
         />
       </View>

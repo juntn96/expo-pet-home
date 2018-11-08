@@ -38,6 +38,8 @@ class MatchPetTab extends Component {
           }}
         >
           <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => this.props.navigation.openDrawer()}
             style={{
               width: 30,
               height: 30,

@@ -47,7 +47,7 @@ class PostItem extends Component {
             </View>
           </Left>
           <Right style={{ alignSelf: "flex-start" }}>
-            <TouchableOpacity onPress={this._openModal}  hitSlop={{top: 25, bottom: 25, left: 25, right: 25}} activeOpacity={0.7} >
+            <TouchableOpacity onPress={this._openModal}  hitSlop={{top: 49, bottom: 40, left: 40, right: 40}} activeOpacity={0.7} >
               <Icon name="ios-more" style={{ color: "#000" }} />
             </TouchableOpacity>
           </Right>

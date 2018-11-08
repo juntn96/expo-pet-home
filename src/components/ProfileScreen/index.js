@@ -1,30 +1,48 @@
 import React from "react";
 import { View, FlatList, Animated } from "react-native";
-import { Container } from "native-base";
+import { Container, List, ListItem, Button, Text } from "native-base";
 import PostItem from "../CustomComponents/PostItem";
 import { postData } from "../../utils/fakeData";
 import { connect } from "react-redux";
 import AnimatedHeader from "./AnimatedHeader";
-
+import Modal from 'react-native-modalbox'
 const animatedValue = new Animated.Value(0);
 const AnimatedList = Animated.createAnimatedComponent(FlatList);
+
+const BUTTON_HEIGHT = 45
 class ProfileScreen extends React.Component {
   constructor(props) {
     super(props);
-
-    // animatedValue.addListener(({ value }) => {
-    //   console.log(value);
-    // });
-
-    // animatedValue.interpolate({
-    //   extrapolate: 'identity'
-    // })
   }
+
+  _openModel = () => {
+    this.optionModal.open();
+  };
 
   render() {
     const { userData } = this.props.data;
     return (
       <Container>
+        <Modal
+          ref={ref => {
+            this.optionModal = ref;
+          }}
+          position={"bottom"}
+          swipeToClose={true}
+          style={{
+            height: BUTTON_HEIGHT * 2,
+            backgroundColor: 'transparent'
+          }}
+        >
+          <List>
+            <Button full info >
+              <Text>Edit</Text>
+            </Button>
+            <Button full danger >
+              <Text>Delete</Text>
+            </Button>
+          </List>
+        </Modal>
         <AnimatedHeader userData={userData} animatedValue={animatedValue} />
         <AnimatedList
           onScroll={Animated.event(
