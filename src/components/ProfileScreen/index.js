@@ -1,77 +1,71 @@
 import React from "react";
-import { Text, View, TouchableOpacity, Dimensions, Image } from "react-native";
+import { View, FlatList, Animated } from "react-native";
+import { Container } from "native-base";
+import PostItem from "../CustomComponents/PostItem";
+import { postData } from "../../utils/fakeData";
+import { connect } from "react-redux";
+import AnimatedHeader from "./AnimatedHeader";
 
-import {
-  Container,
-  Content,
-  Header,
-  Left,
-  Body,
-  Right,
-  Title,
-} from "native-base";
-
-import { connect } from 'react-redux'
-
+const animatedValue = new Animated.Value(0);
+const AnimatedList = Animated.createAnimatedComponent(FlatList);
 class ProfileScreen extends React.Component {
+  constructor(props) {
+    super(props);
+
+    // animatedValue.addListener(({ value }) => {
+    //   console.log(value);
+    // });
+
+    // animatedValue.interpolate({
+    //   extrapolate: 'identity'
+    // })
+  }
+
   render() {
-    const {userData} = this.props.data
-    console.log(userData)
+    const { userData } = this.props.data;
     return (
       <Container>
-        <Content>
-          <View
-            style={{
-              height: 300,
-            }}
-          >
-            <View
-              style={{
-                height: 200,
-                backgroundColor: "#000",
-              }}
-            >
-              <Image
-                source={require('../../assets/images/bg2.png')}
+        <AnimatedHeader userData={userData} animatedValue={animatedValue} />
+        <AnimatedList
+          onScroll={Animated.event(
+            [
+              {
+                nativeEvent: {
+                  contentOffset: {
+                    y: animatedValue,
+                  },
+                },
+              },
+            ],
+            {
+              useNativeDriver: true,
+            }
+          )}
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={16}
+          data={postData}
+          renderItem={({ item }) => {
+            return (
+              <View
                 style={{
-                  width: '100%',
-                  height: '100%'
+                  marginLeft: 10,
+                  marginRight: 10,
                 }}
-              />
-            </View>
-            <View 
-              style={{
-                width: 80,
-                height: 80,
-                borderRadius: 80,
-                backgroundColor: '#FFF',
-                position: 'absolute',
-                top: 140,
-                alignSelf: 'center',
-                overflow: 'hidden',
-                borderWidth: 2,
-                borderColor: '#FFF'
-              }}
-            >
-              <Image 
-                source={{uri: userData.largePicture.data.url}}
-                style={{
-                  width: '100%',
-                  height: '100%'
-                }}
-              />
-            </View>
-            <Text
-              style={{
-                marginTop: 28,
-                fontSize: 20,
-                fontWeight: 'bold',
-                alignSelf: 'center',
-                color: '#00000090'
-              }}
-            >{userData.name}</Text>
-          </View>
-        </Content>
+              >
+                <PostItem
+                  postData={item}
+                  optionPress={this._openModel}
+                  navigation={this.props.navigation}
+                />
+              </View>
+            );
+          }}
+          keyExtractor={item => item.postId + ""}
+          contentContainerStyle={{
+            paddingBottom: 20,
+            paddingTop: 220,
+          }}
+        />
       </Container>
     );
   }
@@ -79,8 +73,8 @@ class ProfileScreen extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    data: state.userData
-  }
-}
+    data: state.userData,
+  };
+};
 
 export default connect(mapStateToProps)(ProfileScreen);
