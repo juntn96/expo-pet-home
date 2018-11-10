@@ -1,9 +1,17 @@
 import React, { Component } from "react";
-import { StyleSheet, Platform, Image } from "react-native";
+import {
+  StyleSheet,
+  Platform,
+  Image,
+  Text,
+  FlatList,
+  Dimensions,
+  View,
+} from "react-native";
 import { MapView, Constants, Location, Permissions } from "expo";
 import { locationData, markerType } from "../../../utils/fakeData";
-import { GoogleMap } from '../../../services/Map'
-const { Marker, Polyline } = MapView;
+import { GoogleMap } from "../../../services/Map";
+const { Marker, Polyline, Callout } = MapView;
 
 class Map extends Component {
   constructor(props) {
@@ -17,6 +25,7 @@ class Map extends Component {
       },
       coords: null,
     };
+    this.markers = {};
   }
 
   componentDidMount() {
@@ -78,8 +87,29 @@ class Map extends Component {
     }
   };
 
+  _onCalloutPress = locationItem => {
+    const { onCalloutPress } = this.props;
+    if (onCalloutPress) {
+      onCalloutPress(locationItem);
+    }
+  };
+
   moveToCoordinate = coordinate => {
     this.mapView.animateToCoordinate(coordinate, 300);
+  };
+
+  showCallout = locationItem => {
+    if (locationItem) {
+      const marker = this.markers[locationItem.id];
+      marker.showCallout();
+    }
+  };
+
+  hideCallout = locationItem => {
+    if (locationItem) {
+      const marker = this.markers[locationItem.id];
+      marker.hideCallout();
+    }
   };
 
   startDirection = (fromLocation, toLocation) => {
@@ -110,6 +140,7 @@ class Map extends Component {
           const markerImage = markerType[marker.type].marker;
           return (
             <Marker
+              ref={ref => (this.markers[marker.id] = ref)}
               coordinate={marker.coordinate}
               title={marker.name}
               key={marker.id}
@@ -119,6 +150,41 @@ class Map extends Component {
               }}
             >
               <Image source={markerImage} />
+              <Callout
+                onPress={() => {
+                  this._onCalloutPress(marker);
+                }}
+              >
+                <View
+                  style={{
+                    width: Dimensions.get("window").width / 2.5,
+                  }}
+                >
+                  <Image
+                    source={require("../../../assets/images/bg3.png")}
+                    style={{
+                      width: Dimensions.get("window").width / 2.5,
+                      height: Dimensions.get("window").width / 2.5,
+                      resizeMode: "cover",
+                      marginBottom: 10,
+                    }}
+                  />
+                  <Text
+                    numberOfLines={1}
+                    lineBreakMode="tail"
+                    style={{
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {marker.name}
+                  </Text>
+                  <Text numberOfLines={3} lineBreakMode="tail">
+                    Lorem Ipsum is simply dummy text of the printing and
+                    typesetting industry. Lorem Ipsum has been the industry's
+                    standard dummy text ever since the 1500s
+                  </Text>
+                </View>
+              </Callout>
             </Marker>
           );
         })}

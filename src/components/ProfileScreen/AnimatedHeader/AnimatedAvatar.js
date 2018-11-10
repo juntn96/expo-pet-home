@@ -12,7 +12,7 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 const HEADER_MAX_HEIGHT = 200;
 const HEADER_MIN_HEIGHT = 74;
 const AVATAR_MAX_SCALE = 1;
-const AVATAR_MIN_SCALE = 0.6;
+const AVATAR_MIN_SCALE = 0.5;
 const AVATAR_SIZE = 80;
 
 
@@ -30,13 +30,13 @@ class componentName extends Component {
 
     let avatarTransX = animatedValue.interpolate({
       inputRange: [0, HEADER_MAX_HEIGHT],
-      outputRange: [SCREEN_WIDTH / 2 - AVATAR_SIZE / 2, 10],
+      outputRange: [SCREEN_WIDTH / 2 - AVATAR_SIZE / 2, 50],
       extrapolate: "clamp",
     });
 
     let avatarTransY = animatedValue.interpolate({
       inputRange: [0, HEADER_MAX_HEIGHT],
-      outputRange: [AVATAR_SIZE - BODY_HEIGHT, -4],
+      outputRange: [AVATAR_SIZE - BODY_HEIGHT, -27 + (AVATAR_SIZE * AVATAR_MIN_SCALE) / 2 ],
       extrapolate: "clamp",
     });
 
@@ -73,7 +73,6 @@ class componentName extends Component {
             overflow: "hidden",
             position: "absolute",
             bottom: 0,
-            zIndex: 5,
             borderWidth: 3,
             borderColor: "#FFF",
           }}

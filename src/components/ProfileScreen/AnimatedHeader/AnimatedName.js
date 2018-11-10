@@ -1,9 +1,5 @@
 import React, { Component } from "react";
-import {
-  Text,
-  Animated,
-  Dimensions,
-} from "react-native";
+import { Text, Animated, Dimensions } from "react-native";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -11,6 +7,8 @@ const HEADER_MAX_HEIGHT = 200;
 
 const NAME_MAX_WIDTH = SCREEN_WIDTH - 100;
 const NAME_MAX_HEIGHT = 24;
+
+const TEXT_HEIGHT = 24.5
 
 class AnimatedName extends Component {
   constructor(props) {
@@ -29,19 +27,19 @@ class AnimatedName extends Component {
 
     let nameTransX = animatedValue.interpolate({
       inputRange: [0, HEADER_MAX_HEIGHT],
-      outputRange: [SCREEN_WIDTH / 2 - nameSize.width / 2, 70],
+      outputRange: [SCREEN_WIDTH / 2 - nameSize.width / 2, 100],
       extrapolate: "clamp",
     });
 
     let nameTransY = animatedValue.interpolate({
       inputRange: [0, HEADER_MAX_HEIGHT],
-      outputRange: [-10, -27 + nameSize.height / 2 - 4],
+      outputRange: [-10, -27 + (nameSize.height * 0.7) / 2],
       extrapolate: "clamp",
     });
 
     let nameScale = animatedValue.interpolate({
       inputRange: [0, HEADER_MAX_HEIGHT],
-      outputRange: [1, 0.8],
+      outputRange: [1, 0.7],
       extrapolate: "clamp",
     });
 
@@ -70,12 +68,14 @@ class AnimatedName extends Component {
             this.setState({ nameSize: nameSize });
           }}
           numberOfLines={1}
+          lineBreakMode={"tail"}
           style={{
             fontWeight: "bold",
             fontSize: 20,
             position: "absolute",
             bottom: 0,
             color: "#212121",
+            maxWidth: SCREEN_WIDTH / 2
           }}
         >
           {userData.name}

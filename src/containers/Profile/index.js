@@ -11,7 +11,7 @@ class Profile extends Component {
 
   render() {
     return (
-      <ProfileScreen/>
+      <ProfileScreen navigation={this.props.navigation} />
     );
   }
 }

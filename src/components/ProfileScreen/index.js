@@ -43,7 +43,7 @@ class ProfileScreen extends React.Component {
             </Button>
           </List>
         </Modal>
-        <AnimatedHeader userData={userData} animatedValue={animatedValue} />
+        <AnimatedHeader userData={userData} animatedValue={animatedValue} navigation={this.props.navigation} />
         <AnimatedList
           onScroll={Animated.event(
             [

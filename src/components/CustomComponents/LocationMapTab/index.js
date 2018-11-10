@@ -8,6 +8,7 @@ import DetailModal from "./DetailModal";
 import SimpleSearchModal from "./SimpleSearchModal";
 import Map from "./Map";
 import FilterModal from "./FilterModal";
+import LocationDetailModal from './LocationDetailModal'
 
 export default class extends Component {
   constructor(props) {
@@ -50,6 +51,10 @@ export default class extends Component {
     this.simpleHeader.setLocationItem(locationItem);
   };
 
+  _onCalloutPress = (locationItem) => {
+    this.detailModal.setModalVisible(true, locationItem)
+  }
+
   _showDirectionHeader = () => {
     const { showTabBar } = this.props;
     const { isHideDirection } = this.state;
@@ -70,38 +75,40 @@ export default class extends Component {
   };
 
   _onSmallItemPress = locationItem => {
+    this.mapView.showCallout(locationItem)
     this.mapView.moveToCoordinate(locationItem.coordinate);
     this.simpleHeader.setLocationItem(locationItem);
     this.directionHeader.setItemLocation(locationItem);
   };
 
   _onSmallItemLongPress = (ref, locationItem) => {
-    setTimeout(() => {
-      ref.measureInWindow((x, y) => {
-        this.detailModal.showModal({ x, y }, ref, locationItem);
-      });
-    }, 0);
+    // setTimeout(() => {
+    //   ref.measureInWindow((x, y) => {
+    //     this.detailModal.showModal({ x, y }, ref, locationItem);
+    //   });
+    // }, 0);
   };
 
   _onHideModal = ref => {
-    setTimeout(() => {
-      ref.measureInWindow((x, y) => {
-        this.detailModal.hideModal({ x, y });
-      });
-    }, 0);
+    // setTimeout(() => {
+    //   ref.measureInWindow((x, y) => {
+    //     this.detailModal.hideModal({ x, y });
+    //   });
+    // }, 0);
   };
 
   _onSearchPress = () => {
     this.searchModal.setModalVisible(true);
   };
 
-  _onDirectionBackPress = () => {
-    this._clearLocationItem();
+  _onDirectionBackPress = (locationItem) => {
+    this._clearLocationItem(locationItem);
     this.mapView.clearDirection();
     this._showDirectionHeader();
   };
 
-  _clearLocationItem = () => {
+  _clearLocationItem = (locationItem) => {
+    this.mapView.hideCallout(locationItem)
     this.simpleHeader.setLocationItem(null);
     this.directionHeader.setItemLocation(null);
   };
@@ -115,15 +122,19 @@ export default class extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <DetailModal
+        {/* <DetailModal
           ref={ref => (this.detailModal = ref)}
           onHide={this._onHideModal}
+        /> */}
+        <LocationDetailModal
+          ref={ref => this.detailModal = ref}
         />
         <SimpleSearchModal ref={ref => (this.searchModal = ref)}/>
         <Map
           ref={ref => (this.mapView = ref)}
           onMapPress={this._onMapPress}
           onMarkerPress={this._onMarkerPress}
+          onCalloutPress={this._onCalloutPress}
         />
         <SimpleHeader
           ref={ref => (this.simpleHeader = ref)}

@@ -4,6 +4,8 @@ import { View, Animated, Dimensions } from "react-native";
 import AnimatedBackground from "./AnimatedBackground";
 import AnimatedAvatar from "./AnimatedAvatar";
 import AnimatedName from "./AnimatedName";
+import AnimatedNavBar from "./AnimatedNavBar";
+import { Button, Icon } from "native-base";
 
 const HEADER_MAX_HEIGHT = 200;
 const HEADER_MIN_HEIGHT = 74;
@@ -26,7 +28,7 @@ class AnimatedHeader extends Component {
     return (
       <Animated.View
         style={{
-          backgroundColor: "#FFFFFF95",
+          backgroundColor: "#FFFFFF",
           transform: [
             {
               translateY: transY,
@@ -40,6 +42,7 @@ class AnimatedHeader extends Component {
           height: HEADER_MAX_HEIGHT,
         }}
       >
+        <AnimatedNavBar animatedValue={animatedValue} navigation={this.props.navigation} />
         <AnimatedBackground animatedValue={animatedValue} userData={userData} />
         <View
           style={{

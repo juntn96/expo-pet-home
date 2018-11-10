@@ -75,7 +75,7 @@ class DirectionHeader extends Component {
           <Button
             transparent
             onPress={() => {
-              this.props.onBackPress();
+              this.props.onBackPress(locationItem);
             }}
           >
             <Icon name="ios-arrow-back-outline" style={{ color: "#FFF" }} />

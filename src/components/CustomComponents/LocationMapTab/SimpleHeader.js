@@ -6,7 +6,7 @@ import {
   Modal,
   TextInput,
 } from "react-native";
-import { Header, Body, Left, Right, Icon, Title, Button } from "native-base";
+import { Header, Body, Left, Right, Icon, Title, Button, Text } from "native-base";
 
 const transAnimation = (animated, value) => {
   Animated.timing(animated, {
@@ -60,22 +60,27 @@ class SimpleHeader extends Component {
           transform: transform,
         }}
       >
-        <Header transparent style={{
-          marginTop: 10
-        }} >
+        <Header
+          transparent
+          style={{
+            marginTop: 10,
+          }}
+        >
           <View
             style={{
               flex: 1,
               flexDirection: "row",
               alignItems: "center",
-              backgroundColor: "transparent",
+              borderWidth: 1,
+              borderColor: "#B5B5B5",
+              borderRadius: 5,
             }}
           >
             {locationItem ? (
               <Button
                 transparent
                 iconRight
-                onPress={() => this.props.onBackPress()}
+                onPress={() => this.props.onBackPress(locationItem)}
               >
                 <Icon name="md-close" style={{ color: "#EC466A" }} />
               </Button>
@@ -90,18 +95,15 @@ class SimpleHeader extends Component {
             )}
             <TouchableOpacity
               activeOpacity={0.7}
-              onPress={() =>
-                this.props.onSearchPress()
-              }
+              onPress={() => this.props.onSearchPress()}
               style={{
                 flex: 1,
                 justifyContent: "center",
-                alignItems: "center",
               }}
             >
-              <Title style={{ color: "#EC466A" }}>
-                {locationItem ? locationItem.name : "Tìm địa điểm"}
-              </Title>
+              <Text style={{ color: "#EC466A" }}>
+                {locationItem ? locationItem.name : "Tìm địa điểm..."}
+              </Text>
             </TouchableOpacity>
             <Button
               transparent

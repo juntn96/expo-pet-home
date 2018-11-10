@@ -2,8 +2,7 @@ export const postData = [
   {
     postId: 1,
     postDate: "April 15, 2016",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
+    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
     type: "Playground",
     postImage: [
       {
@@ -33,8 +32,7 @@ export const postData = [
   {
     postId: 2,
     postDate: "April 15, 2016",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
+    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
     type: "Playground",
     postImage: [
       {
@@ -64,8 +62,7 @@ export const postData = [
   {
     postId: 3,
     postDate: "April 15, 2016",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
+    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
     type: "Playground",
     postImage: [
       {
@@ -95,8 +92,7 @@ export const postData = [
   {
     postId: 4,
     postDate: "April 15, 2016",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
+    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
     type: "Playground",
     postImage: [
       {
@@ -129,9 +125,10 @@ export const locationData = [
   {
     id: "1",
     name: "Bệnh viện thú y",
+    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
     type: "hospital",
     coordinate: {
-      latitude: 21.011550,
+      latitude: 21.01155,
       longitude: 105.522508,
     },
     images: [
@@ -157,6 +154,7 @@ export const locationData = [
   {
     id: "2",
     name: "Đồ chơi cho pet",
+    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
     type: "store",
     coordinate: {
       latitude: 21.014492,
@@ -185,6 +183,7 @@ export const locationData = [
   {
     id: "3",
     name: "Đồ ăn cho pet",
+    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
     type: "store",
     coordinate: {
       latitude: 21.009129,
@@ -213,6 +212,7 @@ export const locationData = [
   {
     id: "4",
     name: "Trạm cứu hộ Pet",
+    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
     type: "home",
     coordinate: {
       latitude: 21.011107,
@@ -241,10 +241,11 @@ export const locationData = [
   {
     id: "5",
     name: "Tìm hoàng thượng",
+    description: "Hoàng thượng đang mất tích, mau mau cứu giá",
     type: "sos",
     coordinate: {
       latitude: 21.011289,
-      longitude: 105.526440,
+      longitude: 105.52644,
     },
     images: [
       {
@@ -268,22 +269,21 @@ export const locationData = [
   },
 ];
 
-
 export const markerType = {
   hospital: {
-    marker: require('../assets/icons/marker_hospital.png'),
-    thumbnail: require('../assets/images/thumbnail_hospital.png')
+    marker: require("../assets/icons/marker_hospital.png"),
+    thumbnail: require("../assets/images/thumbnail_hospital.png"),
   },
   sos: {
-    marker: require('../assets/icons/marker_sos.png'),
-    thumbnail: require('../assets/images/thumbnail_sos.png')
+    marker: require("../assets/icons/marker_sos.png"),
+    thumbnail: require("../assets/images/thumbnail_sos.png"),
   },
   store: {
-    marker: require('../assets/icons/marker_store.png'),
-    thumbnail: require('../assets/images/thumbnail_store.png')
+    marker: require("../assets/icons/marker_store.png"),
+    thumbnail: require("../assets/images/thumbnail_store.png"),
   },
   home: {
     marker: require("../assets/icons/marker_home.png"),
-    thumbnail: require('../assets/images/thumbnail_home.png')
-  }
-}
+    thumbnail: require("../assets/images/thumbnail_home.png"),
+  },
+};
