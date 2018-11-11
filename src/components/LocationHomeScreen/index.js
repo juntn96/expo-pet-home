@@ -1,11 +1,36 @@
 import React, { Component } from "react";
-import { View, LayoutAnimation } from "react-native";
+import {
+  View,
+  LayoutAnimation,
+  FlatList,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import { Container } from "native-base";
 
 import TabBar from "./TabBar";
 import LocationMapTab from "../CustomComponents/LocationMapTab";
+import TabContainer from "./TabContainer";
 
 import { locationData } from "../../utils/fakeData";
+
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const SCREEN_HEIGHT = Dimensions.get("window").height;
+
+const SCREENS = [
+  {
+    index: 0,
+    screen: "LIST",
+  },
+  {
+    index: 1,
+    screen: "MAP",
+  },
+  {
+    index: 2,
+    screen: "SAVED",
+  },
+];
 
 const CustomLayoutAnimation = {
   duration: 200,
@@ -43,39 +68,67 @@ export default class extends Component {
   };
 
   _onTabPress = index => {
-    this.setState({
-      tabIndex: index,
+    this.tabs.scrollTo({
+      x: index * SCREEN_WIDTH,
+      y: 0,
+      animated: false,
     });
   };
 
   _renderTab = () => {
-    LayoutAnimation.configureNext(CustomLayoutAnimation);
-    switch (this.state.tabIndex) {
-      case 1: {
-        return <View />;
-      }
-      case 2: {
+    return SCREENS.map(value => {
+      if (value.screen === "LIST") {
         return (
-          <LocationMapTab
-            showTabBar={this._showTabBar}
-            locationData={locationData}
-            navigation={this.props.navigation}
-          />
+          <TabContainer key={value.index}>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: "green",
+              }}
+            />
+          </TabContainer>
         );
       }
-      case 3: {
-        return <View />;
+      if (value.screen === "MAP") {
+        return (
+          <TabContainer key={value.index}>
+            <LocationMapTab
+              showTabBar={this._showTabBar}
+              locationData={locationData}
+              navigation={this.props.navigation}
+            />
+          </TabContainer>
+        );
       }
-      default: {
-        return null;
+      if (value.screen === "SAVED") {
+        return (
+          <TabContainer key={value.index}>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: "blue",
+              }}
+            />
+          </TabContainer>
+        );
       }
-    }
+    });
   };
 
   render() {
     return (
       <Container>
-        {this._renderTab()}
+        <ScrollView
+          ref={ref => this.tabs = ref}
+          horizontal
+          pagingEnabled
+          automaticallyAdjustContentInsets={false}
+          showsHorizontalScrollIndicator={false}
+          alwaysBounceVertical={false}
+          bounces={false}
+        >
+          {this._renderTab()}
+        </ScrollView>
         <TabBar
           ref={ref => (this.tabBar = ref)}
           onTabPress={this._onTabPress}

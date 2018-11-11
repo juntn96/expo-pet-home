@@ -63,7 +63,7 @@ class TabBar extends Component {
       >
         <TouchableOpacity
           onPress={() => {
-            this._onPress(1);
+            this._onPress(0);
           }}
           style={{
             flex: 1,
@@ -75,7 +75,7 @@ class TabBar extends Component {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            this._onPress(2);
+            this._onPress(1);
           }}
           style={{
             flex: 1,
@@ -87,7 +87,7 @@ class TabBar extends Component {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            this._onPress(3);
+            this._onPress(2);
           }}
           style={{
             flex: 1,
