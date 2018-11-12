@@ -1,13 +1,9 @@
 import React, { Component } from "react";
 import {
-  View,
   Animated,
   Dimensions,
   FlatList,
-  TouchableOpacity,
 } from "react-native";
-import { Text, ListItem, Thumbnail, Left, Body } from "native-base";
-import { locationData, markerType } from "../../../../utils/fakeData";
 import DestinationLocationItem from "./DestinationLocationItem";
 import StartLocationItem from "./StartLocationItem";
 

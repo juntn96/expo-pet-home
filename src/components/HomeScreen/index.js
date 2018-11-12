@@ -12,27 +12,47 @@ export default class extends Component {
   render() {
     return (
       <Container>
-        <Tabs tabBarPosition="bottom" locked={true}>
+        <Tabs
+          tabBarPosition="bottom"
+          locked={true}
+          tabBarUnderlineStyle={{ backgroundColor: "#EC466A" }}
+        >
           <Tab
             heading={
-              <TabHeading>
-                <Icon name="ios-home-outline" />
+              <TabHeading
+                style={{
+                  backgroundColor: "#FFFFFF",
+                }}
+              >
+                <Icon name="ios-home-outline" style={{ color: "#EC466A" }} />
               </TabHeading>
             }
+            
           >
             <HomeTab navigation={this.props.navigation} />
           </Tab>
           <Tab
             heading={
-              <TabHeading>
-                <Icon name="ios-search" />
+              <TabHeading
+                style={{
+                  backgroundColor: "#FFFFFF",
+                }}
+              >
+                <Icon name="ios-search" style={{ color: "#EC466A" }} />
               </TabHeading>
             }
           />
           <Tab
             heading={
-              <TabHeading>
-                <Icon name="ios-add-circle-outline" />
+              <TabHeading
+                style={{
+                  backgroundColor: "#FFFFFF",
+                }}
+              >
+                <Icon
+                  name="ios-add-circle-outline"
+                  style={{ color: "#EC466A" }}
+                />
               </TabHeading>
             }
           >
@@ -40,8 +60,15 @@ export default class extends Component {
           </Tab>
           <Tab
             heading={
-              <TabHeading>
-                <Icon name="ios-bookmark-outline" />
+              <TabHeading
+                style={{
+                  backgroundColor: "#FFFFFF",
+                }}
+              >
+                <Icon
+                  name="ios-bookmark-outline"
+                  style={{ color: "#EC466A" }}
+                />
               </TabHeading>
             }
           />

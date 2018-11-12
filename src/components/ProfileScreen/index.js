@@ -5,9 +5,11 @@ import PostItem from "../CustomComponents/PostItem";
 import { postData } from "../../utils/fakeData";
 import { connect } from "react-redux";
 import AnimatedHeader from "./AnimatedHeader";
-import Modal from 'react-native-modalbox'
+import PostOptionModal from '../CustomComponents/PostOptionModal'
+
 const animatedValue = new Animated.Value(0);
 const AnimatedList = Animated.createAnimatedComponent(FlatList);
+
 
 const BUTTON_HEIGHT = 45
 class ProfileScreen extends React.Component {
@@ -16,33 +18,25 @@ class ProfileScreen extends React.Component {
   }
 
   _openModel = () => {
-    this.optionModal.open();
+    this.optionModal.setModalVisible(true, 
+      [
+        {
+          name: 'Sửa bài viết'
+        },
+        {
+          name: 'Xóa bài viết'
+        }
+      ]
+    );
   };
 
   render() {
     const { userData } = this.props.data;
     return (
       <Container>
-        <Modal
-          ref={ref => {
-            this.optionModal = ref;
-          }}
-          position={"bottom"}
-          swipeToClose={true}
-          style={{
-            height: BUTTON_HEIGHT * 2,
-            backgroundColor: 'transparent'
-          }}
-        >
-          <List>
-            <Button full info >
-              <Text>Edit</Text>
-            </Button>
-            <Button full danger >
-              <Text>Delete</Text>
-            </Button>
-          </List>
-        </Modal>
+        <PostOptionModal
+          ref={ref => this.optionModal = ref}
+        />
         <AnimatedHeader userData={userData} animatedValue={animatedValue} navigation={this.props.navigation} />
         <AnimatedList
           onScroll={Animated.event(

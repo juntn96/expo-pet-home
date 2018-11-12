@@ -5,6 +5,7 @@ import {
   View,
   NativeModules,
   LayoutAnimation,
+  Modal,
 } from "react-native";
 import { Button, List, Text } from "native-base";
 import TagList from "../TagList";
@@ -18,10 +19,11 @@ import PostItem from "../PostItem";
 import { postData } from "../../../utils/fakeData";
 
 import ActivityModal from "../ActivityModal";
+import PostOptionModal from "../PostOptionModal";
 
 const { UIManager } = NativeModules;
 
-import Modal from "react-native-modalbox";
+// import Modal from "react-native-modalbox";
 
 const BUTTON_HEIGHT = 45;
 
@@ -73,7 +75,11 @@ class HomeTab extends Component {
   };
 
   _openModel = () => {
-    this.optionModal.open();
+    this.optionModal.setModalVisible(true, [
+      {
+        name: "Báo cáo bài viết",
+      },
+    ]);
   };
 
   _renderTagList = () => {
@@ -92,35 +98,8 @@ class HomeTab extends Component {
   render() {
     return (
       <View>
-        <Modal
-          ref={ref => {
-            this.optionModal = ref;
-          }}
-          position={"bottom"}
-          swipeToClose={true}
-          style={{
-            height: BUTTON_HEIGHT * 3,
-            backgroundColor: "transparent",
-            paddingBottom: 280
-          }}
-        >
-          <List>
-            <Button full success>
-              <Text>Lưu bài viết</Text>
-            </Button>
-            <Button full warning>
-              <Text>Ẩn bài viết</Text>
-            </Button>
-            <Button full danger>
-              <Text>Báo cáo bài viết</Text>
-            </Button>
-          </List>
-        </Modal>
-        <ActivityModal
-          ref={ref => {
-            this.activityModal = ref;
-          }}
-        />
+        <PostOptionModal ref={ref => (this.optionModal = ref)} />
+        <ActivityModal ref={ref => (this.activityModal = ref)} />
         <CustomHeader
           title="Pet Home"
           buttonLeft="menu"

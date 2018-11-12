@@ -10,14 +10,14 @@ class ActivityModal extends Component {
     super(props);
     this.state = {
       modalVisible: false,
-      initPage: null
+      initPage: null,
     };
   }
 
   setVisible = (visible, initPage) => {
     this.setState({
       modalVisible: visible,
-      initPage: initPage ? initPage : null
+      initPage: initPage ? initPage : null,
     });
   };
 
@@ -39,12 +39,21 @@ class ActivityModal extends Component {
         />
         <Tabs
           page={initPage ? initPage : 0}
+          tabBarUnderlineStyle={{ backgroundColor: "#EC466A" }}
         >
-          <Tab heading="Thông báo">
+          <Tab
+            heading="Thông báo"
+            activeTextStyle={{ color: "#EC466A" }}
+            tabStyle={{ backgroundColor: "#FFFFFF" }}
+          >
             <NotificationList />
           </Tab>
 
-          <Tab heading="Tin nhắn">
+          <Tab
+            heading="Tin nhắn"
+            activeTextStyle={{ color: "#EC466A" }}
+            tabStyle={{ backgroundColor: "#FFFFFF" }}
+          >
             <MessageList />
           </Tab>
         </Tabs>
