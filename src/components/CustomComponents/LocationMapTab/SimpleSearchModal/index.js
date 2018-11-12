@@ -1,67 +1,76 @@
 import React, { Component } from "react";
-import {
-  View,
-  Modal,
-  TextInput,
-  FlatList,
-  Animated,
-  Dimensions,
-  LayoutAnimation,
-  UIManager,
-} from "react-native";
-import {
-  Header,
-  Icon,
-  Button,
-  Container,
-  Content,
-  Text,
-  ListItem,
-  Thumbnail,
-  Left,
-  Body,
-  Right,
-} from "native-base";
-import { locationData, markerType } from "../../../../utils/fakeData";
+import { View, Modal, TextInput } from "react-native";
+import { Header, Icon, Button, Container, Content } from "native-base";
 import FilterModal from "../FilterModal";
+import LocationList from "./LocationList";
+import { GoogleMap } from "../../../../services/Map";
+import { locationData } from "../../../../utils/fakeData";
 
 class SimpleSearchModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
-      listHeight: 0,
-      animatedTrans: new Animated.ValueXY({
-        x: 0,
-        y: Dimensions.get("window").height + 200,
-      }),
+      searchQuery: "",
+      locationData: [],
     };
   }
 
-  setModalVisible = visible => {
+  setModalVisible = (visible, searchType) => {
+    this.searchType = searchType;
     if (visible) {
       this.setState(
         {
           modalVisible: visible,
+          locationData: searchType === "start" ? [] : locationData,
         },
         () => {
-          Animated.spring(this.state.animatedTrans, {
-            toValue: { x: 0, y: 0 },
-            useNativeDriver: true,
-          }).start();
+          this.LocationList.show(searchType);
         }
       );
     } else {
-      Animated.timing(this.state.animatedTrans, {
-        toValue: { x: 0, y: 0 - Dimensions.get("window").height },
-        duration: 400,
-        useNativeDriver: true,
-      }).start(() => {
-        this.setState({
-          modalVisible: visible,
-        });
+      this.setState({
+        modalVisible: visible,
       });
     }
+  };
+
+  _onSearchQueryChange = text => {
+    if (this.searchWaiting) {
+      clearTimeout(this.searchWaiting);
+    }
+    this.searchWaiting = setTimeout(() => {
+      this.searchWaiting = null;
+      const { userLocation } = this.props;
+      if (this.searchType === "start") {
+        this._searchStartLocation(text, userLocation);
+      }
+      if (this.searchType === "destination") {
+        this._searchDestinationLocation(text, userLocation);
+      }
+    }, 200);
+  };
+
+  _searchStartLocation = async (text, nearby) => {
+    const results = await GoogleMap.searchLocation(text, nearby);
+    if (results) {
+      this.setState({
+        locationData: results,
+      });
+    }
+  };
+
+  _searchDestinationLocation = (text, nearby) => {
+    console.log("destination: ", text, nearby);
+  };
+
+  _onSelectLocation = (location, searchType) => {
+    console.log(location, searchType);
+    const { onLocationChange } = this.props
+    if (onLocationChange) {
+      onLocationChange(location, searchType)
+    }
+    this.setModalVisible(false)
   };
 
   render() {
@@ -111,6 +120,7 @@ class SimpleSearchModal extends Component {
                   style={{
                     borderBottomWidth: 0,
                   }}
+                  onChangeText={this._onSearchQueryChange}
                 />
               </View>
               <Button
@@ -123,40 +133,14 @@ class SimpleSearchModal extends Component {
             </View>
           </Header>
           <Content>
-            <Animated.View
-              style={{
-                paddingBottom: 8,
-                transform: [
-                  ...this.state.animatedTrans.getTranslateTransform(),
-                ],
-              }}
-            >
-              <FlatList
-                data={locationData}
-                showsVerticalScrollIndicator={false}
-                keyExtractor={item => item.id}
-                renderItem={({ item }) => {
-                  return (
-                    <ListItem thumbnail>
-                      <Left>
-                        <Thumbnail
-                          small
-                          square
-                          source={markerType[item.type].thumbnail}
-                        />
-                      </Left>
-                      <Body>
-                        <Text>{item.name}</Text>
-                        <Text note>Hòa Lạc, Thạch Thất, Hà Nội</Text>
-                      </Body>
-                    </ListItem>
-                  );
-                }}
-              />
-            </Animated.View>
+            <LocationList
+              ref={ref => (this.LocationList = ref)}
+              locationData={this.state.locationData}
+              onItemPress={this._onSelectLocation}
+            />
           </Content>
         </Container>
-        <FilterModal ref={ref => this.filterModal = ref} />
+        <FilterModal ref={ref => (this.filterModal = ref)} />
       </Modal>
     );
   }

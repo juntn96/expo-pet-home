@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
+import { MapView, Constants, Location, Permissions } from "expo";
 import { locationData } from "../../../utils/fakeData";
 import SimpleHeader from "./SimpleHeader";
 import DirectionHeader from "./DirectionHeader";
@@ -8,7 +9,7 @@ import DetailModal from "./DetailModal";
 import SimpleSearchModal from "./SimpleSearchModal";
 import Map from "./Map";
 import FilterModal from "./FilterModal";
-import LocationDetailModal from './LocationDetailModal'
+import LocationDetailModal from "./LocationDetailModal";
 
 export default class extends Component {
   constructor(props) {
@@ -17,8 +18,34 @@ export default class extends Component {
     this.state = {
       isHideAll: false,
       isHideDirection: true,
+      userLocation: null,
     };
   }
+
+  componentDidMount() {
+    if (Platform.OS === "android" && !Constants.isDevice) {
+      console.log(
+        "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
+      );
+    } else {
+      this._getLocationAsync();
+    }
+  }
+
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status === "granted") {
+      let location = await Location.getCurrentPositionAsync({});
+      this.setState({
+        userLocation: {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        },
+      });
+    }
+  };
 
   _onMapPress = () => {
     const { showTabBar } = this.props;
@@ -46,14 +73,14 @@ export default class extends Component {
   _onMarkerPress = locationItem => {
     let itemIndex = locationData.indexOf(locationItem);
     this.mapView.moveToCoordinate(locationItem.coordinate);
-    this.directionHeader.setItemLocation(locationItem);
+    this.directionHeader.setDestinationLocation(locationItem);
     this.smallList.scrollToIndex(itemIndex);
     this.simpleHeader.setLocationItem(locationItem);
   };
 
-  _onCalloutPress = (locationItem) => {
-    this.detailModal.setModalVisible(true, locationItem)
-  }
+  _onCalloutPress = locationItem => {
+    this.detailModal.setModalVisible(true, locationItem);
+  };
 
   _showDirectionHeader = () => {
     const { showTabBar } = this.props;
@@ -75,67 +102,86 @@ export default class extends Component {
   };
 
   _onSmallItemPress = locationItem => {
-    this.mapView.showCallout(locationItem)
+    this.mapView.showCallout(locationItem);
     this.mapView.moveToCoordinate(locationItem.coordinate);
     this.simpleHeader.setLocationItem(locationItem);
-    this.directionHeader.setItemLocation(locationItem);
+    this.directionHeader.setDestinationLocation(locationItem);
   };
 
-  _onSmallItemLongPress = (ref, locationItem) => {
-    // setTimeout(() => {
-    //   ref.measureInWindow((x, y) => {
-    //     this.detailModal.showModal({ x, y }, ref, locationItem);
-    //   });
-    // }, 0);
-  };
+  // _onSmallItemLongPress = (ref, locationItem) => {
+  //   // setTimeout(() => {
+  //   //   ref.measureInWindow((x, y) => {
+  //   //     this.detailModal.showModal({ x, y }, ref, locationItem);
+  //   //   });
+  //   // }, 0);
+  // };
 
-  _onHideModal = ref => {
-    // setTimeout(() => {
-    //   ref.measureInWindow((x, y) => {
-    //     this.detailModal.hideModal({ x, y });
-    //   });
-    // }, 0);
-  };
+  // _onHideModal = ref => {
+  //   // setTimeout(() => {
+  //   //   ref.measureInWindow((x, y) => {
+  //   //     this.detailModal.hideModal({ x, y });
+  //   //   });
+  //   // }, 0);
+  // };
 
   _onSearchPress = () => {
-    this.searchModal.setModalVisible(true);
+    this.searchModal.setModalVisible(true, "destination");
   };
 
-  _onDirectionBackPress = (locationItem) => {
+  _onDirectionBackPress = locationItem => {
     this._clearLocationItem(locationItem);
     this.mapView.clearDirection();
     this._showDirectionHeader();
   };
 
-  _clearLocationItem = (locationItem) => {
-    this.mapView.hideCallout(locationItem)
-    this.simpleHeader.setLocationItem(null);
-    this.directionHeader.setItemLocation(null);
+  _onSelectLocationPress = type => {
+    this.searchModal.setModalVisible(true, type);
   };
 
-  _startDirection = (fromLocation, toLocation) => {
-    if (toLocation) {
-      this.mapView.startDirection(fromLocation, toLocation);
+  _clearLocationItem = locationItem => {
+    this.mapView.hideCallout(locationItem);
+    this.simpleHeader.setLocationItem(null);
+    this.directionHeader.setDestinationLocation(null);
+  };
+
+  _startDirection = (startLocation, destinationLocation) => {
+    this.mapView.startDirection(startLocation, destinationLocation);
+  };
+
+  _onLocationChange = (location, type) => {
+    const latitude = location.latitude;
+    const longitude = location.longitude;
+    const coordinate = { latitude: latitude, longitude: longitude };
+    if (type === "start") {
+      this.directionHeader.setStartLocation(location);
+      this.mapView.addSelectLocation(coordinate);
+      this.mapView.moveToCoordinate(coordinate);
     }
   };
 
   render() {
+    const { userLocation } = this.state;
     return (
       <View style={styles.container}>
         {/* <DetailModal
           ref={ref => (this.detailModal = ref)}
           onHide={this._onHideModal}
         /> */}
-        <LocationDetailModal
-          ref={ref => this.detailModal = ref}
+        <LocationDetailModal ref={ref => (this.detailModal = ref)} />
+        <SimpleSearchModal
+          ref={ref => (this.searchModal = ref)}
+          userLocation={userLocation}
+          onLocationChange={this._onLocationChange}
         />
-        <SimpleSearchModal ref={ref => (this.searchModal = ref)}/>
-        <Map
-          ref={ref => (this.mapView = ref)}
-          onMapPress={this._onMapPress}
-          onMarkerPress={this._onMarkerPress}
-          onCalloutPress={this._onCalloutPress}
-        />
+        {userLocation ? (
+          <Map
+            ref={ref => (this.mapView = ref)}
+            userLocation={userLocation}
+            onMapPress={this._onMapPress}
+            onMarkerPress={this._onMarkerPress}
+            onCalloutPress={this._onCalloutPress}
+          />
+        ) : null}
         <SimpleHeader
           ref={ref => (this.simpleHeader = ref)}
           onDirectionPress={this._showDirectionHeader}
@@ -143,12 +189,15 @@ export default class extends Component {
           onBackPress={this._clearLocationItem}
           onSearchPress={this._onSearchPress}
         />
-        <DirectionHeader
-          ref={ref => (this.directionHeader = ref)}
-          onDirectionPress={this._showDirectionHeader}
-          onStartDirection={this._startDirection}
-          onBackPress={this._onDirectionBackPress}
-        />
+        {userLocation ? (
+          <DirectionHeader
+            ref={ref => (this.directionHeader = ref)}
+            onStartDirection={this._startDirection}
+            onBackPress={this._onDirectionBackPress}
+            onSelectLocationPress={this._onSelectLocationPress}
+            userLocation={userLocation}
+          />
+        ) : null}
         <View style={styles.containerList}>
           <LocationSmallList
             onItemPress={this._onSmallItemPress}

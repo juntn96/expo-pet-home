@@ -1,11 +1,8 @@
 import React, { Component } from "react";
-import { View, TouchableOpacity, Animated } from "react-native";
+import { View, TouchableOpacity, Animated, StyleSheet } from "react-native";
 import { Icon } from "native-base";
 
-const ANIMATE_VALUE = {
-  Hide: 0,
-  Show: 1,
-};
+const animateTrans = new Animated.Value(1);
 
 const transAnimation = (animated, value) => {
   Animated.timing(animated, {
@@ -16,90 +13,100 @@ const transAnimation = (animated, value) => {
 };
 
 class TabBar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      animateTrans: new Animated.Value(1),
-    };
-  }
+  state = {
+    stateStyle: styles.listState,
+  };
 
   animateShow = () => {
-    const { animateTrans } = this.state
-    transAnimation(animateTrans, 1)
+    transAnimation(animateTrans, 1);
   };
 
   animateHide = () => {
-    const { animateTrans } = this.state
-    transAnimation(animateTrans, 0)
+    transAnimation(animateTrans, 0);
   };
 
   _onPress = index => {
     const { onTabPress } = this.props;
+    let stateStyle = {};
+    if (index === 1) {
+      stateStyle = styles.mapState;
+    } else {
+      stateStyle = styles.listState;
+    }
     if (onTabPress) {
+      this.setState({
+        stateStyle: stateStyle,
+      });
       onTabPress(index);
     }
   };
 
   render() {
-    let transY = this.state.animateTrans.interpolate({
-      inputRange: [0, 1],
-      outputRange: [56, 0],
-    });
-
-    let transform = [{ translateY: transY }];
-
     return (
-      <Animated.View
-        style={{
-          height: 56,
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          flexDirection: "row",
-          backgroundColor: "transparent",
-          transform: transform,
-        }}
-      >
+      <Animated.View style={[this.state.stateStyle, styles.animatedView]}>
         <TouchableOpacity
+          activeOpacity={0.7}
           onPress={() => {
             this._onPress(0);
           }}
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+          style={styles.tab}
         >
-          <Icon name="ios-list-box-outline" />
+          <Icon name="ios-list-box-outline" style={styles.icon} />
         </TouchableOpacity>
         <TouchableOpacity
+          activeOpacity={0.7}
           onPress={() => {
             this._onPress(1);
           }}
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+          style={styles.tab}
         >
-          <Icon name="ios-navigate-outline" />
+          <Icon name="ios-navigate-outline" style={styles.icon} />
         </TouchableOpacity>
         <TouchableOpacity
+          activeOpacity={0.7}
           onPress={() => {
             this._onPress(2);
           }}
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+          style={styles.tab}
         >
-          <Icon name="ios-bookmark-outline" />
+          <Icon name="ios-bookmark-outline" style={styles.icon} />
         </TouchableOpacity>
       </Animated.View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  animatedView: {
+    height: 54,
+    flexDirection: "row",
+    transform: [
+      {
+        translateY: animateTrans.interpolate({
+          inputRange: [0, 1],
+          outputRange: [54, 0],
+        }),
+      },
+    ],
+  },
+  tab: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  icon: {
+    color: "#EC466A",
+  },
+  mapState: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "transparent",
+  },
+  listState: {
+    backgroundColor: "#FFFFFF",
+  },
+});
 
 export default TabBar;

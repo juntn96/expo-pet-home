@@ -17,50 +17,15 @@ class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      location: {
-        latitude: 21.015806,
-        longitude: 105.516287,
-        latitudeDelta: 0.09,
-        longitudeDelta: 0.09,
-      },
       coords: null,
+      selectLocation: null,
     };
     this.markers = {};
   }
 
-  componentDidMount() {
-    if (Platform.OS === "android" && !Constants.isDevice) {
-      console.log(
-        "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
-      );
-    } else {
-      this._getLocationAsync();
-    }
-  }
-
-  _getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status === "granted") {
-      let location = await Location.getCurrentPositionAsync({});
-      this.mapView.animateToRegion(
-        {
-          ...location.coords,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        },
-        0
-      );
-      this.setState({
-        location: {
-          ...location.coords,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        },
-      });
-    }
-  };
-
   _getDirections = async (startLoc, destinationLoc) => {
+    console.log('start: ', startLoc)
+    console.log('des: ', destinationLoc)
     const result = await GoogleMap.getDirections(startLoc, destinationLoc);
     if (result) {
       this.setState({ coords: result });
@@ -112,11 +77,8 @@ class Map extends Component {
     }
   };
 
-  startDirection = (fromLocation, toLocation) => {
-    this._getDirections(
-      fromLocation ? fromLocation : this.state.location,
-      toLocation
-    );
+  startDirection = (startLocation, destinationLocation) => {
+    this._getDirections(startLocation, destinationLocation);
   };
 
   clearDirection = () => {
@@ -125,8 +87,21 @@ class Map extends Component {
     });
   };
 
+  addSelectLocation = location => {
+    this.setState({
+      selectLocation: location,
+    });
+  };
+
+  removeSelectLocation = () => {
+    this.setState({
+      selectLocation: null,
+    });
+  };
+
   render() {
-    const { location, coords } = this.state;
+    const { location, coords, selectLocation } = this.state;
+    const { userLocation } = this.props;
     return (
       <MapView
         ref={ref => (this.mapView = ref)}
@@ -134,8 +109,9 @@ class Map extends Component {
         showsUserLocation={true}
         provider={"google"}
         style={styles.map}
-        initialRegion={location}
+        initialRegion={userLocation}
       >
+        {selectLocation ? <Marker coordinate={selectLocation} /> : null}
         {locationData.map(marker => {
           const markerImage = markerType[marker.type].marker;
           return (

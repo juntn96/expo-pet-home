@@ -1,11 +1,5 @@
 import React, { Component } from "react";
-import {
-  View,
-  LayoutAnimation,
-  FlatList,
-  Dimensions,
-  ScrollView,
-} from "react-native";
+import { View, Dimensions, ScrollView } from "react-native";
 import { Container } from "native-base";
 
 import TabBar from "./TabBar";
@@ -15,7 +9,6 @@ import TabContainer from "./TabContainer";
 import { locationData } from "../../utils/fakeData";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
-const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const SCREENS = [
   {
@@ -32,24 +25,10 @@ const SCREENS = [
   },
 ];
 
-const CustomLayoutAnimation = {
-  duration: 200,
-  create: {
-    type: LayoutAnimation.Types.linear,
-    property: LayoutAnimation.Properties.opacity,
-  },
-  update: {
-    type: LayoutAnimation.Types.easeInEaseOut,
-  },
-};
 export default class extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      tabIndex: 2,
-    };
-  }
+  state = {
+    tabIndex: 2,
+  };
 
   shouldComponentUpdate(nextProps, nextState) {
     const { tabIndex } = this.state;
@@ -119,13 +98,14 @@ export default class extends Component {
     return (
       <Container>
         <ScrollView
-          ref={ref => this.tabs = ref}
+          ref={ref => (this.tabs = ref)}
           horizontal
           pagingEnabled
           automaticallyAdjustContentInsets={false}
           showsHorizontalScrollIndicator={false}
           alwaysBounceVertical={false}
           bounces={false}
+          scrollEnabled={false}
         >
           {this._renderTab()}
         </ScrollView>
