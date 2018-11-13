@@ -36,7 +36,7 @@ class FilterModal extends Component {
   }
 
   setVisibleModal = visible => {
-    console.log(visible);
+    // console.log(visible);
     this.setState({
       visibleModal: visible,
     });

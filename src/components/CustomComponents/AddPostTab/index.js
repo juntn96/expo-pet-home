@@ -52,7 +52,7 @@ class AddPostModal extends Component {
           ...result,
           id: Date.now(),
         };
-        console.log(result);
+        // console.log(result);
         let tmpPhotos = this.state.photos;
         tmpPhotos.push(result);
         this.setState({

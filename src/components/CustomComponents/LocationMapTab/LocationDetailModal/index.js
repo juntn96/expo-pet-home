@@ -27,7 +27,7 @@ class LocationDetailModal extends Component {
   }
 
   setModalVisible = (visible, locationItem) => {
-    console.log(locationItem);
+    // console.log(locationItem);
     this.setState({
       modalVisible: visible,
       locationItem: locationItem,

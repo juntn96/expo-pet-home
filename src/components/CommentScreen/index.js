@@ -1,6 +1,13 @@
 import React, { Component } from "react";
 import { View, TouchableOpacity, Image, TextInput } from "react-native";
-import { Container, Content, Thumbnail, Text, Icon, Button, Footer } from "native-base";
+import {
+  Container,
+  Content,
+  Thumbnail,
+  Text,
+  Icon,
+  Footer,
+} from "native-base";
 
 export default class extends Component {
   constructor(props) {
@@ -104,10 +111,10 @@ export default class extends Component {
           style={{
             flexDirection: "row",
             alignItems: "center",
-            marginLeft: 10, 
+            marginLeft: 10,
             marginRight: 10,
-            position: 'absolute',
-            bottom: 0
+            position: "absolute",
+            bottom: 0,
           }}
         >
           <View
@@ -120,10 +127,14 @@ export default class extends Component {
               backgroundColor: "#EEEEEE",
               height: 45,
               paddingLeft: 10,
-              paddingRight: 10
+              paddingRight: 10,
             }}
           >
-            <TextInput placeholder="..." underlineColorAndroid="transparent" style={{borderBottomWidth: 0, flex: 1}} />
+            <TextInput
+              placeholder="..."
+              underlineColorAndroid="transparent"
+              style={{ borderBottomWidth: 0, flex: 1 }}
+            />
           </View>
           <TouchableOpacity>
             <Text>Send</Text>

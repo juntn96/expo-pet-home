@@ -24,8 +24,8 @@ class Map extends Component {
   }
 
   _getDirections = async (startLoc, destinationLoc) => {
-    console.log('start: ', startLoc)
-    console.log('des: ', destinationLoc)
+    // console.log('start: ', startLoc)
+    // console.log('des: ', destinationLoc)
     const result = await GoogleMap.getDirections(startLoc, destinationLoc);
     if (result) {
       this.setState({ coords: result });

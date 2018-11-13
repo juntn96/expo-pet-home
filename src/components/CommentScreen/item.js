@@ -39,7 +39,6 @@ export default class extends Component {
           this.view.measureInWindow((x, y, containerWidth, containerHeight) => {
             console.log(x, y, containerWidth, containerHeight);
             console.log(this.props.item);
-            console.log("+++++");
           });
         }}
         style={[styles.nonsenseItem, { ...customStyle }]}

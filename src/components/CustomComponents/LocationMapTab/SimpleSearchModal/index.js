@@ -65,7 +65,7 @@ class SimpleSearchModal extends Component {
   };
 
   _onSelectLocation = (location, searchType) => {
-    console.log(location, searchType);
+    // console.log(location, searchType);
     const { onLocationChange } = this.props
     if (onLocationChange) {
       onLocationChange(location, searchType)
