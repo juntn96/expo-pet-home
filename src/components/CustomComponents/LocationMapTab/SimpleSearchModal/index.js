@@ -3,7 +3,7 @@ import { View, Modal, TextInput } from "react-native";
 import { Header, Icon, Button, Container, Content } from "native-base";
 import FilterModal from "../FilterModal";
 import LocationList from "./LocationList";
-import { GoogleMap } from "../../../../services/Map";
+import GoogleMap from "../../../../services/GoogleMap";
 import { locationData } from "../../../../utils/fakeData";
 
 class SimpleSearchModal extends Component {

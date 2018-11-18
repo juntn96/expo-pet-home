@@ -22,11 +22,11 @@ class Photo extends Component {
   }
 
   _selectItem = () => {
-    const { onItemPress, item, size } = this.props;
+    const { onItemPress, item, size, maxNumber } = this.props;
     const { isSelected } = this.state;
 
     if (!isSelected) {
-      if (size < 10) {
+      if (size < maxNumber) {
         onItemPress("add", item);
         this.setState({
           isSelected: true,

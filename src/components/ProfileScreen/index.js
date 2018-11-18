@@ -3,41 +3,39 @@ import { View, FlatList, Animated } from "react-native";
 import { Container, List, ListItem, Button, Text } from "native-base";
 import PostItem from "../CustomComponents/PostItem";
 import { postData } from "../../utils/fakeData";
-import { connect } from "react-redux";
 import AnimatedHeader from "./AnimatedHeader";
-import PostOptionModal from '../CustomComponents/PostOptionModal'
+import PostOptionModal from "../CustomComponents/PostOptionModal";
 
 const animatedValue = new Animated.Value(0);
 const AnimatedList = Animated.createAnimatedComponent(FlatList);
 
-
-const BUTTON_HEIGHT = 45
+const BUTTON_HEIGHT = 45;
 class ProfileScreen extends React.Component {
   constructor(props) {
     super(props);
   }
 
   _openModel = () => {
-    this.optionModal.setModalVisible(true, 
-      [
-        {
-          name: 'Sửa bài viết'
-        },
-        {
-          name: 'Xóa bài viết'
-        }
-      ]
-    );
+    this.optionModal.setModalVisible(true, [
+      {
+        name: "Sửa bài viết",
+      },
+      {
+        name: "Xóa bài viết",
+      },
+    ]);
   };
 
   render() {
-    const { userData } = this.props.data;
+    const { userData } = this.props;
     return (
       <Container>
-        <PostOptionModal
-          ref={ref => this.optionModal = ref}
+        <PostOptionModal ref={ref => (this.optionModal = ref)} />
+        <AnimatedHeader
+          userData={userData}
+          animatedValue={animatedValue}
+          navigation={this.props.navigation}
         />
-        <AnimatedHeader userData={userData} animatedValue={animatedValue} navigation={this.props.navigation} />
         <AnimatedList
           onScroll={Animated.event(
             [
@@ -83,10 +81,4 @@ class ProfileScreen extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    data: state.userData,
-  };
-};
-
-export default connect(mapStateToProps)(ProfileScreen);
+export default ProfileScreen;

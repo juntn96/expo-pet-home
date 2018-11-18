@@ -78,7 +78,7 @@ class componentName extends Component {
           }}
         >
           <Image
-            source={{uri: userData.largePicture.data.url}}
+            source={{uri: userData.avatar}}
             style={{
               width: AVATAR_SIZE,
               height: AVATAR_SIZE,

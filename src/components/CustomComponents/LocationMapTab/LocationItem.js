@@ -20,10 +20,6 @@ class LocationItem extends Component {
     this.props.onPress(this.props.item)
   }
 
-  _onLongPress = () => {
-    this.props.onLongPress(this.props.item.id)
-  }
-
   _onHide = () => {
     setTimeout(() => {
       this.locationItem.measureInWindow((x, y) => {
@@ -59,7 +55,6 @@ class LocationItem extends Component {
           delayPressOut={200}
           activeOpacity={0.7}
           onPress={this._onPress}
-          onLongPress={this._onLongPress}
           ref={ref => (this.locationItem = ref)}
           style={{
             backgroundColor: "#c5c5c590",

@@ -30,13 +30,6 @@ class LocationSmallList extends Component {
     animationMove(animateTrans, 0);
   };
 
-  _onLongPress = id => {
-    const { onItemLongPress } = this.props;
-    if (onItemLongPress) {
-      onItemLongPress(this.items[id].ref, this.items[id].item);
-    }
-  };
-
   _onPress = item => {
     const { onItemPress } = this.props;
     this.scrollToIndex(this.props.locationData.indexOf(item));
@@ -58,7 +51,6 @@ class LocationSmallList extends Component {
       <View ref={ref => (this.items[item.id] = { ref, item })}>
         <LocationItem
           item={item}
-          onLongPress={this._onLongPress}
           onPress={this._onPress}
           isAnimated={!this.state.scrollEnabled}
         />

@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
+  FlatList,
+  ToastAndroid,
 } from "react-native";
 import {
   Button,
@@ -15,48 +17,74 @@ import {
   Form,
   Textarea,
   List,
+  Toast,
 } from "native-base";
 import { ImagePicker } from "expo";
 import CustomHeader from "../../CustomComponents/CustomHeader";
-
+import PostCategories from "./PostCategories";
 import GalleryModal from "../GalleryModal";
-
 import PhotoItem from "./PhotoItem";
+import PostServices from "../../../services/PostServices";
 
-import { connect } from "react-redux";
+import ImageServices from "../../../services/ImageServices";
 
-class AddPostModal extends Component {
+class AddPostTab extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      photos: [],
+      images: [],
+      loading: false,
+      postCategories: [],
+      title: "",
+      category: null,
+      status: 1,
     };
+    this.uploadImages = [];
+    this.baseState = this.state;
   }
 
-  _onSubmitPicture = photos => {
-    let tmp = this.state.photos;
-    tmp = tmp.concat(photos);
+  componentDidMount() {
+    this._getCategories();
+  }
+
+  _getCategories = async () => {
+    try {
+      this.setState({ loading: true });
+      const rs = await PostServices.getPostCategories();
+      this.setState({
+        loading: false,
+        postCategories: rs,
+      });
+    } catch (er) {
+      console.log(er);
+    }
+  };
+
+  _onSubmitPicture = images => {
+    let tmp = this.state.images;
+    tmp = tmp.concat(images);
     this.setState({
-      photos: tmp,
+      images: tmp,
     });
   };
 
   _snapPicture = async () => {
     const { Permissions } = Expo;
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    if (status === "granted") {
+    const res = await Promise.all([
+      Permissions.askAsync(Permissions.CAMERA),
+      Permissions.askAsync(Permissions.CAMERA_ROLL),
+    ]);
+    if (res.some(permission => permission.status === "granted")) {
       let result = await ImagePicker.launchCameraAsync();
       if (!result.cancelled) {
         result = {
           ...result,
           id: Date.now(),
         };
-        // console.log(result);
-        let tmpPhotos = this.state.photos;
-        tmpPhotos.push(result);
+        let tmpImages = this.state.images;
+        tmpImages.push(result);
         this.setState({
-          photos: tmpPhotos,
+          images: tmpImages,
         });
       }
     } else {
@@ -64,17 +92,81 @@ class AddPostModal extends Component {
     }
   };
 
-  _removeItem = item => {
-    let tmpPhotos = this.state.photos.filter(photo => {
+  _removeImageItem = item => {
+    let tmpImages = this.state.images.filter(photo => {
       return photo.id !== item.id;
     });
     this.setState({
-      photos: tmpPhotos,
+      images: tmpImages,
+    });
+    this.uploadImages = this.uploadImages.filter(image => {
+      return image.id !== item.id;
     });
   };
 
+  _onSelectCategory = category => {
+    this.setState({
+      category,
+    });
+  };
+
+  _uploadImageCallback = image => {
+    this.uploadImages.push(image);
+  };
+
+  _requestCreatePost = async () => {
+    const { toast } = this.props;
+    if (!this._validate()) return;
+    try {
+      const { title, category, status } = this.state;
+      const images = this.uploadImages.map(img => {
+        return {
+          url: img.url,
+          public_id: img.public_id,
+          width: img.width,
+          height: img.height,
+        };
+      });
+      const ownerId = this.props.userData._id;
+      const typeId = category._id;
+      const postData = { title, images, typeId, status, ownerId };
+      await PostServices.createPost(postData);
+
+      this.props.onCreateDone();
+      this.uploadImages = [];
+      this.setState(this.baseState);
+
+      toast({ message: "Đăng bài viết thành công", duration: 3000 });
+    } catch (error) {
+      toast({ message: "Có lỗi xảy ra", duration: 3000 });
+    }
+  };
+
+  _validate = () => {
+    const { title, category, images } = this.state;
+    const { toast } = this.props;
+    if (title.length === 0) {
+      toast({ message: "Hãy viết 1 chút gì đó :D", duration: 3000 });
+      return false;
+    }
+    if (category === null) {
+      toast({ message: "Bạn chưa chọn loại bài viết", duration: 3000 });
+      return false;
+    }
+    if (images.length === 0) {
+      toast({ message: "Hãy thêm ít nhất 1 ảnh nào", duration: 3000 });
+      return false;
+    }
+    if (this.uploadImages.length !== images.length) {
+      toast({ message: "Ảnh của bạn đang upload", duration: 3000 });
+      return false;
+    }
+    return true;
+  };
+
   render() {
-    const { userData } = this.props.data;
+    const { userData } = this.props;
+    const { loading, postCategories, images } = this.state;
     return (
       <Container>
         <CustomHeader
@@ -84,50 +176,76 @@ class AddPostModal extends Component {
             this.props.navigation.openDrawer();
           }}
           buttonRight="md-add"
+          actionRight={() => {
+            this._requestCreatePost();
+          }}
         />
         <Content>
-          <View>
-            <View style={styles.infoBar}>
-              <View style={styles.avatarContainer}>
-                {userData ? (
-                  <Image
-                    style={styles.avatar}
-                    source={{
-                      uri: userData.picture.data.url,
-                    }}
-                  />
-                ) : null}
-              </View>
-              <Text style={styles.textUsername}>
-                {userData ? userData.name : ""}
-              </Text>
-              <TouchableOpacity style={styles.settingContainer}>
-                <Icon name="md-settings" style={styles.settingIcon} />
-              </TouchableOpacity>
+          <View style={styles.infoBar}>
+            <View style={styles.avatarContainer}>
+              {userData ? (
+                <Image
+                  style={styles.avatar}
+                  source={{
+                    uri: userData.avatar,
+                  }}
+                />
+              ) : null}
             </View>
+            <Text style={styles.textUsername}>
+              {userData ? userData.appName : ""}
+            </Text>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.settingContainer}
+              onPress={() =>
+                this.props.toast({ message: "hello", duration: 3000 })
+              }
+            >
+              <Icon name="md-settings" style={styles.settingIcon} />
+            </TouchableOpacity>
           </View>
+          <PostCategories
+            categories={postCategories}
+            onItemPress={this._onSelectCategory}
+          />
           <View style={styles.formContainer}>
             <Form>
               <Textarea
                 bordered
-                placeholder="Write something you'd like"
+                placeholder="Hãy viết gì đó nào..."
                 rowSpan={(Dimensions.get("screen").height - 100) / 50}
+                onChangeText={text => this.setState({ title: text })}
+                value={this.state.title}
               />
             </Form>
           </View>
-          <List
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            renderRow={item => {
-              return <PhotoItem removeItem={this._removeItem} item={item} />;
-            }}
-            dataArray={this.state.photos}
-          />
+          <View>
+            <FlatList
+              horizontal
+              keyExtractor={item => item.uri}
+              extraData={images}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({ item }) => {
+                return (
+                  <PhotoItem
+                    removeItem={this._removeImageItem}
+                    item={item}
+                    onUploadDone={this._uploadImageCallback}
+                  />
+                );
+              }}
+              data={images}
+            />
+          </View>
           <View style={styles.optionContainer}>
             <Button transparent onPress={this._snapPicture}>
               <Icon name="md-camera" />
             </Button>
-            <GalleryModal onSubmit={this._onSubmitPicture} />
+            <GalleryModal
+              onSubmit={this._onSubmitPicture}
+              maxNumber={10 - images.length}
+            />
           </View>
         </Content>
       </Container>
@@ -178,17 +296,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
-  return {
-    data: state.userData,
-  };
-};
-
-const mapDispatchToProps = () => {
-  return {};
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AddPostModal);
+export default AddPostTab;

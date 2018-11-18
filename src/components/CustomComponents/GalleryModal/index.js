@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, Modal, FlatList } from "react-native";
+import { View, Text, Modal, FlatList, CameraRoll } from "react-native";
 import { Button, Icon } from "native-base";
 import { ImagePicker, Permissions, FileSystem, MediaLibrary } from "expo";
 import CustomHeader from "../../CustomComponents/CustomHeader";
@@ -19,7 +19,7 @@ export default class extends Component {
   }
 
   componentDidMount = async () => {
-    const info = await MediaLibrary.getAssetsAsync();
+    const info = await MediaLibrary.getAssetsAsync({mediaType: "photo", first: 1000});
     this.setState({
       photos: info.assets,
     });
@@ -51,9 +51,11 @@ export default class extends Component {
   };
 
   _renderItem = ({ item }) => {
+    const { maxNumber } = this.props
     return (
       <Photo
         item={item}
+        maxNumber={maxNumber}
         size={this.state.selectedPhotos.length}
         onItemPress={this._onItemPress}
       />
@@ -62,6 +64,7 @@ export default class extends Component {
 
   render() {
     const { photos, selectedPhotos, modalVisible } = this.state;
+    const { maxNumber } = this.props
     return (
       <View>
         <Modal
@@ -73,7 +76,7 @@ export default class extends Component {
           }}
         >
           <CustomHeader
-            title={selectedPhotos.length !== 10 ? selectedPhotos.length : "Max"}
+            title={selectedPhotos.length !== maxNumber ? selectedPhotos.length : "Max"}
             buttonLeft="md-close"
             actionLeft={() => {
               this._setModalVisible();

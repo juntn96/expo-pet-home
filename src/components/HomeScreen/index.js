@@ -9,13 +9,20 @@ import AddPostTab from "../CustomComponents/AddPostTab";
 
 import HomeTab from "../CustomComponents/HomeTab";
 export default class extends Component {
+
+  _onCreateDone = () => {
+    this.tabs.goToPage(0)
+  };
+
   render() {
     return (
       <Container>
         <Tabs
+          ref={ref => (this.tabs = ref)}
           tabBarPosition="bottom"
           locked={true}
           tabBarUnderlineStyle={{ backgroundColor: "#EC466A" }}
+          scrollWithoutAnimation
         >
           <Tab
             heading={
@@ -27,7 +34,6 @@ export default class extends Component {
                 <Icon name="ios-home-outline" style={{ color: "#EC466A" }} />
               </TabHeading>
             }
-            
           >
             <HomeTab navigation={this.props.navigation} />
           </Tab>
@@ -56,7 +62,12 @@ export default class extends Component {
               </TabHeading>
             }
           >
-            <AddPostTab navigation={this.props.navigation} />
+            <AddPostTab
+              navigation={this.props.navigation}
+              userData={this.props.userData}
+              toast={this.props.toast}
+              onCreateDone={this._onCreateDone}
+            />
           </Tab>
           <Tab
             heading={

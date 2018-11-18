@@ -1,19 +1,34 @@
-import React, { Component } from 'react';
-import { View, Text } from 'react-native';
-import ProfileScreen from '../../components/ProfileScreen'
+import React, { Component } from "react";
+import { View, Text } from "react-native";
+import ProfileScreen from "../../components/ProfileScreen";
+import { connect } from "react-redux";
 
 class Profile extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
 
   render() {
     return (
-      <ProfileScreen navigation={this.props.navigation} />
+      <ProfileScreen
+        navigation={this.props.navigation}
+        userData={this.props.data.userData}
+      />
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    data: state.userData,
+  };
+};
 
-export default Profile;
+const mapDispatchToProps = () => {
+  return {};
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Profile);

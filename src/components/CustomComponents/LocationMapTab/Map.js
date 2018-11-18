@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { MapView, Constants, Location, Permissions } from "expo";
 import { locationData, markerType } from "../../../utils/fakeData";
-import { GoogleMap } from "../../../services/Map";
+import GoogleMap from "../../../services/GoogleMap";
 const { Marker, Polyline, Callout } = MapView;
 
 class Map extends Component {
@@ -24,8 +24,6 @@ class Map extends Component {
   }
 
   _getDirections = async (startLoc, destinationLoc) => {
-    // console.log('start: ', startLoc)
-    // console.log('des: ', destinationLoc)
     const result = await GoogleMap.getDirections(startLoc, destinationLoc);
     if (result) {
       this.setState({ coords: result });

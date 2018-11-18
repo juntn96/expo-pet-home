@@ -108,22 +108,6 @@ export default class extends Component {
     this.directionHeader.setDestinationLocation(locationItem);
   };
 
-  // _onSmallItemLongPress = (ref, locationItem) => {
-  //   // setTimeout(() => {
-  //   //   ref.measureInWindow((x, y) => {
-  //   //     this.detailModal.showModal({ x, y }, ref, locationItem);
-  //   //   });
-  //   // }, 0);
-  // };
-
-  // _onHideModal = ref => {
-  //   // setTimeout(() => {
-  //   //   ref.measureInWindow((x, y) => {
-  //   //     this.detailModal.hideModal({ x, y });
-  //   //   });
-  //   // }, 0);
-  // };
-
   _onSearchPress = () => {
     this.searchModal.setModalVisible(true, "destination");
   };
@@ -163,10 +147,6 @@ export default class extends Component {
     const { userLocation } = this.state;
     return (
       <View style={styles.container}>
-        {/* <DetailModal
-          ref={ref => (this.detailModal = ref)}
-          onHide={this._onHideModal}
-        /> */}
         <LocationDetailModal ref={ref => (this.detailModal = ref)} />
         <SimpleSearchModal
           ref={ref => (this.searchModal = ref)}
@@ -201,7 +181,6 @@ export default class extends Component {
         <View style={styles.containerList}>
           <LocationSmallList
             onItemPress={this._onSmallItemPress}
-            onItemLongPress={this._onSmallItemLongPress}
             ref={ref => (this.smallList = ref)}
             locationData={this.props.locationData}
           />

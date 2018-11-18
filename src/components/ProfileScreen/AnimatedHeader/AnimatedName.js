@@ -78,7 +78,7 @@ class AnimatedName extends Component {
             maxWidth: SCREEN_WIDTH / 2
           }}
         >
-          {userData.name}
+          {userData.appName}
         </Text>
       </Animated.View>
     );
