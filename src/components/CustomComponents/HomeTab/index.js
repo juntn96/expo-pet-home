@@ -1,31 +1,17 @@
 import React, { Component } from "react";
 import {
-  FlatList,
   Animated,
   View,
   NativeModules,
   LayoutAnimation,
-  Modal,
+  StyleSheet,
 } from "react-native";
-import { Button, List, Text } from "native-base";
-import TagList from "../TagList";
-
 import CustomHeader from "../CustomHeader";
-
-import "../PostOptionModal";
-
-import PostItem from "../PostItem";
-
-import { postData } from "../../../utils/fakeData";
-
 import ActivityModal from "../ActivityModal";
 import PostOptionModal from "../PostOptionModal";
-
+import PostList from "./PostList";
+import TagList from "./TagList";
 const { UIManager } = NativeModules;
-
-// import Modal from "react-native-modalbox";
-
-const BUTTON_HEIGHT = 45;
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -45,7 +31,6 @@ class HomeTab extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      animatedValue: new Animated.Value(0),
       scrollDown: false,
     };
   }
@@ -82,17 +67,30 @@ class HomeTab extends Component {
     ]);
   };
 
+  _onCategoryChange = category => {
+    try {
+      if (category._id === "all") {
+        this.postList.requestGetAll();
+      } else {
+        this.postList.requestGetByType(category);
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
   _renderTagList = () => {
     LayoutAnimation.configureNext(CustomLayoutAnimation);
+    let stateStyle = { zIndex: 2 };
+
     if (this.state.scrollDown) {
-      return null;
-    } else {
-      return (
-        <View>
-          <TagList navigation={this.props.navigation} />
-        </View>
-      );
+      stateStyle = { width: 0, height: 0 };
     }
+    return (
+      <View style={stateStyle}>
+        <TagList onCategoryChange={this._onCategoryChange} />
+      </View>
+    );
   };
 
   render() {
@@ -113,29 +111,9 @@ class HomeTab extends Component {
           }}
         />
         {this._renderTagList()}
-        {/* <View style={{ margin: 10 }}>
-          
-        </View> */}
-        <FlatList
+        <PostList
           onScroll={this._onScroll}
-          scrollEventThrottle={200}
-          showsVerticalScrollIndicator={false}
-          data={postData}
-          renderItem={({ item }) => {
-            return (
-              <PostItem
-                postData={item}
-                optionPress={this._openModel}
-                navigation={this.props.navigation}
-              />
-            );
-          }}
-          keyExtractor={item => item.postId + ""}
-          contentContainerStyle={{
-            paddingBottom: 70,
-            paddingLeft: 10,
-            paddingRight: 10,
-          }}
+          ref={ref => (this.postList = ref)}
         />
       </View>
     );

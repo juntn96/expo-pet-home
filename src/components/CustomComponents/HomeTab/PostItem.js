@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-import ReactNative, { View, Dimensions, Image, TouchableOpacity, UIManager } from "react-native";
+import { View, Image, TouchableOpacity } from "react-native";
 import {
-  Container,
-  Header,
-  Content,
   Card,
   CardItem,
   Thumbnail,
@@ -13,9 +10,6 @@ import {
   Left,
   Body,
   Right,
-  FooterTab,
-  Footer,
-  Badge,
 } from "native-base";
 
 class PostItem extends Component {
@@ -33,16 +27,16 @@ class PostItem extends Component {
 
   render() {
     const { postData } = this.props;
-
+    const date = new Date(postData.createdAt)
     return (
       <Card>
         <CardItem>
           <Left>
-            <Thumbnail source={postData.userData.picture} />
+            <Thumbnail source={{uri: postData.images[0].url}} />
             <View>
-              <Text>{postData.userData.name}</Text>
+              <Text style={{alignSelf: "flex-start" }} >{"aaa"}</Text>
               <Text note style={{ fontSize: 12, alignSelf: "flex-start" }}>
-                {postData.postDate}
+                {date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear()}
               </Text>
             </View>
           </Left>
@@ -54,12 +48,12 @@ class PostItem extends Component {
         </CardItem>
         <CardItem>
           <Body>
-            <Text>{postData.description}</Text>
+            <Text>{postData.title}</Text>
           </Body>
         </CardItem>
         <CardItem cardBody>
           <Image
-            source={postData.postImage[0].uri}
+            source={{uri: postData.images[0].url}}
             style={{ height: 200, width: null, flex: 1 }}
           />
         </CardItem>
@@ -67,21 +61,21 @@ class PostItem extends Component {
           <Left>
             <Button transparent textStyle={{ color: "#FF8EBC" }}>
               <Icon name="ios-arrow-up" style={{ color: "#FF8EBC" }} />
-              <Text>{postData.interactive.upvote}</Text>
+              <Text>{"1"}</Text>
             </Button>
             <Button transparent textStyle={{ color: "#00E7C3" }} onPress={() => {this.props.navigation.navigate("Comment")}} >
               <Icon
                 name="ios-chatbubbles-outline"
                 style={{ color: "#00E7C3" }}
               />
-              <Text>{postData.interactive.comment}</Text>
+              <Text>{"1"}</Text>
             </Button>
           </Left>
 
           <Right>
             <Button transparent textStyle={{ color: "#EC466A" }}>
               <Icon name="ios-arrow-down" style={{ color: "#EC466A" }} />
-              <Text>{postData.interactive.downvote}</Text>
+              <Text>{"1"}</Text>
             </Button>
           </Right>
         </CardItem>

@@ -22,7 +22,40 @@ const createPost = async postData => {
   }
 };
 
+const getAll = async () => {
+  try {
+    const url = `post/get`;
+    const data = await ApiServices.get(url);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getPostByType = async typeId => {
+  try {
+    const url = `post/get/${typeId}`;
+    const data = await ApiServices.get(url);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getPostByOwner = async ownerId => {
+  try {
+    const url = `post/${ownerId}`;
+    const data = await ApiServices.get(url);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   getPostCategories,
   createPost,
+  getPostByType,
+  getPostByOwner,
+  getAll
 };
