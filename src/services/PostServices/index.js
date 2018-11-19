@@ -52,10 +52,45 @@ const getPostByOwner = async ownerId => {
   }
 };
 
+const getVote = async (postId, voteType) => {
+  try {
+    const url = `post/vote/get?postId=${postId}&voteType=${voteType}`;
+    const data = await ApiServices.get(url);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const vote = async voteData => {
+  try {
+    const url = `post/vote`;
+    const method = "POST";
+    const data = await ApiServices.requestOption(method, url, voteData);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const report = async report => {
+  try {
+    const url = `post/report/add`;
+    const method = "POST";
+    const data = await ApiServices.requestOption(method, url, report);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   getPostCategories,
   createPost,
   getPostByType,
   getPostByOwner,
-  getAll
+  getAll,
+  vote,
+  getVote,
+  report
 };

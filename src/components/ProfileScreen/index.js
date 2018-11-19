@@ -1,7 +1,7 @@
 import React from "react";
 import { View, FlatList, Animated } from "react-native";
 import { Container, List, ListItem, Button, Text } from "native-base";
-import PostItem from "../CustomComponents/PostItem";
+// import PostItem from "../CustomComponents/PostItem";
 import { postData } from "../../utils/fakeData";
 import AnimatedHeader from "./AnimatedHeader";
 import PostOptionModal from "../CustomComponents/PostOptionModal";
@@ -62,11 +62,11 @@ class ProfileScreen extends React.Component {
                   marginRight: 10,
                 }}
               >
-                <PostItem
+                {/* <PostItem
                   postData={item}
                   optionPress={this._openModel}
                   navigation={this.props.navigation}
-                />
+                /> */}
               </View>
             );
           }}

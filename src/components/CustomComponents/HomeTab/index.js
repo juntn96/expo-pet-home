@@ -9,7 +9,7 @@ import {
 import CustomHeader from "../CustomHeader";
 import ActivityModal from "../ActivityModal";
 import PostOptionModal from "../PostOptionModal";
-import PostList from "./PostList";
+import PostList from "../PostList";
 import TagList from "./TagList";
 const { UIManager } = NativeModules;
 
@@ -19,7 +19,7 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 const CustomLayoutAnimation = {
   duration: 200,
   create: {
-    type: LayoutAnimation.Types.linear,
+    type: LayoutAnimation.Types.easeInEaseOut,
     property: LayoutAnimation.Properties.opacity,
   },
   update: {
@@ -59,12 +59,8 @@ class HomeTab extends Component {
     }
   };
 
-  _openModel = () => {
-    this.optionModal.setModalVisible(true, [
-      {
-        name: "Báo cáo bài viết",
-      },
-    ]);
+  _openOptionModel = post => {
+    this.optionModal.setModalVisible(true, post, ["Report"]);
   };
 
   _onCategoryChange = category => {
@@ -96,7 +92,10 @@ class HomeTab extends Component {
   render() {
     return (
       <View>
-        <PostOptionModal ref={ref => (this.optionModal = ref)} />
+        <PostOptionModal
+          ref={ref => (this.optionModal = ref)}
+          toast={this.props.toast}
+        />
         <ActivityModal ref={ref => (this.activityModal = ref)} />
         <CustomHeader
           title="Pet Home"
@@ -114,6 +113,9 @@ class HomeTab extends Component {
         <PostList
           onScroll={this._onScroll}
           ref={ref => (this.postList = ref)}
+          navigation={this.props.navigation}
+          optionPress={this._openOptionModel}
+          toast={this.props.toast}
         />
       </View>
     );

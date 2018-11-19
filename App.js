@@ -26,8 +26,6 @@ export default class App extends Component {
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
     });
     this.setState({ loading: false });
-    // console.log(Dimensions.get('screen'))
-    // console.log(Dimensions.get('window'))
   }
 
   render() {

@@ -9,9 +9,8 @@ import AddPostTab from "../CustomComponents/AddPostTab";
 
 import HomeTab from "../CustomComponents/HomeTab";
 export default class extends Component {
-
   _onCreateDone = () => {
-    this.tabs.goToPage(0)
+    this.tabs.goToPage(0);
   };
 
   render() {
@@ -35,7 +34,10 @@ export default class extends Component {
               </TabHeading>
             }
           >
-            <HomeTab navigation={this.props.navigation} />
+            <HomeTab
+              navigation={this.props.navigation}
+              toast={this.props.toast}
+            />
           </Tab>
           <Tab
             heading={
@@ -69,20 +71,6 @@ export default class extends Component {
               onCreateDone={this._onCreateDone}
             />
           </Tab>
-          <Tab
-            heading={
-              <TabHeading
-                style={{
-                  backgroundColor: "#FFFFFF",
-                }}
-              >
-                <Icon
-                  name="ios-bookmark-outline"
-                  style={{ color: "#EC466A" }}
-                />
-              </TabHeading>
-            }
-          />
         </Tabs>
       </Container>
     );
