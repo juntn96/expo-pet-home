@@ -72,7 +72,9 @@ class PostItem extends Component {
           </Body>
         </CardItem>
         <CardItem cardBody>
-          <PostGridImage images={postData.images} />
+          <View style={{ flex: 1 }}>
+            <PostGridImage images={postData.images} />
+          </View>
         </CardItem>
         <CardItem>
           <Left>
