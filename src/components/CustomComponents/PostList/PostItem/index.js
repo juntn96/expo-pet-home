@@ -13,7 +13,8 @@ import {
 } from "native-base";
 import Comment from "./Comment";
 import Vote from "./Vote";
-import PostGridImage from "../../PostGridImage"
+import PostGridImage from "../../PostGridImage";
+import ReadMoreText from "../../ReadMoreText";
 
 class PostItem extends Component {
   constructor(props) {
@@ -49,11 +50,7 @@ class PostItem extends Component {
                 {postData.ownerId.appName}
               </Text>
               <Text note style={{ fontSize: 12, alignSelf: "flex-start" }}>
-                {date.getDate() +
-                  "/" +
-                  date.getMonth() +
-                  "/" +
-                  date.getFullYear()}
+                {date.toLocaleDateString()}
               </Text>
             </View>
           </Left>
@@ -69,13 +66,13 @@ class PostItem extends Component {
         </CardItem>
         <CardItem>
           <Body>
-            <Text>{postData.title}</Text>
+            <ReadMoreText numberOfLines={3}>
+              <Text>{postData.title}</Text>
+            </ReadMoreText>
           </Body>
         </CardItem>
         <CardItem cardBody>
-          <PostGridImage
-            images={postData.images}
-          />
+          <PostGridImage images={postData.images} />
         </CardItem>
         <CardItem>
           <Left>

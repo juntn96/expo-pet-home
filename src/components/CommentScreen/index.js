@@ -5,7 +5,7 @@ import Footer from "./Footer";
 import CommentList from "./CommentList";
 import Header from "./Header";
 import PostGridImage from "../CustomComponents/PostGridImage";
-
+import ReadMoreText from "../CustomComponents/ReadMoreText";
 export default class extends Component {
   constructor(props) {
     super(props);
@@ -13,7 +13,7 @@ export default class extends Component {
   }
 
   _sendCommentCallback = () => {
-    this.commentList._requestGetComments()
+    this.commentList._requestGetComments();
   };
 
   render() {
@@ -29,7 +29,9 @@ export default class extends Component {
               marginBottom: 10,
             }}
           >
-            <Text>{postData.title}</Text>
+            <ReadMoreText numberOfLines={3}>
+              <Text>{postData.title}</Text>
+            </ReadMoreText>
             <View style={{ height: 4 }} />
             <PostGridImage images={postData.images} />
           </View>

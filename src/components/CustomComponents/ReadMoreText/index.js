@@ -61,7 +61,7 @@ class ReadMoreText extends PureComponent {
         </Text>
         {showReadMore && !showAllText ? (
           <TouchableOpacity onPress={this._showText}>
-            <Text style={{ color: "#2196F3" }}>Xem thêm</Text>
+            <Text style={{ color: "#2196F3" }}>Đọc thêm</Text>
           </TouchableOpacity>
         ) : null}
       </TouchableOpacity>
