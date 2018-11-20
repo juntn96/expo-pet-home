@@ -13,6 +13,7 @@ import {
 } from "native-base";
 import Comment from "./Comment";
 import Vote from "./Vote";
+import PostGridImage from "../../PostGridImage"
 
 class PostItem extends Component {
   constructor(props) {
@@ -72,9 +73,8 @@ class PostItem extends Component {
           </Body>
         </CardItem>
         <CardItem cardBody>
-          <Image
-            source={{ uri: postData.images[0].url }}
-            style={{ height: 200, width: null, flex: 1 }}
+          <PostGridImage
+            images={postData.images}
           />
         </CardItem>
         <CardItem>

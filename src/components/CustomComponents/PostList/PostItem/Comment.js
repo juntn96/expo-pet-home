@@ -1,12 +1,28 @@
 import React, { Component } from "react";
 import { View } from "react-native";
 import { Button, Icon, Text } from "native-base";
-
+import PostServices from "../../../../services/PostServices";
 class Vote extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      comments: [],
+    };
   }
+
+  async componentDidMount() {
+    await this._requestGetComments();
+  }
+
+  _requestGetComments = async () => {
+    try {
+      const { postData } = this.props;
+      const result = await PostServices.getComments(postData._id);
+      this.setState({ comments: result });
+    } catch (error) {
+      throw error;
+    }
+  };
 
   render() {
     return (
@@ -14,11 +30,13 @@ class Vote extends Component {
         transparent
         textStyle={{ color: "#00E7C3" }}
         onPress={() => {
-          this.props.navigation.navigate("Comment");
+          this.props.navigation.navigate("Comment", {
+            postData: this.props.postData,
+          });
         }}
       >
         <Icon name="ios-chatbubbles-outline" style={{ color: "#00E7C3" }} />
-        <Text>{"1"}</Text>
+        <Text>{this.state.comments.length}</Text>
       </Button>
     );
   }

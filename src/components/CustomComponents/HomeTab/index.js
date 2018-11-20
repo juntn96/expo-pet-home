@@ -17,7 +17,7 @@ UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
 const CustomLayoutAnimation = {
-  duration: 200,
+  duration: 0,
   create: {
     type: LayoutAnimation.Types.easeInEaseOut,
     property: LayoutAnimation.Properties.opacity,
@@ -65,11 +65,7 @@ class HomeTab extends Component {
 
   _onCategoryChange = category => {
     try {
-      if (category._id === "all") {
-        this.postList.requestGetAll();
-      } else {
-        this.postList.requestGetByType(category);
-      }
+      this.postList.requestGetByType(category._id);
     } catch (error) {
       throw error;
     }

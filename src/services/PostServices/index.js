@@ -84,6 +84,49 @@ const report = async report => {
   }
 };
 
+const addComment = async comment => {
+  try {
+    const url = `post/comment/add`;
+    const method = "POST";
+    const data = await ApiServices.requestOption(method, url, comment);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getComments = async postId => {
+  try {
+    const url = `post/comment/${postId}`;
+    const data = await ApiServices.get(url);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const editComment = async comment => {
+  try {
+    const url = `post/report/add`;
+    const method = "POST";
+    const data = await ApiServices.requestOption(method, url, report);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deleteComment = async comment => {
+  try {
+    const url = `post/report/add`;
+    const method = "POST";
+    const data = await ApiServices.requestOption(method, url, report);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   getPostCategories,
   createPost,
@@ -92,5 +135,9 @@ export default {
   getAll,
   vote,
   getVote,
-  report
+  report,
+  addComment,
+  getComments,
+  editComment,
+  deleteComment,
 };

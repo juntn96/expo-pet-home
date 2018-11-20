@@ -1,5 +1,12 @@
 import React, { PureComponent } from "react";
-import { FlatList, View, Text, Dimensions, StyleSheet } from "react-native";
+import {
+  FlatList,
+  View,
+  Text,
+  Dimensions,
+  StyleSheet,
+  RefreshControl,
+} from "react-native";
 import { Spinner } from "native-base";
 import PostItem from "./PostItem";
 import PostServices from "../../../services/PostServices";
@@ -10,6 +17,7 @@ class PostList extends PureComponent {
       postData: [],
       loading: false,
     };
+    this.currentType = "all";
   }
 
   async componentDidMount() {
@@ -29,8 +37,12 @@ class PostList extends PureComponent {
 
   requestGetByType = async type => {
     this._setLoading(true);
+    this.currentType = type;
+    if (this.currentType === "all") {
+      return this.requestGetAll();
+    }
     try {
-      const result = await PostServices.getPostByType(type._id);
+      const result = await PostServices.getPostByType(this.currentType);
       this.setState({ postData: result });
     } catch (error) {
       throw error;
@@ -90,6 +102,12 @@ class PostList extends PureComponent {
           paddingLeft: 10,
           paddingRight: 10,
         }}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={() => this.requestGetByType(this.currentType)}
+          />
+        }
       />
     );
   }

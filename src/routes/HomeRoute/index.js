@@ -1,6 +1,6 @@
 import { createStackNavigator } from "react-navigation";
 import HomeScreen from "../../containers/Home";
-import CommentScreen from "../../components/CommentScreen";
+import CommentScreen from "../../containers/Comment";
 
 const HomeRoute = createStackNavigator(
   {
