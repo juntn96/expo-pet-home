@@ -6,6 +6,7 @@ import "../CustomComponents/PostOptionModal";
 import Modal from "react-native-modalbox";
 
 import AddPostTab from "../CustomComponents/AddPostTab";
+import SearchPostTab from "../CustomComponents/SearchPostTab";
 
 import HomeTab from "../CustomComponents/HomeTab";
 export default class extends Component {
@@ -49,7 +50,13 @@ export default class extends Component {
                 <Icon name="ios-search" style={{ color: "#EC466A" }} />
               </TabHeading>
             }
-          />
+          >
+            <SearchPostTab
+              navigation={this.props.navigation}
+              userData={this.props.userData}
+              toast={this.props.toast}
+            />
+          </Tab>
           <Tab
             heading={
               <TabHeading

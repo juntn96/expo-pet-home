@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { View, Text, Modal } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
-import CustomHeader from '../CustomHeader'
+import CustomHeader from "../CustomHeader";
+import MessageServices from "../../../services/MessageServices";
+import SocketClient from "socket.io-client";
+import { SERVER_INFO } from "../../../constants/config";
+const socketIP = SERVER_INFO.PUBLIC_ADDRESS;
 
 class ChatModal extends Component {
   constructor(props) {
@@ -10,49 +14,84 @@ class ChatModal extends Component {
       modalVisible: false,
       messages: [],
     };
+    this.socket = null;
   }
 
-  componentWillMount() {
-    this.setState({
-      messages: [
-        {
-          _id: 1,
-          text: "An rau ren ko",
-          createdAt: new Date(),
+  componentDidMount() {}
+
+  _connectSocket = conversation => {
+    this.socket = SocketClient(`http://${socketIP}:5000`);
+    this.socket.emit("joinConversation", conversation);
+    this.socket.on("sendMessage", data => {
+      console.log("socket id >> ", this.socket.id);
+      console.log("response socket >> ", data);
+      const mes = {
+        _id: data.message._id,
+        text: data.message.text,
+        createdAt: data.message.createdAt,
+        user: data.user,
+      };
+      this.setState(previousState => ({
+        messages: GiftedChat.append(previousState.messages, mes),
+      }));
+    });
+  };
+
+  _requestGetMessages = async conversation => {
+    try {
+      const result = await MessageServices.getMessages(conversation._id);
+      let messages = result.map(mes => {
+        return {
+          _id: mes._id,
+          text: mes.content,
+          createdAt: mes.createdAt,
           user: {
-            _id: 2,
-            name: "Lam Ngoc Khanh",
-            avatar: require("../../../assets/images/bg1.png"),
+            _id: mes.sender._id,
+            name: mes.sender.appName,
+            avatar: mes.sender.avatar,
           },
-        },
-      ],
-    });
-  }
+        };
+      });
+      this.setState({ messages });
+    } catch (error) {
+      throw error;
+    }
+  };
 
-  open = () => {
+  setModalVisible = (visible, conversation) => {
+    this.conversation = conversation;
+    if (visible) {
+      this._requestGetMessages(conversation);
+      this._connectSocket(conversation);
+    } else {
+      this.socket.disconnect();
+    }
     this.setState({
-      modalVisible: true,
+      modalVisible: visible,
     });
   };
 
-  close = () => {
-    this.setState({
-      modalVisible: false,
-    });
-  };
+  _onDismiss = () => {};
 
-  _onDismiss = () => {
-    
-  }
-
-  _onSend = (messages = []) => {
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }));
+  _onSend = async (messages = []) => {
+    console.log("messages: ", messages);
+    const { userData } = this.props;
+    const data = {
+      conversationId: this.conversation._id,
+      message: messages[0],
+      user: {
+        _id: messages[0].user._id,
+        name: userData.appName,
+        avatar: userData.avatar,
+      },
+    };
+    this.socket.emit("sendMessage", data);
   };
 
   render() {
     const { modalVisible } = this.state;
+    const { userData } = this.props;
+    console.log(userData);
     return (
       <Modal
         visible={modalVisible}
@@ -62,21 +101,23 @@ class ChatModal extends Component {
         onDismiss={this._onDismiss}
       >
         <CustomHeader
-          title="Khanh Dai Ka"
+          title=""
           buttonLeft="md-close"
           actionLeft={() => {
-            this.close();
+            this.setModalVisible(false);
           }}
         />
-        <GiftedChat
-          messages={this.state.messages}
-          onSend={messages => {
-            this._onSend(messages);
-          }}
-          user={{
-            _id: 1,
-          }}
-        />
+        {modalVisible ? (
+          <GiftedChat
+            messages={this.state.messages}
+            onSend={messages => {
+              this._onSend(messages);
+            }}
+            user={{
+              _id: userData._id,
+            }}
+          />
+        ) : null}
       </Modal>
     );
   }

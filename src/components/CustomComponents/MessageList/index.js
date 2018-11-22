@@ -1,51 +1,74 @@
 import React, { Component } from "react";
-import { View, TouchableOpacity } from "react-native";
-import {
-  List,
-  Left,
-  Body,
-  Right,
-  ListItem,
-  Thumbnail,
-  Text,
-  Button,
-  Icon,
-} from "native-base";
+import { View, FlatList } from "react-native";
+import { List, Left, Body, ListItem, Thumbnail, Text } from "native-base";
+import { connect } from "react-redux";
+import MessageServices from "../../../services/MessageServices";
 
-const data = [1, 2, 3, 4, 5, 6, 7, 8];
-
-import ChatModal from '../ChatModal'
+import ChatModal from "../ChatModal";
 
 class MessageList extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      conversation: [],
+    };
   }
 
-  _renderItem = item => {
+  componentDidMount() {
+    this._requestGetConversation();
+  }
+
+  _requestGetConversation = async () => {
+    try {
+      const { userData } = this.props.data;
+      const result = await MessageServices.getAllConversation(userData._id);
+      this.setState({ conversation: result });
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  _renderItem = ({ item }) => {
+    const { userData } = this.props.data;
+    const receiver = item.users.filter(data => data.user._id !== userData._id);
+    const date = new Date(item.createdAt);
+    const messages = item.messages;
+    let lastMes = "";
+    if (messages.length > 0) {
+      lastMes = messages[messages.length - 1];
+      if (lastMes.sender === userData._id) {
+        lastMes = "Bạn: " + lastMes.content;
+      } else {
+        lastMes = lastMes.content;
+      }
+    }
     return (
-      <ListItem avatar onPress={() => {this.chatModel.open()}} >
+      <ListItem
+        avatar
+        onPress={() => {
+          this.chatModel.setModalVisible(true, item);
+        }}
+      >
         <Left>
-          <Thumbnail
-            circular
-            source={require("../../../assets/images/bg1.png")}
-          />
+          <Thumbnail small circular source={{ uri: receiver[0].user.avatar }} />
         </Left>
         <Body>
           <View
             style={{
-              flexDirection: 'row',
+              flexDirection: "row",
             }}
           >
             <Text
               style={{
-                flex: 1
+                flex: 1,
               }}
-            >Lam Ngoc Khanh</Text>
-            <Text note>3:43 pm</Text>
+            >
+              {receiver[0].user.appName}
+            </Text>
+            <Text note>{date.toLocaleTimeString()}</Text>
           </View>
           <Text note numberOfLines={1}>
-            xin chao. ban co an rau ren k
+            {lastMes}
           </Text>
         </Body>
       </ListItem>
@@ -53,13 +76,29 @@ class MessageList extends Component {
   };
 
   render() {
+    const { conversation } = this.state;
     return (
       <View>
-        <ChatModal ref={ref => {this.chatModel = ref}} />
-        <List dataArray={data} renderRow={item => this._renderItem(item)} />
+        <ChatModal
+          ref={ref => {
+            this.chatModel = ref;
+          }}
+          userData={this.props.data.userData}
+        />
+        <FlatList
+          data={conversation}
+          keyExtractor={item => item._id}
+          renderItem={this._renderItem}
+        />
       </View>
     );
   }
 }
 
-export default MessageList;
+const mapStateToProps = state => {
+  return {
+    data: state.userData,
+  };
+};
+
+export default connect(mapStateToProps)(MessageList);

@@ -52,6 +52,16 @@ const getPostByOwner = async ownerId => {
   }
 };
 
+const searchPostByText = async text => {
+  try {
+    const url = `post/search?title=${text}`
+    const data = await ApiServices.get(url);
+    return data.result;
+  } catch (error) {
+    throw error
+  }
+}
+
 const getVote = async (postId, voteType) => {
   try {
     const url = `post/vote/get?postId=${postId}&voteType=${voteType}`;
@@ -132,6 +142,7 @@ export default {
   createPost,
   getPostByType,
   getPostByOwner,
+  searchPostByText,
   getAll,
   vote,
   getVote,

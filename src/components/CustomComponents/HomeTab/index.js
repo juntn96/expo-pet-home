@@ -16,48 +16,48 @@ const { UIManager } = NativeModules;
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
-const CustomLayoutAnimation = {
-  duration: 0,
-  create: {
-    type: LayoutAnimation.Types.easeInEaseOut,
-    property: LayoutAnimation.Properties.opacity,
-  },
-  update: {
-    type: LayoutAnimation.Types.easeInEaseOut,
-  },
-};
+// const CustomLayoutAnimation = {
+//   duration: 0,
+//   create: {
+//     type: LayoutAnimation.Types.easeInEaseOut,
+//     property: LayoutAnimation.Properties.opacity,
+//   },
+//   update: {
+//     type: LayoutAnimation.Types.easeInEaseOut,
+//   },
+// };
 
 class HomeTab extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      scrollDown: false,
+      // scrollDown: false,
     };
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.state.scrollDown !== nextState.scrollDown;
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return this.state.scrollDown !== nextState.scrollDown;
+  // }
 
-  isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
-    const paddingToBottom = 10;
-    return (
-      layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom
-    );
-  };
+  // isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+  //   const paddingToBottom = 10;
+  //   return (
+  //     layoutMeasurement.height + contentOffset.y >=
+  //     contentSize.height - paddingToBottom
+  //   );
+  // };
 
-  _onScroll = event => {
-    let currentOffset = event.nativeEvent.contentOffset.y;
-    let direction = currentOffset > this.offset ? "down" : "up";
-    this.offset = currentOffset;
-    if (direction === "down" && currentOffset > 10) {
-      this.setState({ scrollDown: true });
-    }
-    if (direction === "up" && !this.isCloseToBottom(event.nativeEvent)) {
-      this.setState({ scrollDown: false });
-    }
-  };
+  // _onScroll = event => {
+  //   let currentOffset = event.nativeEvent.contentOffset.y;
+  //   let direction = currentOffset > this.offset ? "down" : "up";
+  //   this.offset = currentOffset;
+  //   if (direction === "down" && currentOffset > 10) {
+  //     this.setState({ scrollDown: true });
+  //   }
+  //   if (direction === "up" && !this.isCloseToBottom(event.nativeEvent)) {
+  //     this.setState({ scrollDown: false });
+  //   }
+  // };
 
   _openOptionModel = post => {
     this.optionModal.setModalVisible(true, post, ["Report"]);
@@ -71,19 +71,19 @@ class HomeTab extends Component {
     }
   };
 
-  _renderTagList = () => {
-    LayoutAnimation.configureNext(CustomLayoutAnimation);
-    let stateStyle = { zIndex: 2 };
+  // _renderTagList = () => {
+  // LayoutAnimation.easeInEaseOut();
+  // let stateStyle = { zIndex: 2 };
 
-    if (this.state.scrollDown) {
-      stateStyle = { width: 0, height: 0 };
-    }
-    return (
-      <View style={stateStyle}>
-        <TagList onCategoryChange={this._onCategoryChange} />
-      </View>
-    );
-  };
+  // if (this.state.scrollDown) {
+  //   stateStyle = { width: 0, height: 0 };
+  // }
+  //   return (
+  //     <View style={stateStyle}>
+  //       <TagList onCategoryChange={this._onCategoryChange} />
+  //     </View>
+  //   );
+  // };
 
   render() {
     return (
@@ -105,9 +105,11 @@ class HomeTab extends Component {
             this.activityModal.setVisible(true);
           }}
         />
-        {this._renderTagList()}
+        <View>
+          <TagList onCategoryChange={this._onCategoryChange} />
+        </View>
         <PostList
-          onScroll={this._onScroll}
+          // onScroll={this._onScroll}
           ref={ref => (this.postList = ref)}
           navigation={this.props.navigation}
           optionPress={this._openOptionModel}
