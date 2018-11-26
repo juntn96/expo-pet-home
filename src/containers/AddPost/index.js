@@ -1,18 +1,25 @@
 import React, { Component } from "react";
-import { View, Text } from "react-native";
-import ProfileScreen from "../../components/ProfileScreen";
+import { View, Text, StyleSheet } from "react-native";
+import AddPostTab from "../../components/AddPostTab";
 import { connect } from "react-redux";
 import { toggle } from "../../redux/actions/UIActions";
-
-class Profile extends Component {
+class AddPost extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   render() {
+    const { userData } = this.props.auth;
+    if (!userData) {
+      return (
+        <View style={styles.background}>
+          <Text>Hãy đăng nhập để tạo bài viết</Text>
+        </View>
+      );
+    }
     return (
-      <ProfileScreen
+      <AddPostTab
         navigation={this.props.navigation}
         userData={this.props.auth.userData}
         toast={this.props.toast}
@@ -20,13 +27,23 @@ class Profile extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+  },
+});
+
 const mapStateToProps = state => {
   return {
     auth: state.auth,
   };
 };
 
-const mapDispatchToProps = () => {
+const mapDispatchToProps = dispatch => {
   return {
     toast: toast => {
       dispatch(toggle(toast));
@@ -37,4 +54,4 @@ const mapDispatchToProps = () => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Profile);
+)(AddPost);

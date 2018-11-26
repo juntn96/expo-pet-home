@@ -81,7 +81,7 @@ class ReportModal extends Component {
       >
         {loading ? (
           <View style={styles.loading}>
-            <Spinner />
+            <Spinner color="#615c70" />
           </View>
         ) : null}
         <View style={styles.container}>

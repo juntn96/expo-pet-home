@@ -9,46 +9,17 @@ import {
 } from "react-native";
 import { Spinner } from "native-base";
 import PostItem from "./PostItem";
-import PostServices from "../../../services/PostServices";
+import { getPost } from "../../../redux/actions/PostActions";
+import { connect } from "react-redux";
+
 class PostList extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      postData: [],
-      loading: false,
-    };
-    this.currentType = "all";
   }
 
   async componentDidMount() {
-    this.requestGetAll();
+    this.props.getPost("all");
   }
-
-  requestGetAll = async () => {
-    this._setLoading(true);
-    try {
-      const result = await PostServices.getAll();
-      this.setState({ postData: result });
-    } catch (error) {
-      throw error;
-    }
-    this._setLoading(false);
-  };
-
-  requestGetByType = async type => {
-    this._setLoading(true);
-    this.currentType = type;
-    if (this.currentType === "all") {
-      return this.requestGetAll();
-    }
-    try {
-      const result = await PostServices.getPostByType(this.currentType);
-      this.setState({ postData: result });
-    } catch (error) {
-      throw error;
-    }
-    this._setLoading(false);
-  };
 
   _optionPress = post => {
     const { optionPress } = this.props;
@@ -69,16 +40,17 @@ class PostList extends PureComponent {
         postData={item}
         optionPress={this._optionPress}
         navigation={this.props.navigation}
+        userData={this.props.userData}
       />
     );
   };
 
   render() {
-    const { postData, loading } = this.state;
+    const { loading, postData, postType } = this.props.postState;
     if (loading) {
       return (
         <View style={styles.background}>
-          <Spinner />
+          <Spinner color="#615c70" />
         </View>
       );
     }
@@ -98,14 +70,13 @@ class PostList extends PureComponent {
         renderItem={this._renderItem}
         keyExtractor={item => item._id}
         contentContainerStyle={{
-          paddingBottom: 70,
-          paddingLeft: 10,
-          paddingRight: 10,
+          marginLeft: 10, 
+          marginRight: 10
         }}
         refreshControl={
           <RefreshControl
             refreshing={loading}
-            onRefresh={() => this.requestGetByType(this.currentType)}
+            onRefresh={() => this.props.getPost(postType)}
           />
         }
       />
@@ -115,13 +86,31 @@ class PostList extends PureComponent {
 
 const styles = StyleSheet.create({
   background: {
+    flex: 1,
     position: "absolute",
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
     justifyContent: "center",
     alignItems: "center",
-    flex: 1,
+    width: "100%",
+    height: "100%",
   },
 });
 
-export default PostList;
+const mapStateToProps = state => {
+  return {
+    postState: state.post,
+    userData: state.auth.userData,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getPost: type => {
+      dispatch(getPost(type));
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PostList);

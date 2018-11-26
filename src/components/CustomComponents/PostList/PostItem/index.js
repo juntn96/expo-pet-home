@@ -38,7 +38,7 @@ class PostItem extends Component {
   };
 
   render() {
-    const { postData } = this.props;
+    const { postData, userData } = this.props;
     const date = new Date(postData.createdAt);
     return (
       <Card>
@@ -55,13 +55,15 @@ class PostItem extends Component {
             </View>
           </Left>
           <Right style={{ alignSelf: "flex-start" }}>
-            <TouchableOpacity
-              onPress={this._optionPress}
-              hitSlop={{ top: 40, bottom: 40, left: 40, right: 40 }}
-              activeOpacity={0.7}
-            >
-              <Icon name="ios-more" style={{ color: "#000" }} />
-            </TouchableOpacity>
+            {userData ? (
+              <TouchableOpacity
+                onPress={this._optionPress}
+                hitSlop={{ top: 40, bottom: 40, left: 40, right: 40 }}
+                activeOpacity={0.7}
+              >
+                <Icon name="ios-more" style={{ color: "#000" }} />
+              </TouchableOpacity>
+            ) : null}
           </Right>
         </CardItem>
         <CardItem>

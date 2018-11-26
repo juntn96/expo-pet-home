@@ -1,18 +1,8 @@
 import React, { Component } from "react";
-import { View, FlatList } from "react-native";
+import { View } from "react-native";
 import {
-  Container,
-  Tabs,
-  Tab,
-  TabHeading,
   Icon,
-  Header,
   Card,
-  CardItem,
-  Left,
-  Body,
-  Right,
-  List,
   Thumbnail,
   Text,
   Button,

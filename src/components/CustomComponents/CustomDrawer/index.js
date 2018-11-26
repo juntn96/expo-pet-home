@@ -1,24 +1,34 @@
 import React, { Component } from "react";
-import {
-  View,
-  Text,
-  Dimensions,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, Dimensions, StyleSheet } from "react-native";
 import { Icon } from "native-base";
 import CustomTouchable from "../CustomTouchable";
 import ActivityModal from "../ActivityModal";
 
 import { connect } from "react-redux";
 import { logout } from "../../../redux/actions/AuthActions";
+import { setLoading } from "../../../redux/actions/UIActions";
+import UserServices from "../../../services/UserServices";
 
 class CustomDrawer extends Component {
   _onPressProfile = () => {
     this.props.navigation.navigate("ProfileRoute");
   };
 
+  _onPressLogout = async () => {
+    const { userData } = this.props.auth;
+    this.props.setLoading(true);
+    try {
+      await UserServices.removeToken(userData._id);
+      this.props.logout();
+      this.props.navigation.navigate("HomeRoute");
+    } catch (error) {
+      throw error;
+    }
+    this.props.setLoading(false);
+  };
+
   render() {
+    const { userData } = this.props.auth;
     return (
       <View style={styles.container}>
         <CustomTouchable
@@ -79,14 +89,11 @@ class CustomDrawer extends Component {
           </CustomTouchable>
         </View>
         <View style={styles.under}>
-          {this.props.data.userData ? (
+          {userData ? (
             <CustomTouchable
               loginRequired={false}
               style={styles.buttonBody}
-              onPress={() => {
-                this.props.logout();
-                this.props.navigation.navigate("HomeRoute");
-              }}
+              onPress={this._onPressLogout}
             >
               <Icon name="md-log-out" style={styles.icon} />
             </CustomTouchable>
@@ -140,7 +147,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    data: state.userData,
+    auth: state.auth,
   };
 };
 
@@ -148,6 +155,9 @@ const mapDispatchToProps = dispatch => {
   return {
     logout: () => {
       dispatch(logout());
+    },
+    setLoading: loading => {
+      dispatch(setLoading(loading));
     },
   };
 };

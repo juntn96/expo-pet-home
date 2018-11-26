@@ -1,24 +1,17 @@
-initState = {
-  userData: null
-}
-const AuthReducer = (state = initState, action) => {
-  switch(action.type) {
-    case 'LOGIN': {
+const AuthReducer = (state = {}, action) => {
+  switch (action.type) {
+    case "LOGIN": {
       return {
-        ...state,
-        userData: action.payload
-      }
+        userData: action.payload,
+      };
     }
-    case 'LOGOUT': {
-      return {
-        ...state,
-        userData: null
-      }
+    case "LOGOUT": {
+      return {};
     }
     default: {
       return state;
     }
   }
-}
+};
 
 export default AuthReducer;

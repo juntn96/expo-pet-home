@@ -1,12 +1,19 @@
 export const toggle = toast => {
   return {
     type: "TOGGLE",
-    payload: toast
-  }
-}
+    payload: toast,
+  };
+};
 
 export const clear = () => {
   return {
-    type: "CLEAR"
-  }
-}
+    type: "CLEAR",
+  };
+};
+
+export const setLoading = loading => {
+  return {
+    type: "LOADING",
+    payload: loading,
+  };
+};

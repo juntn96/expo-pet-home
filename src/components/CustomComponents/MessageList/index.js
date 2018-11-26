@@ -20,7 +20,7 @@ class MessageList extends Component {
 
   _requestGetConversation = async () => {
     try {
-      const { userData } = this.props.data;
+      const { userData } = this.props.auth;
       const result = await MessageServices.getAllConversation(userData._id);
       this.setState({ conversation: result });
     } catch (error) {
@@ -29,7 +29,7 @@ class MessageList extends Component {
   };
 
   _renderItem = ({ item }) => {
-    const { userData } = this.props.data;
+    const { userData } = this.props.auth;
     const receiver = item.users.filter(data => data.user._id !== userData._id);
     const date = new Date(item.createdAt);
     const messages = item.messages;
@@ -83,7 +83,7 @@ class MessageList extends Component {
           ref={ref => {
             this.chatModel = ref;
           }}
-          userData={this.props.data.userData}
+          userData={this.props.auth.userData}
         />
         <FlatList
           data={conversation}
@@ -97,7 +97,7 @@ class MessageList extends Component {
 
 const mapStateToProps = state => {
   return {
-    data: state.userData,
+    auth: state.auth,
   };
 };
 

@@ -17,6 +17,7 @@ export default class extends Component {
   };
 
   render() {
+    const { userData } = this.props;
     const { postData } = this.props.navigation.state.params;
     return (
       <Container>
@@ -40,11 +41,13 @@ export default class extends Component {
             ref={ref => (this.commentList = ref)}
           />
         </Content>
-        <Footer
-          postData={postData}
-          userData={this.props.userData}
-          sendCommentCallback={this._sendCommentCallback}
-        />
+        {userData ? (
+          <Footer
+            postData={postData}
+            userData={this.props.userData}
+            sendCommentCallback={this._sendCommentCallback}
+          />
+        ) : null}
       </Container>
     );
   }

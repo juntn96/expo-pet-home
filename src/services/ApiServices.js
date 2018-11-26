@@ -10,6 +10,7 @@ const ApiServices = {
         method,
         url,
         responseType: "json",
+        timeout: 30000
       });
       return result.data;
     } catch (error) {

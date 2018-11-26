@@ -1,19 +1,15 @@
 import React, { Component } from "react";
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  Dimensions,
-} from "react-native";
-import { Font, AppLoading } from "expo";
+import { StyleSheet, View, AsyncStorage } from "react-native";
+import { Font, AppLoading, Permissions, Notifications } from "expo";
 import DrawerRoute from "./src/routes/DrawerRoute";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/es/integration/react";
 import configureStore from "./src/redux/configStore";
-import Toast from "./src/components/CustomComponents/Toast"
+import Toast from "./src/components/CustomComponents/Toast";
+import AppSpinner from './src/components/CustomComponents/AppSpinner';
+import { Spinner } from "native-base";
 const { persistor, store } = configureStore();
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +33,8 @@ export default class App extends Component {
         <PersistGate persistor={persistor}>
           <View style={styles.container}>
             <DrawerRoute />
-            <Toast/>
+            <Toast />
+            <AppSpinner />
           </View>
         </PersistGate>
       </Provider>

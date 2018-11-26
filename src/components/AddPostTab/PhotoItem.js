@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { Icon, Spinner, Toast } from "native-base";
-import ImageServices from "../../../services/ImageServices";
+import ImageServices from "../../services/ImageServices";
 
 class PhotoItem extends Component {
   constructor(props) {
@@ -68,7 +68,7 @@ class PhotoItem extends Component {
         <Image source={{ uri: item.uri }} style={styles.photo} />
         {loading ? (
           <View style={styles.loading}>
-            <Spinner color="blue" />
+            <Spinner color="#615c70" />
           </View>
         ) : null}
         <TouchableOpacity onPress={this._onPress} style={styles.removeBtn}>

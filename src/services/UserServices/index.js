@@ -1,16 +1,46 @@
 import ApiServices from "../ApiServices";
-
-const UserServices = {
-  login: async userData => {
-    try {
-      const method = "POST";
-      const funcUrl = "app/user/add";
-      const data = await ApiServices.requestOption(method, funcUrl, userData);
-      return data.result;
-    } catch (error) {
-      throw error;
-    }
-  },
+import ExpoService from "../ExpoService";
+const login = async userData => {
+  try {
+    const method = "POST";
+    const funcUrl = "app/user/add";
+    const data = await ApiServices.requestOption(method, funcUrl, userData);
+    const token = await ExpoService.getExpoToken();
+    const user = data.result;
+    await registerToken(user._id, token);
+    return user;
+  } catch (error) {
+    throw error;
+  }
 };
 
-export default UserServices;
+const registerToken = async (userId, expoToken) => {
+  try {
+    const method = "POST";
+    const funcUrl = "app/user/addExpoToken";
+    const data = await ApiServices.requestOption(method, funcUrl, {
+      userId,
+      expoToken,
+    });
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const removeToken = async userId => {
+  try {
+    const method = "POST";
+    const funcUrl = "app/user/removeExpoToken";
+    const data = await ApiServices.requestOption(method, funcUrl, { userId });
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export default {
+  login,
+  registerToken,
+  removeToken,
+};

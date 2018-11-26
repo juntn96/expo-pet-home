@@ -64,19 +64,6 @@ class Header extends Component {
             </Text>
           </View>
         </View>
-        <View>
-          <TouchableOpacity
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              marginRight: 20,
-              flex: 1,
-              paddingLeft: 20,
-            }}
-          >
-            <Icon name="md-more" />
-          </TouchableOpacity>
-        </View>
       </View>
     );
   }

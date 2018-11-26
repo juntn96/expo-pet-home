@@ -1,23 +1,24 @@
 import React, { Component } from "react";
 import { View, Text } from "react-native";
-import HomeScreen from "../../components/HomeScreen";
+import HomeTab from "../../components/HomeTab";
 import { connect } from "react-redux";
 import { toggle } from "../../redux/actions/UIActions";
 
 class Home extends Component {
   render() {
     return (
-      <HomeScreen
+      <HomeTab
         navigation={this.props.navigation}
-        userData={this.props.data.userData}
+        userData={this.props.auth.userData}
         toast={this.props.toast}
       />
     );
   }
 }
+
 const mapStateToProps = state => {
   return {
-    data: state.userData,
+    auth: state.auth,
   };
 };
 

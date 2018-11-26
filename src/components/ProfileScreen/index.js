@@ -1,10 +1,11 @@
 import React from "react";
-import { View, FlatList, Animated } from "react-native";
+import { View, FlatList, Animated, RefreshControl } from "react-native";
 import { Container, List, ListItem, Button, Text } from "native-base";
-// import PostItem from "../CustomComponents/PostItem";
-import { postData } from "../../utils/fakeData";
+import PostItem from "../CustomComponents/PostList/PostItem";
 import AnimatedHeader from "./AnimatedHeader";
 import PostOptionModal from "../CustomComponents/PostOptionModal";
+
+import PostServices from "../../services/PostServices";
 
 const animatedValue = new Animated.Value(0);
 const AnimatedList = Animated.createAnimatedComponent(FlatList);
@@ -13,17 +14,34 @@ const BUTTON_HEIGHT = 45;
 class ProfileScreen extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      postData: [],
+      loading: false,
+    };
   }
 
-  _openModel = () => {
-    this.optionModal.setModalVisible(true, [
-      {
-        name: "Sửa bài viết",
-      },
-      {
-        name: "Xóa bài viết",
-      },
-    ]);
+  componentDidMount() {
+    this.requestGetByOwner();
+  }
+
+  requestGetByOwner = async () => {
+    this._setLoading(true);
+    try {
+      const { userData } = this.props;
+      const result = await PostServices.getPostByOwner(userData._id);
+      this.setState({ postData: result });
+    } catch (error) {
+      throw error;
+    }
+    this._setLoading(false);
+  };
+
+  _openModel = (post) => {
+    this.optionModal.setModalVisible(true, post, ["Edit", "Delete"]);
+  };
+
+  _setLoading = loading => {
+    this.setState({ loading });
   };
 
   render() {
@@ -53,28 +71,27 @@ class ProfileScreen extends React.Component {
           )}
           showsVerticalScrollIndicator={false}
           scrollEventThrottle={16}
-          data={postData}
+          data={this.state.postData}
           renderItem={({ item }) => {
             return (
-              <View
-                style={{
-                  marginLeft: 10,
-                  marginRight: 10,
-                }}
-              >
-                {/* <PostItem
-                  postData={item}
-                  optionPress={this._openModel}
-                  navigation={this.props.navigation}
-                /> */}
-              </View>
+              <PostItem
+                postData={item}
+                optionPress={this._openModel}
+                navigation={this.props.navigation}
+              />
             );
           }}
-          keyExtractor={item => item.postId + ""}
+          keyExtractor={item => item._id}
           contentContainerStyle={{
             paddingBottom: 20,
             paddingTop: 220,
           }}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.loading}
+              onRefresh={this.requestGetByOwner}
+            />
+          }
         />
       </Container>
     );

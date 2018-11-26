@@ -7,26 +7,14 @@ import {
   Dimensions,
   StyleSheet,
   FlatList,
-  ToastAndroid,
 } from "react-native";
-import {
-  Button,
-  Icon,
-  Container,
-  Content,
-  Form,
-  Textarea,
-  List,
-  Toast,
-} from "native-base";
+import { Button, Icon, Container, Content, Form, Textarea } from "native-base";
 import { ImagePicker } from "expo";
-import CustomHeader from "../../CustomComponents/CustomHeader";
+import CustomHeader from "../CustomComponents/CustomHeader";
 import PostCategories from "./PostCategories";
-import GalleryModal from "../GalleryModal";
+import GalleryModal from "../CustomComponents/GalleryModal";
 import PhotoItem from "./PhotoItem";
-import PostServices from "../../../services/PostServices";
-
-import ImageServices from "../../../services/ImageServices";
+import PostServices from "../../services/PostServices";
 
 class AddPostTab extends Component {
   constructor(props) {
@@ -166,7 +154,7 @@ class AddPostTab extends Component {
 
   render() {
     const { userData } = this.props;
-    const { loading, postCategories, images } = this.state;
+    const { postCategories, images } = this.state;
     return (
       <Container>
         <CustomHeader

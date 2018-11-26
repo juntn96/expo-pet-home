@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import { View } from "react-native";
-import { Button, Icon, Text } from "native-base";
+import { Icon, Text } from "native-base";
+import CustomButton from "../../CustomButton";
 import PostServices from "../../../../services/PostServices";
 
 class UpVote extends PureComponent {
@@ -75,15 +76,16 @@ class UpVote extends PureComponent {
     const activeColor = !voted ? "#B5B5B5" : type === 1 ? "#EC466A" : "#FF8EBC";
     const typeIcon = type === 1 ? "ios-arrow-up" : "ios-arrow-down";
     return (
-      <Button
+      <CustomButton
         transparent
         textStyle={{ color: activeColor }}
         disabled={loading}
-        onPress={this._requestVote}
+        loginRequired={true}
+        onCustomPress={this._requestVote}
       >
         <Icon name={typeIcon} style={{ color: activeColor }} />
         <Text>{voteCount}</Text>
-      </Button>
+      </CustomButton>
     );
   }
 }

@@ -1,22 +1,35 @@
 import React, { Component } from "react";
 import { TouchableOpacity } from "react-native";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
 import { loginFb } from "../../../services/LoginFacebook";
 
 import { login, logout } from "../../../redux/actions/AuthActions";
 
+import { setLoading } from "../../../redux/actions/UIActions";
+
 import { connect } from "react-redux";
 
 class CustomTouchable extends Component {
-  
   _onPress = async () => {
-    const { data, onCustomPress, login, loginRequired } = this.props;
-    if (!data.userData && loginRequired) {
-      const userData = await loginFb();
-      if (userData) {
-        login(userData);
+    const {
+      auth,
+      onCustomPress,
+      login,
+      loginRequired,
+      setLoading,
+    } = this.props;
+    if (!auth.userData && loginRequired) {
+      setLoading(true);
+      try {
+        const userData = await loginFb();
+        if (userData) {
+          login(userData);
+        }
+      } catch (error) {
+        throw error;
       }
+      setLoading(false);
     } else {
       if (onCustomPress) {
         onCustomPress();
@@ -35,7 +48,7 @@ class CustomTouchable extends Component {
 
 const mapStateToProps = state => {
   return {
-    data: state.userData,
+    auth: state.auth,
   };
 };
 
@@ -47,12 +60,15 @@ const mapDispatchToProps = dispatch => {
     logout: () => {
       dispatch(logout());
     },
+    setLoading: loading => {
+      dispatch(setLoading(loading));
+    },
   };
 };
 
 CustomTouchable.propTypes = {
-  loginRequired: PropTypes.bool.isRequired
-}
+  loginRequired: PropTypes.bool.isRequired,
+};
 
 export default connect(
   mapStateToProps,

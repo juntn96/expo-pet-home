@@ -1,18 +1,5 @@
 import React, { Component } from "react";
 import { View, FlatList, Dimensions } from "react-native";
-import {
-  Container,
-  Tabs,
-  Tab,
-  TabHeading,
-  Icon,
-  Header,
-  Card,
-  CardItem,
-  Left,
-  Body,
-  Right,
-} from "native-base";
 import EditItem from "./EditItem";
 import CustomHeader from "../CustomHeader";
 

@@ -14,7 +14,7 @@ class Comment extends Component {
     return (
       <CommentScreen
         navigation={this.props.navigation}
-        userData={this.props.data.userData}
+        userData={this.props.auth.userData}
         toast={this.props.toast}
       />
     );
@@ -23,7 +23,7 @@ class Comment extends Component {
 
 const mapStateToProps = state => {
   return {
-    data: state.userData,
+    auth: state.auth,
   };
 };
 

@@ -11,3 +11,10 @@ export const toast = (state = null, { type, payload }) => {
     }
   }
 };
+
+export const appLoading = (state = false, { type, payload }) => {
+  if (type === "LOADING") {
+    return payload;
+  }
+  return state;
+};

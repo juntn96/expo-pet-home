@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { View, Text, TextInput, FlatList } from "react-native";
 import { Container, Header, Button, Icon } from "native-base";
-import PostItem from "../PostList/PostItem";
-import PostOptionModal from "../PostOptionModal";
-import PostServices from "../../../services/PostServices";
+import PostItem from "../CustomComponents/PostList/PostItem";
+import PostOptionModal from "../CustomComponents/PostOptionModal";
+import PostServices from "../../services/PostServices";
 
 class SearchPostTab extends Component {
   constructor(props) {
