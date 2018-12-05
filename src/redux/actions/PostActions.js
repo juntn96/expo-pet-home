@@ -19,3 +19,10 @@ export const getFailed = () => {
     type: PostActionTypes.GET_FAILED,
   };
 };
+
+export const deletePost = post => {
+  return {
+    type: PostActionTypes.DELETE_POST,
+    payload: post,
+  };
+};

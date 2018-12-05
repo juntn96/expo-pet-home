@@ -1,9 +1,18 @@
 import React from "react";
-import { View, FlatList, Animated, RefreshControl } from "react-native";
+import {
+  View,
+  FlatList,
+  Animated,
+  RefreshControl,
+  ActionSheetIOS,
+  Alert,
+  AlertIOS,
+} from "react-native";
 import { Container, List, ListItem, Button, Text } from "native-base";
 import PostItem from "../CustomComponents/PostList/PostItem";
 import AnimatedHeader from "./AnimatedHeader";
 import PostOptionModal from "../CustomComponents/PostOptionModal";
+import EditPostModal from "../CustomComponents/EditPostModal";
 
 import PostServices from "../../services/PostServices";
 
@@ -36,8 +45,41 @@ class ProfileScreen extends React.Component {
     this._setLoading(false);
   };
 
-  _openModel = (post) => {
-    this.optionModal.setModalVisible(true, post, ["Edit", "Delete"]);
+  _openModel = post => {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ["Bỏ qua", "Sửa bài viết", "Xóa bài viết"],
+        cancelButtonIndex: 0,
+      },
+      buttonIndex => {
+        if (buttonIndex === 1) {
+          this.editPostModal.setModalVisible(true, post);
+        }
+        if (buttonIndex === 2) {
+          Alert.alert(
+            "Bạn có chắc muốn xóa bài viết này?",
+            undefined,
+            [
+              {
+                text: "Không",
+                style: "cancel",
+              },
+              {
+                text: "Có",
+                onPress: () => {
+                  PostServices.deletePost({ id: post._id });
+                  const tmp = this.state.postData.filter(item => item !== post);
+                  this.setState({ postData: tmp });
+                },
+              },
+            ],
+            {
+              cancelable: true,
+            }
+          );
+        }
+      }
+    );
   };
 
   _setLoading = loading => {
@@ -45,10 +87,14 @@ class ProfileScreen extends React.Component {
   };
 
   render() {
-    const { userData } = this.props;
+    const { userData, toast } = this.props;
     return (
       <Container>
-        <PostOptionModal ref={ref => (this.optionModal = ref)} />
+        <EditPostModal
+          ref={ref => (this.editPostModal = ref)}
+          userData={userData}
+          toast={toast}
+        />
         <AnimatedHeader
           userData={userData}
           animatedValue={animatedValue}
@@ -78,6 +124,7 @@ class ProfileScreen extends React.Component {
                 postData={item}
                 optionPress={this._openModel}
                 navigation={this.props.navigation}
+                userData={this.props.userData}
               />
             );
           }}
@@ -85,6 +132,7 @@ class ProfileScreen extends React.Component {
           contentContainerStyle={{
             paddingBottom: 20,
             paddingTop: 220,
+            padding: 10,
           }}
           refreshControl={
             <RefreshControl

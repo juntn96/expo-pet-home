@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { TouchableOpacity, FlatList } from "react-native";
 import {
   List,
   Left,
@@ -8,19 +8,32 @@ import {
   ListItem,
   Thumbnail,
   Text,
-  Button,
   Icon,
 } from "native-base";
+import UserServices from "../../../services/UserServices";
+import { connect } from "react-redux";
 
-const data = [1, 2, 3, 4, 5, 6, 7, 8];
 
 class NotificationList extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      notifications: [],
+    };
   }
 
-  _renderItem = item => {
+  async componentDidMount() {
+    try {
+      const { userData } = this.props.auth;
+      const result = await UserServices.getNotifications(userData._id);
+      this.setState({ notifications: result });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  _renderItem = ({ item }) => {
+    console.log(item)
     return (
       <ListItem thumbnail>
         <Left>
@@ -36,7 +49,7 @@ class NotificationList extends Component {
                 fontWeight: "bold",
               }}
             >
-              Lam Ngoc Khanh
+              {item.from.appName}
             </Text>
             <Text> đã bình luận về bài viết của bạn </Text>
           </Text>
@@ -46,8 +59,8 @@ class NotificationList extends Component {
           <TouchableOpacity
             activeOpacity={0.7}
             style={{
-              justifyContent: 'center',
-              alignItems: 'center'
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <Icon name="ios-more" />
@@ -58,8 +71,21 @@ class NotificationList extends Component {
   };
 
   render() {
-    return <List dataArray={data} renderRow={item => this._renderItem(item)} />;
+    const { notifications } = this.state;
+    return (
+      <FlatList
+        data={notifications}
+        key={item => item._id}
+        renderItem={this._renderItem}
+      />
+    );
   }
 }
 
-export default NotificationList;
+const mapStateToProps = state => {
+  return {
+    auth: state.auth,
+  };
+};
+
+export default connect(mapStateToProps)(NotificationList);

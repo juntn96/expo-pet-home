@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Spinner } from "native-base";
 import PostItem from "./PostItem";
-import { getPost } from "../../../redux/actions/PostActions";
+import { getPost, deletePost } from "../../../redux/actions/PostActions";
 import { connect } from "react-redux";
 
 class PostList extends PureComponent {
@@ -70,8 +70,8 @@ class PostList extends PureComponent {
         renderItem={this._renderItem}
         keyExtractor={item => item._id}
         contentContainerStyle={{
-          marginLeft: 10, 
-          marginRight: 10
+          marginLeft: 10,
+          marginRight: 10,
         }}
         refreshControl={
           <RefreshControl
@@ -106,6 +106,9 @@ const mapDispatchToProps = dispatch => {
   return {
     getPost: type => {
       dispatch(getPost(type));
+    },
+    deletePost: post => {
+      dispatch(deletePost(post));
     },
   };
 };

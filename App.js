@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import { StyleSheet, View, AsyncStorage } from "react-native";
-import { Font, AppLoading, Permissions, Notifications } from "expo";
+import { StyleSheet, View } from "react-native";
+import { Font, AppLoading } from "expo";
 import DrawerRoute from "./src/routes/DrawerRoute";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/es/integration/react";
 import configureStore from "./src/redux/configStore";
 import Toast from "./src/components/CustomComponents/Toast";
-import AppSpinner from './src/components/CustomComponents/AppSpinner';
-import { Spinner } from "native-base";
+import AppSpinner from "./src/components/CustomComponents/AppSpinner";
+import NotificationHandle from "./src/components/CustomComponents/NotificationHandle";
 const { persistor, store } = configureStore();
 
 export default class App extends Component {
@@ -35,6 +35,7 @@ export default class App extends Component {
             <DrawerRoute />
             <Toast />
             <AppSpinner />
+            <NotificationHandle />
           </View>
         </PersistGate>
       </Provider>

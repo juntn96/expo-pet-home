@@ -1,11 +1,5 @@
 import React, { Component } from "react";
-import {
-  View,
-  Text,
-  Animated,
-  TouchableOpacity,
-} from "react-native";
-
+import { View, Text, Animated, TouchableOpacity } from "react-native";
 
 class LocationItem extends Component {
   constructor(props) {
@@ -17,8 +11,8 @@ class LocationItem extends Component {
   }
 
   _onPress = () => {
-    this.props.onPress(this.props.item)
-  }
+    this.props.onPress(this.props.item);
+  };
 
   _onHide = () => {
     setTimeout(() => {
@@ -32,8 +26,7 @@ class LocationItem extends Component {
   };
 
   render() {
-
-    const { item } = this.props
+    const { item } = this.props;
 
     return (
       <Animated.View
@@ -124,7 +117,9 @@ class LocationItem extends Component {
                 marginRight: 10,
               }}
             />
-            <Text style={{ fontSize: 12 }}>{`${item.rating}/5 - Cách bạn 1.2Km`}</Text>
+            <Text style={{ fontSize: 12 }}>{`${
+              item.systemRating
+            }/5 - Cách bạn ${item.distance}`}</Text>
           </View>
         </TouchableOpacity>
       </Animated.View>

@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
 const asyncMeasure = component => {
+  if (!component) return;
   return new Promise(resolve => {
     component.measure((x, y, w, h) => {
       resolve(h);
@@ -24,13 +25,17 @@ class ReadMoreText extends PureComponent {
   }
 
   async componentDidMount() {
-    await asyncNextFrame();
-    this.maxHeight = await asyncMeasure(this.textView);
-    this.setState({ measure: true });
-    await asyncNextFrame();
-    this.minHeight = await asyncMeasure(this.textView);
-    if (this.maxHeight > this.minHeight) {
-      this.setState({ showReadMore: true });
+    try {
+      await asyncNextFrame();
+      this.maxHeight = await asyncMeasure(this.textView);
+      this.setState({ measure: true });
+      await asyncNextFrame();
+      this.minHeight = await asyncMeasure(this.textView);
+      if (this.maxHeight > this.minHeight) {
+        this.setState({ showReadMore: true });
+      }
+    } catch (error) {
+      throw error
     }
   }
 
@@ -56,9 +61,7 @@ class ReadMoreText extends PureComponent {
           flexWrap: "wrap",
         }}
       >
-        <Text numberOfLines={line}>
-          {this.props.children}
-        </Text>
+        <Text numberOfLines={line}>{this.props.children}</Text>
         {showReadMore && !showAllText ? (
           <TouchableOpacity onPress={this._showText}>
             <Text style={{ color: "#2196F3" }}>Đọc thêm</Text>

@@ -4,6 +4,7 @@ import { Tabs, Tab } from "native-base";
 import CustomHeader from "../CustomHeader";
 import NotificationList from "../NotificationList";
 import MessageList from "../MessageList";
+import { Notifications } from "expo"
 
 class ActivityModal extends Component {
   constructor(props) {

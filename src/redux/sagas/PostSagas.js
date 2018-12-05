@@ -5,9 +5,7 @@ import { put, all, takeLatest } from "redux-saga/effects";
 
 const getPost = function*({ type, payload }) {
   try {
-    console.log("saga >> ", type);
     const postType = payload;
-    console.log("saga type >> ", postType);
     let postData = [];
     if (postType === "all") {
       postData = yield PostServices.getAll();

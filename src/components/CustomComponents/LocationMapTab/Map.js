@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import { MapView, Constants, Location, Permissions } from "expo";
-import { locationData, markerType } from "../../../utils/fakeData";
+import { markerType } from "../../../utils/fakeData";
 import GoogleMap from "../../../services/GoogleMap";
 const { Marker, Polyline, Callout } = MapView;
 
@@ -63,14 +63,14 @@ class Map extends Component {
 
   showCallout = locationItem => {
     if (locationItem) {
-      const marker = this.markers[locationItem.id];
+      const marker = this.markers[locationItem._id];
       marker.showCallout();
     }
   };
 
   hideCallout = locationItem => {
     if (locationItem) {
-      const marker = this.markers[locationItem.id];
+      const marker = this.markers[locationItem._id];
       marker.hideCallout();
     }
   };
@@ -99,7 +99,7 @@ class Map extends Component {
 
   render() {
     const { location, coords, selectLocation } = this.state;
-    const { userLocation } = this.props;
+    const { userLocation, locationData } = this.props;
     return (
       <MapView
         ref={ref => (this.mapView = ref)}
@@ -111,19 +111,19 @@ class Map extends Component {
       >
         {selectLocation ? <Marker coordinate={selectLocation} /> : null}
         {locationData.map(marker => {
-          const markerImage = markerType[marker.type].marker;
+          // const markerImage = markerType[marker.type].marker;
           return (
             <Marker
-              ref={ref => (this.markers[marker.id] = ref)}
+              ref={ref => (this.markers[marker._id] = ref)}
               coordinate={marker.coordinate}
               title={marker.name}
-              key={marker.id}
-              identifier={marker.id + ""}
+              key={marker._id}
+              identifier={marker._id + ""}
               onPress={() => {
                 this._onMarkerPress(marker);
               }}
             >
-              <Image source={markerImage} />
+              {/* <Image source={markerImage} /> */}
               <Callout
                 onPress={() => {
                   this._onCalloutPress(marker);
@@ -153,9 +153,7 @@ class Map extends Component {
                     {marker.name}
                   </Text>
                   <Text numberOfLines={3} lineBreakMode="tail">
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry. Lorem Ipsum has been the industry's
-                    standard dummy text ever since the 1500s
+                    {marker.description}
                   </Text>
                 </View>
               </Callout>

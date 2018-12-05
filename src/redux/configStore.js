@@ -8,9 +8,6 @@ import createSagaMiddleware from "redux-saga";
 import storage from "redux-persist/es/storage";
 import rootSaga from "./sagas/rootSaga";
 import reducers from "./reducers";
-// import { toast } from "./reducers/UIActions";
-// import AuthReducer from "./reducers/AuthReducer";
-// import PostReducer from "./reducers/PostReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 const middleware = [sagaMiddleware];
@@ -19,7 +16,7 @@ const config = {
   timeout: 0,
   key: "root",
   storage,
-  blacklist: ["ui", "post"],
+  blacklist: ["ui", "post", "notification"],
 };
 
 const persistedReducer = persistReducer(config, reducers);

@@ -4,7 +4,7 @@ import { Icon, Text } from "native-base";
 import CustomButton from "../../CustomButton";
 import PostServices from "../../../../services/PostServices";
 
-class UpVote extends PureComponent {
+class Vote extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,12 +22,12 @@ class UpVote extends PureComponent {
     this._setLoading(true);
     try {
       this._setLoading(true);
-      const { postData, type } = this.props;
+      const { postData, type, userData } = this.props;
       const result = await PostServices.getVote(postData._id, type);
       this._setVoteCount(result.length);
-      this._setVoted(
-        result.some(vote => vote.voterId === postData.ownerId._id)
-      );
+      if (userData) {
+        this._setVoted(result.some(vote => vote.voterId === userData._id));
+      }
     } catch (error) {
       throw error;
     }
@@ -37,11 +37,27 @@ class UpVote extends PureComponent {
   _requestVote = async () => {
     this._setLoading(true);
     try {
-      const { postData, type, voteCallback } = this.props;
+      const { postData, type, voteCallback, userData } = this.props;
       const data = {
         postId: postData._id,
-        voterId: postData.ownerId._id,
+        voterId: userData._id,
         voteType: type,
+        notification: {
+          tokens: [postData.ownerId.expoToken],
+          data: {
+            message: `đã ${
+              type === 1 ? "up vote" : "down vote"
+            } bài viết của bạn`,
+            content: {
+              post: {
+                _id: postData._id,
+              },
+            },
+            sender: userData._id,
+            receiver: postData.ownerId._id,
+            type: "post",
+          },
+        },
       };
       await PostServices.vote(data);
       this._requestGetVote();
@@ -90,4 +106,4 @@ class UpVote extends PureComponent {
   }
 }
 
-export default UpVote;
+export default Vote;

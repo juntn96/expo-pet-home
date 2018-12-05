@@ -19,15 +19,17 @@ import PostServices from "../../services/PostServices";
 class AddPostTab extends Component {
   constructor(props) {
     super(props);
+    const postData = props.postData;
+    console.log(postData);
     this.state = {
-      images: [],
+      images: !postData ? [] : postData.images,
       loading: false,
       postCategories: [],
-      title: "",
-      category: null,
+      title: !postData ? "" : postData.title,
+      category: !postData ? null : { _id: postData.typeId },
       status: 1,
     };
-    this.uploadImages = [];
+    this.uploadImages = !postData ? [] : postData.images;
     this.baseState = this.state;
   }
 
@@ -81,14 +83,14 @@ class AddPostTab extends Component {
   };
 
   _removeImageItem = item => {
-    let tmpImages = this.state.images.filter(photo => {
-      return photo.id !== item.id;
+    let tmpImages = this.state.images.filter(img => {
+      return img !== item;
     });
     this.setState({
       images: tmpImages,
     });
-    this.uploadImages = this.uploadImages.filter(image => {
-      return image.id !== item.id;
+    this.uploadImages = this.uploadImages.filter(img => {
+      return img !== item;
     });
   };
 
@@ -103,28 +105,62 @@ class AddPostTab extends Component {
   };
 
   _requestCreatePost = async () => {
-    const { toast } = this.props;
+    const { toast, type, postData } = this.props;
     if (!this._validate()) return;
     try {
       const { title, category, status } = this.state;
       const images = this.uploadImages.map(img => {
+        console.log(img);
         return {
           url: img.url,
-          public_id: img.public_id,
+          publicId: img.public_id,
           width: img.width,
           height: img.height,
         };
       });
       const ownerId = this.props.userData._id;
       const typeId = category._id;
-      const postData = { title, images, typeId, status, ownerId };
-      await PostServices.createPost(postData);
+      console.log(type);
+      if (type === "edit") {
+        console.log("edit");
+        const data = {
+          postId: postData._id,
+          updateOptions: [
+            {
+              propName: "title",
+              value: title,
+            },
+            {
+              propName: "typeId",
+              value: category._id,
+            },
+            {
+              propName: "status",
+              value: status,
+            },
+            {
+              propName: "images",
+              value: images,
+            },
+          ],
+        };
+        await PostServices.editPost(data);
+        toast({ message: "Sửa bài viết thành công", duration: 4000 });
+        this.props.closeModal();
+      } else {
+        const data = { title, images, typeId, status, ownerId };
+        await PostServices.createPost(data);
+        toast({ message: "Đăng bài viết thành công", duration: 3000 });
+        this.props.navigation.navigate("Home");
+      }
 
-      this.props.onCreateDone();
+      // this.props.onCreateDone();
       this.uploadImages = [];
-      this.setState(this.baseState);
-
-      toast({ message: "Đăng bài viết thành công", duration: 3000 });
+      this.setState({
+        ...this.baseState,
+        postCategories: this.state.postCategories,
+        category: null,
+      });
     } catch (error) {
       toast({ message: "Có lỗi xảy ra", duration: 3000 });
     }
@@ -134,7 +170,7 @@ class AddPostTab extends Component {
     const { title, category, images } = this.state;
     const { toast } = this.props;
     if (title.length === 0) {
-      toast({ message: "Hãy viết 1 chút gì đó :D", duration: 3000 });
+      toast({ message: "Hãy viết 1 chút gì đó", duration: 3000 });
       return false;
     }
     if (category === null) {
@@ -153,15 +189,19 @@ class AddPostTab extends Component {
   };
 
   render() {
-    const { userData } = this.props;
+    const { userData, type } = this.props;
     const { postCategories, images } = this.state;
     return (
       <Container>
         <CustomHeader
           title="Tạo bài viết"
-          buttonLeft="menu"
+          buttonLeft={type === "edit" ? "md-close" : "menu"}
           actionLeft={() => {
-            this.props.navigation.openDrawer();
+            if (type === "edit") {
+              this.props.closeModal();
+            } else {
+              this.props.navigation.openDrawer();
+            }
           }}
           buttonRight="md-add"
           actionRight={() => {
@@ -196,6 +236,9 @@ class AddPostTab extends Component {
           <PostCategories
             categories={postCategories}
             onItemPress={this._onSelectCategory}
+            selectedCategoryId={
+              this.state.category ? this.state.category._id : ""
+            }
           />
           <View style={styles.formContainer}>
             <Form>
@@ -211,7 +254,7 @@ class AddPostTab extends Component {
           <View>
             <FlatList
               horizontal
-              keyExtractor={item => item.uri}
+              keyExtractor={item => (item._id ? item._id : item.uri)}
               extraData={images}
               showsHorizontalScrollIndicator={false}
               renderItem={({ item }) => {

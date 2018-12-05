@@ -20,21 +20,21 @@ class ChatModal extends Component {
   componentDidMount() {}
 
   _connectSocket = conversation => {
-    // this.socket = SocketClient(`http://${socketIP}:5000`);
-    // this.socket.emit("joinConversation", conversation);
-    // this.socket.on("sendMessage", data => {
-    //   console.log("socket id >> ", this.socket.id);
-    //   console.log("response socket >> ", data);
-    //   const mes = {
-    //     _id: data.message._id,
-    //     text: data.message.text,
-    //     createdAt: data.message.createdAt,
-    //     user: data.user,
-    //   };
-    //   this.setState(previousState => ({
-    //     messages: GiftedChat.append(previousState.messages, mes),
-    //   }));
-    // });
+    this.socket = SocketClient(`http://${socketIP}:5000`);
+    this.socket.emit("joinConversation", conversation);
+    this.socket.on("sendMessage", data => {
+      console.log("socket id >> ", this.socket.id);
+      console.log("response socket >> ", data);
+      const mes = {
+        _id: data.message._id,
+        text: data.message.text,
+        createdAt: data.message.createdAt,
+        user: data.user,
+      };
+      this.setState(previousState => ({
+        messages: GiftedChat.append(previousState.messages, mes),
+      }));
+    });
   };
 
   _requestGetMessages = async conversation => {
@@ -74,18 +74,18 @@ class ChatModal extends Component {
   _onDismiss = () => {};
 
   _onSend = async (messages = []) => {
-    // console.log("messages: ", messages);
-    // const { userData } = this.props;
-    // const data = {
-    //   conversationId: this.conversation._id,
-    //   message: messages[0],
-    //   user: {
-    //     _id: messages[0].user._id,
-    //     name: userData.appName,
-    //     avatar: userData.avatar,
-    //   },
-    // };
-    // this.socket.emit("sendMessage", data);
+    console.log("messages: ", messages);
+    const { userData } = this.props;
+    const data = {
+      conversationId: this.conversation._id,
+      message: messages[0],
+      user: {
+        _id: messages[0].user._id,
+        name: userData.appName,
+        avatar: userData.avatar,
+      },
+    };
+    this.socket.emit("sendMessage", data);
   };
 
   render() {

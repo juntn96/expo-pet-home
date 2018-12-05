@@ -22,6 +22,28 @@ const createPost = async postData => {
   }
 };
 
+const editPost = async postData => {
+  try {
+    const url = "post/edit";
+    const method = "PUT";
+    const data = await ApiServices.requestOption(method, url, postData);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deletePost = async postData => {
+  try {
+    const url = "post/deleteById";
+    const method = "DELETE";
+    const data = await ApiServices.requestOption(method, url, postData);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getAll = async () => {
   try {
     const url = `post/get`;
@@ -54,13 +76,13 @@ const getPostByOwner = async ownerId => {
 
 const searchPostByText = async text => {
   try {
-    const url = `post/search?title=${text}`
+    const url = `post/search?title=${text}`;
     const data = await ApiServices.get(url);
     return data.result;
   } catch (error) {
-    throw error
+    throw error;
   }
-}
+};
 
 const getVote = async (postId, voteType) => {
   try {
@@ -140,6 +162,8 @@ const deleteComment = async comment => {
 export default {
   getPostCategories,
   createPost,
+  editPost,
+  deletePost,
   getPostByType,
   getPostByOwner,
   searchPostByText,

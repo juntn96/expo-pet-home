@@ -2,26 +2,17 @@ import React, { Component } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 class PostCategories extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedCategoryId: "",
-    };
-  }
-
+  
   _onItemPress = category => {
     const { onItemPress } = this.props;
     if (onItemPress) {
       onItemPress(category);
     }
-    this.setState({
-      selectedCategoryId: category._id,
-    });
   };
 
   render() {
     const { categories } = this.props;
-    const { selectedCategoryId } = this.state;
+    const { selectedCategoryId } = this.props;
     return (
       <View style={styles.container}>
         {categories.map(category => {

@@ -12,6 +12,8 @@ class PhotoItem extends Component {
   }
 
   componentDidMount() {
+    const { item } = this.props;
+    if (item._id) return;
     this._uploadImage();
   }
 
@@ -20,7 +22,7 @@ class PhotoItem extends Component {
       const { item } = this.props;
       this._setLoading(true);
       const result = await ImageServices.uploadImage(item);
-      this._onUploadDone({...result, id: item.id});
+      this._onUploadDone({ ...result, id: item.id });
       this._setLoading(false);
     } catch (error) {
       throw error;
@@ -48,7 +50,9 @@ class PhotoItem extends Component {
       if (loading) {
         ImageServices.cancelUpload();
       } else {
-        ImageServices.destroyImage(this.image.public_id);
+        if (this.image) {
+          ImageServices.destroyImage(this.image.public_id);
+        }
       }
       if (removeItem) {
         removeItem(item);
@@ -62,10 +66,11 @@ class PhotoItem extends Component {
     const { item } = this.props;
     const { loading } = this.state;
     return (
-      <View
-        style={styles.container}
-      >
-        <Image source={{ uri: item.uri }} style={styles.photo} />
+      <View style={styles.container}>
+        <Image
+          source={{ uri: item._id ? item.url : item.uri }}
+          style={styles.photo}
+        />
         {loading ? (
           <View style={styles.loading}>
             <Spinner color="#615c70" />
@@ -81,8 +86,8 @@ class PhotoItem extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginRight: 4
-  },  
+    marginRight: 4,
+  },
   photo: {
     width: 150,
     height: 200,

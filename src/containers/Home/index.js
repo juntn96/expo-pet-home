@@ -3,6 +3,7 @@ import { View, Text } from "react-native";
 import HomeTab from "../../components/HomeTab";
 import { connect } from "react-redux";
 import { toggle } from "../../redux/actions/UIActions";
+import { deletePost } from "../../redux/actions/PostActions";
 
 class Home extends Component {
   render() {
@@ -11,6 +12,7 @@ class Home extends Component {
         navigation={this.props.navigation}
         userData={this.props.auth.userData}
         toast={this.props.toast}
+        deletePost={this.props.deletePost}
       />
     );
   }
@@ -26,6 +28,9 @@ const mapDispatchToProps = dispatch => {
   return {
     toast: toast => {
       dispatch(toggle(toast));
+    },
+    deletePost: post => {
+      dispatch(deletePost(post));
     },
   };
 };

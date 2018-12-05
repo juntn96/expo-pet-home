@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { View, Text } from "react-native";
 import ProfileScreen from "../../components/ProfileScreen";
 import { connect } from "react-redux";
 import { toggle } from "../../redux/actions/UIActions";
@@ -26,7 +25,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = () => {
+const mapDispatchToProps = dispatch => {
   return {
     toast: toast => {
       dispatch(toggle(toast));

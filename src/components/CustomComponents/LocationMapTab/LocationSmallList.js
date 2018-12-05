@@ -93,7 +93,7 @@ class LocationSmallList extends Component {
             renderItem={this._renderItem}
             horizontal
             showsHorizontalScrollIndicator={false}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item._id}
           />
         </Animated.View>
       </View>

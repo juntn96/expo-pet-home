@@ -10,6 +10,7 @@ import SimpleSearchModal from "./SimpleSearchModal";
 import Map from "./Map";
 import FilterModal from "./FilterModal";
 import LocationDetailModal from "./LocationDetailModal";
+import LocationServices from "../../../services/LocationServices";
 
 export default class extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ export default class extends Component {
       isHideAll: false,
       isHideDirection: true,
       userLocation: null,
+      listLocations: [],
     };
   }
 
@@ -36,14 +38,32 @@ export default class extends Component {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status === "granted") {
       let location = await Location.getCurrentPositionAsync({});
-      this.setState({
-        userLocation: {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
+      this.setState(
+        {
+          userLocation: {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+          },
         },
+        () => {
+          this._requestGetLocation();
+        }
+      );
+    }
+  };
+
+  _requestGetLocation = async () => {
+    try {
+      const { userLocation } = this.state;
+      const result = await LocationServices.getLocation({
+        ...userLocation,
+        radius: 3000,
       });
+      this.setState({ listLocations: result });
+    } catch (error) {
+      throw error;
     }
   };
 
@@ -71,7 +91,7 @@ export default class extends Component {
   };
 
   _onMarkerPress = locationItem => {
-    let itemIndex = locationData.indexOf(locationItem);
+    let itemIndex = this.state.listLocations.indexOf(locationItem);
     this.mapView.moveToCoordinate(locationItem.coordinate);
     this.directionHeader.setDestinationLocation(locationItem);
     this.smallList.scrollToIndex(itemIndex);
@@ -144,7 +164,7 @@ export default class extends Component {
   };
 
   render() {
-    const { userLocation } = this.state;
+    const { userLocation, listLocations } = this.state;
     return (
       <View style={styles.container}>
         <LocationDetailModal ref={ref => (this.detailModal = ref)} />
@@ -157,6 +177,7 @@ export default class extends Component {
           <Map
             ref={ref => (this.mapView = ref)}
             userLocation={userLocation}
+            locationData={listLocations}
             onMapPress={this._onMapPress}
             onMarkerPress={this._onMarkerPress}
             onCalloutPress={this._onCalloutPress}
@@ -182,7 +203,7 @@ export default class extends Component {
           <LocationSmallList
             onItemPress={this._onSmallItemPress}
             ref={ref => (this.smallList = ref)}
-            locationData={this.props.locationData}
+            locationData={listLocations}
           />
         </View>
       </View>

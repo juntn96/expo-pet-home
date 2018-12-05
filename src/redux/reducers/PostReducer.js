@@ -30,6 +30,13 @@ const postReducer = (state = initialState, { type, payload }) => {
         loading: false,
       };
     }
+    case PostActionTypes.DELETE_POST: {
+      const tmp = state.postData.filter(post => post !== payload);
+      return {
+        ...state,
+        postData: tmp,
+      };
+    }
     default: {
       return state;
     }

@@ -23,6 +23,7 @@ class AddPost extends Component {
         navigation={this.props.navigation}
         userData={this.props.auth.userData}
         toast={this.props.toast}
+        postData={null}
       />
     );
   }

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, Text } from "react-native";
 import { connect } from "react-redux";
+import { toggle } from "../../redux/actions/UIActions";
 import SearchPostTab from "../../components/SearchPostTab";
 
 class SearchPost extends Component {
@@ -10,8 +11,31 @@ class SearchPost extends Component {
   }
 
   render() {
-    return <SearchPostTab/>
+    return (
+      <SearchPostTab
+        navigation={this.props.navigation}
+        userData={this.props.auth.userData}
+        toast={this.props.toast}
+      />
+    );
   }
 }
 
-export default SearchPost;
+const mapStateToProps = state => {
+  return {
+    auth: state.auth,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    toast: toast => {
+      dispatch(toggle(toast));
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SearchPost);

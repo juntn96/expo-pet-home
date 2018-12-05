@@ -39,8 +39,30 @@ const removeToken = async userId => {
   }
 };
 
+const getNotifications = async userId => {
+  try {
+    const funcUrl = `app/user/notification/${userId}`;
+    const data = await ApiServices.get(funcUrl);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const findUser = async userId => {
+  try {
+    const funcUrl = `app/user/${userId}`;
+    const data = await ApiServices.get(funcUrl);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   login,
+  findUser,
   registerToken,
   removeToken,
+  getNotifications,
 };

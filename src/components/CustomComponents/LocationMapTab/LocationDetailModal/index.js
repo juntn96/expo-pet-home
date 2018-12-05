@@ -34,7 +34,7 @@ class LocationDetailModal extends Component {
     });
   };
 
-  _renderItem = ({ item }) => {
+  _renderImageItem = ({ item }) => {
     return (
       <View
         style={{
@@ -46,7 +46,7 @@ class LocationDetailModal extends Component {
         }}
       >
         <Image
-          source={{ uri: item.url }}
+          source={{ uri: item.secure_url }}
           style={{ width: "100%", height: "100%", resizeMode: "cover" }}
         />
       </View>
@@ -159,8 +159,8 @@ class LocationDetailModal extends Component {
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 data={locationItem.images}
-                extraData={item => item.id + ""}
-                renderItem={this._renderItem}
+                extraData={item => item.public_id + ""}
+                renderItem={this._renderImageItem}
               />
               <View
                 style={{
@@ -170,7 +170,7 @@ class LocationDetailModal extends Component {
               >
                 <Animated.View
                   style={{
-                    opacity: desOpaticty
+                    opacity: desOpaticty,
                   }}
                 >
                   <Text

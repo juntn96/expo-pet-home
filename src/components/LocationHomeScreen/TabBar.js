@@ -78,13 +78,13 @@ class TabBar extends Component {
 
 const styles = StyleSheet.create({
   animatedView: {
-    height: 54,
+    height: 50,
     flexDirection: "row",
     transform: [
       {
         translateY: animateTrans.interpolate({
           inputRange: [0, 1],
-          outputRange: [54, 0],
+          outputRange: [50, 0],
         }),
       },
     ],

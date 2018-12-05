@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Dimensions, StyleSheet } from "react-native";
+import { View, Dimensions, StyleSheet, Alert } from "react-native";
 import { Icon } from "native-base";
 import CustomTouchable from "../CustomTouchable";
 import ActivityModal from "../ActivityModal";
@@ -8,23 +8,59 @@ import { connect } from "react-redux";
 import { logout } from "../../../redux/actions/AuthActions";
 import { setLoading } from "../../../redux/actions/UIActions";
 import UserServices from "../../../services/UserServices";
+import { Notifications } from "expo";
+
+import NoticeIcon from "./NoticeIcon";
 
 class CustomDrawer extends Component {
+  state = {
+    notificationType: "",
+  };
+
+  componentDidMount() {
+    this.notificationListener = Notifications.addListener(
+      this._handleNotification
+    );
+  }
+
+  _handleNotification = notification => {
+    console.log(notification);
+    this.setState({ notificationType: notification.data.type });
+  };
+
   _onPressProfile = () => {
     this.props.navigation.navigate("ProfileRoute");
   };
 
-  _onPressLogout = async () => {
-    const { userData } = this.props.auth;
-    this.props.setLoading(true);
-    try {
-      await UserServices.removeToken(userData._id);
-      this.props.logout();
-      this.props.navigation.navigate("HomeRoute");
-    } catch (error) {
-      throw error;
-    }
-    this.props.setLoading(false);
+  _onPressLogout = () => {
+    Alert.alert(
+      "Đăng xuất",
+      undefined,
+      [
+        {
+          text: "Không",
+          style: "cancel",
+        },
+        {
+          text: "Có",
+          onPress: async () => {
+            const { userData } = this.props.auth;
+            this.props.setLoading(true);
+            try {
+              await UserServices.removeToken(userData._id);
+              this.props.logout();
+              this.props.navigation.navigate("HomeRoute");
+            } catch (error) {
+              throw error;
+            }
+            this.props.setLoading(false);
+          },
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    );
   };
 
   render() {
@@ -67,26 +103,22 @@ class CustomDrawer extends Component {
           >
             <Icon name="ios-paw-outline" style={styles.iconBody} />
           </CustomTouchable>
-          <CustomTouchable
-            loginRequired={true}
-            style={styles.buttonBody}
-            onCustomPress={() => {
+          <NoticeIcon
+            name="ios-notifications-outline"
+            notification={this.state.notificationType === "activity"}
+            onPress={() => {
               this.props.navigation.closeDrawer();
               this.activityModal.setVisible(true, 0);
             }}
-          >
-            <Icon name="ios-notifications-outline" style={styles.iconBody} />
-          </CustomTouchable>
-          <CustomTouchable
-            loginRequired={true}
-            style={styles.buttonBody}
-            onCustomPress={() => {
+          />
+          <NoticeIcon
+            name="ios-chatbubbles-outline"
+            notification={this.state.notificationType === "message"}
+            onPress={() => {
               this.props.navigation.closeDrawer();
               this.activityModal.setVisible(true, 1);
             }}
-          >
-            <Icon name="ios-chatbubbles-outline" style={styles.iconBody} />
-          </CustomTouchable>
+          />
         </View>
         <View style={styles.under}>
           {userData ? (
