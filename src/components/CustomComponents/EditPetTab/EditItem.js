@@ -1,12 +1,6 @@
 import React, { Component } from "react";
 import { View } from "react-native";
-import {
-  Icon,
-  Card,
-  Thumbnail,
-  Text,
-  Button,
-} from "native-base";
+import { Icon, Card, Thumbnail, Text, Button } from "native-base";
 
 class EditItem extends Component {
   constructor(props) {
@@ -14,7 +8,19 @@ class EditItem extends Component {
     this.state = {};
   }
 
+  _onEditPress = () => {
+    const { pet } = this.props;
+    this.props.onEditPress(pet);
+  };
+
+  _onDeletePress = () => {
+    const { pet } = this.props;
+    this.props.onDeletePress(pet);
+  };
+
   render() {
+    const { pet } = this.props;
+
     return (
       <Card>
         <View
@@ -23,11 +29,7 @@ class EditItem extends Component {
           }}
         >
           <View style={{ margin: 10 }}>
-            <Thumbnail
-              circular
-              large
-              source={require("../../../assets/images/bg4.png")}
-            />
+            <Thumbnail circular large source={{ uri: pet.images[0].url }} />
           </View>
           <View
             style={{
@@ -41,17 +43,20 @@ class EditItem extends Component {
                 marginTop: 10,
               }}
             >
-              <Text style={{ flex: 1, marginLeft: 6, marginRight: 6 }}>
-                Tên: Kitty
+              <Text
+                style={{ flex: 1, marginLeft: 6, marginRight: 6, fontSize: 12 }}
+              >
+                {`Tên: ${pet.name}`}
               </Text>
               <Text
                 style={{
                   flex: 1,
                   marginLeft: 6,
                   marginRight: 6,
+                  fontSize: 12,
                 }}
               >
-                Loài: Mèo
+                {`Loài: ${pet.breed}`}
               </Text>
             </View>
             <View
@@ -60,17 +65,20 @@ class EditItem extends Component {
                 marginTop: 10,
               }}
             >
-              <Text style={{ flex: 1, marginLeft: 6, marginRight: 6 }}>
-                Giống: Tai cụp
+              <Text
+                style={{ flex: 1, marginLeft: 6, marginRight: 6, fontSize: 12 }}
+              >
+                {`Giống: ${pet.branch}`}
               </Text>
               <Text
                 style={{
                   flex: 1,
                   marginLeft: 6,
                   marginRight: 6,
+                  fontSize: 12,
                 }}
               >
-                Giới tính: Cái
+                {`Giới tính: ${pet.gender}`}
               </Text>
             </View>
             <View
@@ -79,10 +87,23 @@ class EditItem extends Component {
                 marginTop: 10,
               }}
             >
-              <Text style={{ flex: 1, marginLeft: 6, marginRight: 6 }}>
-                Tuổi: 1
+              <Text
+                style={{ flex: 1, marginLeft: 6, marginRight: 6, fontSize: 12 }}
+              >
+                {`Tuổi: ${pet.age}`}
               </Text>
             </View>
+            <Text
+              style={{
+                flex: 1,
+                marginLeft: 6,
+                marginRight: 6,
+                fontSize: 12,
+                marginTop: 10,
+              }}
+            >
+              {`Giới thiệu: ${pet.description}`}
+            </Text>
             <View
               style={{
                 justifyContent: "flex-end",
@@ -90,11 +111,19 @@ class EditItem extends Component {
                 alignSelf: "flex-end",
               }}
             >
-              <Button transparent style={{ marginRight: 10 }}>
+              <Button
+                transparent
+                style={{ marginRight: 10 }}
+                onPress={this._onEditPress}
+              >
                 <Icon name="md-create" />
               </Button>
               <Button transparent>
-                <Icon name="md-trash" style={{ color: "#EC466A" }} />
+                <Icon
+                  name="md-trash"
+                  style={{ color: "#EC466A" }}
+                  onPress={this._onDeletePress}
+                />
               </Button>
             </View>
           </View>

@@ -29,42 +29,50 @@ export default class extends Component {
         <Tabs
           tabBarPosition="bottom"
           locked
-          tabBarUnderlineStyle={{ backgroundColor: "#EC466A" }}
+          tabBarUnderlineStyle={{ backgroundColor: "#FFF" }}
         >
           <Tab
             heading={
               <TabHeading
                 style={{
-                  backgroundColor: "#50576E",
+                  backgroundColor: "#2A2E40",
                 }}
               >
-                <Icon name="md-heart-outline" style={{ color: "#EC466A" }} />
+                <Icon name="md-heart-outline" style={{ color: "#FFF" }} />
               </TabHeading>
             }
           >
-            <MatchPetTab navigation={this.props.navigation} />
+            <MatchPetTab
+              navigation={this.props.navigation}
+              userData={this.props.userData}
+              toast={this.props.toast}
+            />
           </Tab>
           <Tab
             heading={
               <TabHeading
                 style={{
-                  backgroundColor: "#50576E",
+                  backgroundColor: "#2A2E40",
                 }}
               >
-                <Icon name="ios-paw-outline" style={{ color: "#EC466A" }} />
+                <Icon name="ios-paw-outline" style={{ color: "#FFF" }} />
               </TabHeading>
             }
           >
-            <EditPetTab navigation={this.props.navigation} />
+            <EditPetTab
+              navigation={this.props.navigation}
+              userData={this.props.userData}
+              toast={this.props.toast}
+            />
           </Tab>
           <Tab
             heading={
               <TabHeading
                 style={{
-                  backgroundColor: "#50576E",
+                  backgroundColor: "#2A2E40",
                 }}
               >
-                <Icon name="md-clipboard" style={{ color: "#EC466A" }} />
+                <Icon name="md-clipboard" style={{ color: "#FFF" }} />
               </TabHeading>
             }
           >

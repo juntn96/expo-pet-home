@@ -19,21 +19,30 @@ export default class extends Component {
   }
 
   componentDidMount = async () => {
-    const info = await MediaLibrary.getAssetsAsync({mediaType: "photo", first: 1000});
+    const info = await MediaLibrary.getAssetsAsync({
+      mediaType: "photo",
+      first: 1000,
+    });
     this.setState({
       photos: info.assets,
     });
   };
 
   _setModalVisible = () => {
-    this.setState({selectedPhotos: []})
+    this.setState({ selectedPhotos: [] });
     this.setState({ modalVisible: !this.state.modalVisible });
   };
 
   _onSubmit = () => {
     const { onSubmit } = this.props;
     if (onSubmit) {
-      onSubmit(this.state.selectedPhotos);
+      const images = this.state.selectedPhotos.map(img => {
+        return {
+          ...img,
+          _id: img.id,
+        };
+      });
+      onSubmit(images);
       this._setModalVisible();
     }
   };
@@ -51,7 +60,7 @@ export default class extends Component {
   };
 
   _renderItem = ({ item }) => {
-    const { maxNumber } = this.props
+    const { maxNumber } = this.props;
     return (
       <Photo
         item={item}
@@ -64,7 +73,7 @@ export default class extends Component {
 
   render() {
     const { photos, selectedPhotos, modalVisible } = this.state;
-    const { maxNumber } = this.props
+    const { maxNumber } = this.props;
     return (
       <View>
         <Modal
@@ -72,11 +81,15 @@ export default class extends Component {
           transparent={false}
           visible={modalVisible}
           onRequestClose={() => {
-            this._onSubmit()
+            this._onSubmit();
           }}
         >
           <CustomHeader
-            title={selectedPhotos.length !== maxNumber ? selectedPhotos.length : "Max"}
+            title={
+              selectedPhotos.length !== maxNumber
+                ? selectedPhotos.length
+                : "Max"
+            }
             buttonLeft="md-close"
             actionLeft={() => {
               this._setModalVisible();

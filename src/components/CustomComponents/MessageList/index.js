@@ -65,7 +65,7 @@ class MessageList extends Component {
             >
               {receiver[0].user.appName}
             </Text>
-            <Text note>{date.toLocaleTimeString()}</Text>
+            <Text note style={{fontSize: 10}} >{date.toLocaleTimeString()}</Text>
           </View>
           <Text note numberOfLines={1}>
             {lastMes}

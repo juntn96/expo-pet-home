@@ -15,6 +15,7 @@ import PostCategories from "./PostCategories";
 import GalleryModal from "../CustomComponents/GalleryModal";
 import PhotoItem from "./PhotoItem";
 import PostServices from "../../services/PostServices";
+import ToastModal from "../CustomComponents/ToastModal";
 
 class AddPostTab extends Component {
   constructor(props) {
@@ -53,6 +54,7 @@ class AddPostTab extends Component {
   _onSubmitPicture = images => {
     let tmp = this.state.images;
     tmp = tmp.concat(images);
+    console.log(tmp);
     this.setState({
       images: tmp,
     });
@@ -69,7 +71,7 @@ class AddPostTab extends Component {
       if (!result.cancelled) {
         result = {
           ...result,
-          id: Date.now(),
+          _id: Date.now(),
         };
         let tmpImages = this.state.images;
         tmpImages.push(result);
@@ -83,14 +85,14 @@ class AddPostTab extends Component {
   };
 
   _removeImageItem = item => {
-    let tmpImages = this.state.images.filter(img => {
-      return img !== item;
+    const tmpImages = this.state.images.filter(img => {
+      return item._id !== img._id;
     });
     this.setState({
       images: tmpImages,
     });
     this.uploadImages = this.uploadImages.filter(img => {
-      return img !== item;
+      return item._id !== img._id;
     });
   };
 
@@ -110,7 +112,6 @@ class AddPostTab extends Component {
     try {
       const { title, category, status } = this.state;
       const images = this.uploadImages.map(img => {
-        console.log(img);
         return {
           url: img.url,
           publicId: img.public_id,
@@ -120,9 +121,7 @@ class AddPostTab extends Component {
       });
       const ownerId = this.props.userData._id;
       const typeId = category._id;
-      console.log(type);
       if (type === "edit") {
-        console.log("edit");
         const data = {
           postId: postData._id,
           updateOptions: [
@@ -146,7 +145,6 @@ class AddPostTab extends Component {
         };
         await PostServices.editPost(data);
         toast({ message: "Sửa bài viết thành công", duration: 4000 });
-        this.props.closeModal();
       } else {
         const data = { title, images, typeId, status, ownerId };
         await PostServices.createPost(data);
@@ -156,11 +154,19 @@ class AddPostTab extends Component {
 
       // this.props.onCreateDone();
       this.uploadImages = [];
-      this.setState({
-        ...this.baseState,
-        postCategories: this.state.postCategories,
-        category: null,
-      });
+      this.setState(
+        {
+          ...this.baseState,
+          images: [],
+          postCategories: this.state.postCategories,
+          category: null,
+        },
+        () => {
+          if (type === "edit") {
+            this.props.closeModal();
+          }
+        }
+      );
     } catch (error) {
       toast({ message: "Có lỗi xảy ra", duration: 3000 });
     }
@@ -168,20 +174,32 @@ class AddPostTab extends Component {
 
   _validate = () => {
     const { title, category, images } = this.state;
-    const { toast } = this.props;
+    const { toast, type } = this.props;
     if (title.length === 0) {
+      if (type === "edit") {
+        this.toastModal.show("Hãy viết 1 chút gì đó");
+      }
       toast({ message: "Hãy viết 1 chút gì đó", duration: 3000 });
       return false;
     }
     if (category === null) {
+      if (type === "edit") {
+        this.toastModal.show("Bạn chưa chọn loại bài viết");
+      }
       toast({ message: "Bạn chưa chọn loại bài viết", duration: 3000 });
       return false;
     }
     if (images.length === 0) {
+      if (type === "edit") {
+        this.toastModal.show("Hãy thêm ít nhất 1 ảnh nào");
+      }
       toast({ message: "Hãy thêm ít nhất 1 ảnh nào", duration: 3000 });
       return false;
     }
     if (this.uploadImages.length !== images.length) {
+      if (type === "edit") {
+        this.toastModal.show("Ảnh của bạn đang upload");
+      }
       toast({ message: "Ảnh của bạn đang upload", duration: 3000 });
       return false;
     }
@@ -254,7 +272,7 @@ class AddPostTab extends Component {
           <View>
             <FlatList
               horizontal
-              keyExtractor={item => (item._id ? item._id : item.uri)}
+              keyExtractor={item => item._id}
               extraData={images}
               showsHorizontalScrollIndicator={false}
               renderItem={({ item }) => {
@@ -279,6 +297,7 @@ class AddPostTab extends Component {
             />
           </View>
         </Content>
+        <ToastModal ref={ref => (this.toastModal = ref)} />
       </Container>
     );
   }

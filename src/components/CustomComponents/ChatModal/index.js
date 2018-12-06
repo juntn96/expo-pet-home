@@ -40,7 +40,7 @@ class ChatModal extends Component {
   _requestGetMessages = async conversation => {
     try {
       const result = await MessageServices.getMessages(conversation._id);
-      let messages = result.map(mes => {
+      let messages = result.messages.map(mes => {
         return {
           _id: mes._id,
           text: mes.content,
@@ -52,6 +52,7 @@ class ChatModal extends Component {
           },
         };
       });
+      messages = messages.reverse();
       this.setState({ messages });
     } catch (error) {
       throw error;
@@ -65,6 +66,7 @@ class ChatModal extends Component {
       this._connectSocket(conversation);
     } else {
       this.socket.disconnect();
+      this.setState({ messages: [] });
     }
     this.setState({
       modalVisible: visible,
@@ -74,7 +76,6 @@ class ChatModal extends Component {
   _onDismiss = () => {};
 
   _onSend = async (messages = []) => {
-    console.log("messages: ", messages);
     const { userData } = this.props;
     const data = {
       conversationId: this.conversation._id,
@@ -91,7 +92,6 @@ class ChatModal extends Component {
   render() {
     const { modalVisible } = this.state;
     const { userData } = this.props;
-    console.log(userData);
     return (
       <Modal
         visible={modalVisible}

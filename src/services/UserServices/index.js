@@ -41,7 +41,7 @@ const removeToken = async userId => {
 
 const getNotifications = async userId => {
   try {
-    const funcUrl = `app/user/notification/${userId}`;
+    const funcUrl = `app/notification/${userId}`;
     const data = await ApiServices.get(funcUrl);
     return data.result;
   } catch (error) {

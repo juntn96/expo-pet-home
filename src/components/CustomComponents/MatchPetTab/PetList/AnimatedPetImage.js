@@ -10,7 +10,7 @@ class AnimatedPetImage extends Component {
   }
 
   render() {
-    const { index, animatedValue } = this.props;
+    const { index, animatedValue, item } = this.props;
 
     const animateScale = animatedValue.interpolate({
       inputRange: [
@@ -29,9 +29,9 @@ class AnimatedPetImage extends Component {
           alignItems: "center",
           transform: [
             {
-              scale: animateScale
-            }
-          ]
+              scale: animateScale,
+            },
+          ],
         }}
       >
         <View
@@ -46,7 +46,7 @@ class AnimatedPetImage extends Component {
           }}
         >
           <Image
-            source={require("../../../../assets/images/bg4.png")}
+            source={{ uri: item.images[0].url }}
             style={{
               width: "100%",
               height: "100%",

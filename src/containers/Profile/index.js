@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { View, Text } from "react-native";
 import ProfileScreen from "../../components/ProfileScreen";
 import { connect } from "react-redux";
 import { toggle } from "../../redux/actions/UIActions";
@@ -10,6 +11,7 @@ class Profile extends Component {
   }
 
   render() {
+    if (!this.props.auth.userData) return null;;
     return (
       <ProfileScreen
         navigation={this.props.navigation}

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, Modal } from "react-native";
 import AddPostTab from "../../AddPostTab";
-
+import PostServices from "../../../services/PostServices";
 class EditPostModal extends Component {
   constructor(props) {
     super(props);
@@ -14,22 +14,38 @@ class EditPostModal extends Component {
   setModalVisible = (visible, postData) => {
     this.setState({
       modalVisible: visible,
-      postData,
     });
+    if (postData) {
+      this._requestGetPost(postData._id);
+    } else {
+      this.setState({ postData });
+    }
+  };
+
+  _requestGetPost = async postId => {
+    try {
+      const result = await PostServices.getPostById(postId);
+      this.setState({ postData: result });
+    } catch (error) {
+      throw error;
+    }
   };
 
   render() {
     const { postData, modalVisible } = this.state;
     if (!postData) return null;
+    console.log("modal edit: ", postData);
     return (
       <Modal transparent={false} visible={modalVisible} animationType="slide">
-        <AddPostTab
-          postData={postData}
-          userData={this.props.userData}
-          toast={this.props.toast}
-          type="edit"
-          closeModal={() => this.setModalVisible(false)}
-        />
+        {postData ? (
+          <AddPostTab
+            postData={postData}
+            userData={this.props.userData}
+            toast={this.props.toast}
+            type="edit"
+            closeModal={() => this.setModalVisible(false)}
+          />
+        ) : null}
       </Modal>
     );
   }

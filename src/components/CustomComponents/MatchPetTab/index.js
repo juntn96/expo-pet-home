@@ -21,10 +21,11 @@ class MatchPetTab extends Component {
     return (
       <View
         style={{
-          flex: 1
+          flex: 1,
+          backgroundColor: "#2A2E40",
         }}
       >
-        <PetList />
+        <PetList userData={this.props.userData} onMatch={this._showPopup} />
         <View
           style={{
             position: "absolute",
@@ -44,8 +45,8 @@ class MatchPetTab extends Component {
               width: 30,
               height: 30,
               marginLeft: 10,
-              justifyContent: 'center',
-              alignItems: 'center'
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <Icon name="md-menu" style={{ color: "#EC466A", fontSize: 26 }} />
@@ -56,11 +57,14 @@ class MatchPetTab extends Component {
               width: 30,
               height: 30,
               marginRight: 10,
-              justifyContent: 'center',
-              alignItems: 'center'
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <Icon name="ios-notifications-outline" style={{ color: "#EC466A", fontSize: 26 }} />
+            <Icon
+              name="ios-notifications-outline"
+              style={{ color: "#EC466A", fontSize: 26 }}
+            />
           </TouchableOpacity>
         </View>
       </View>

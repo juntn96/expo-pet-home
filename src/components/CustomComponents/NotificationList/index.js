@@ -13,7 +13,6 @@ import {
 import UserServices from "../../../services/UserServices";
 import { connect } from "react-redux";
 
-
 class NotificationList extends Component {
   constructor(props) {
     super(props);
@@ -33,14 +32,10 @@ class NotificationList extends Component {
   }
 
   _renderItem = ({ item }) => {
-    console.log(item)
     return (
       <ListItem thumbnail>
         <Left>
-          <Thumbnail
-            circular
-            source={require("../../../assets/images/bg1.png")}
-          />
+          <Thumbnail circular source={{ uri: item.sender.avatar }} />
         </Left>
         <Body>
           <Text>
@@ -49,11 +44,11 @@ class NotificationList extends Component {
                 fontWeight: "bold",
               }}
             >
-              {item.from.appName}
+              {item.sender.appName}
             </Text>
-            <Text> đã bình luận về bài viết của bạn </Text>
+            <Text> {item.message} </Text>
           </Text>
-          <Text note>1h</Text>
+          <Text note style={{fontSize: 10}} >{new Date(item.createdAt).toLocaleTimeString()}</Text>
         </Body>
         <Right>
           <TouchableOpacity
@@ -75,7 +70,7 @@ class NotificationList extends Component {
     return (
       <FlatList
         data={notifications}
-        key={item => item._id}
+        keyExtractor={item => item._id}
         renderItem={this._renderItem}
       />
     );

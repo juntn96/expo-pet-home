@@ -13,20 +13,18 @@ class PhotoItem extends Component {
 
   componentDidMount() {
     const { item } = this.props;
-    if (item._id) return;
+    if (item.url) return;
     this._uploadImage();
   }
 
   _uploadImage = async () => {
+    this._setLoading(true);
     try {
       const { item } = this.props;
-      this._setLoading(true);
       const result = await ImageServices.uploadImage(item);
-      this._onUploadDone({ ...result, id: item.id });
-      this._setLoading(false);
-    } catch (error) {
-      throw error;
-    }
+      this._onUploadDone({ ...result, _id: item._id });
+    } catch (error) {}
+    this._setLoading(false);
   };
 
   _onUploadDone = image => {
@@ -49,13 +47,15 @@ class PhotoItem extends Component {
     try {
       if (loading) {
         ImageServices.cancelUpload();
-      } else {
-        if (this.image) {
-          ImageServices.destroyImage(this.image.public_id);
-        }
       }
+      // else {
+      //   if (this.image) {
+      //     ImageServices.destroyImage(this.image.public_id);
+      //   }
+      // }
       if (removeItem) {
-        removeItem(item);
+        const img = this.image ? this.image : item;
+        removeItem(img);
       }
     } catch (error) {
       throw error;
@@ -68,7 +68,7 @@ class PhotoItem extends Component {
     return (
       <View style={styles.container}>
         <Image
-          source={{ uri: item._id ? item.url : item.uri }}
+          source={{ uri: item.url ? item.url : item.uri }}
           style={styles.photo}
         />
         {loading ? (

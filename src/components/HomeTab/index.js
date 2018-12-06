@@ -69,6 +69,7 @@ class HomeTab extends Component {
         <ReportModal
           ref={ref => (this.reportModal = ref)}
           toast={this.props.toast}
+          userData={userData}
         />
         <EditPostModal
           ref={ref => (this.editPostModal = ref)}
