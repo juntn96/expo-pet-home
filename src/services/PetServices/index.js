@@ -31,6 +31,16 @@ const getPet = async userId => {
   }
 };
 
+const getPetById = async petId => {
+  try {
+    const url = `pet/getById/${petId}`;
+    const data = await ApiServices.get(url);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const editPet = async data => {
   try {
     const url = "pet/editPet";
@@ -101,14 +111,37 @@ const ignore = async (petId, userId) => {
   }
 };
 
+const requestMatch = async data => {
+  try {
+    const url = `app/notification/add`;
+    const method = "POST";
+    const result = await ApiServices.requestOption(method, url, data);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// const getRequest = async (userId) => {
+//   try {
+//     const url = ``
+//     const method = 'POST'
+//     const result = await ApiServices.requestOption(method, url, {})
+//   } catch (error) {
+//     throw error;
+//   }
+// }
+
 export default {
   addPet,
   getPetByOwner,
   getPet,
+  getPetById,
   editPet,
   deletePet,
   getLikeNumber,
   like,
   ignore,
   isLiked,
+  requestMatch,
 };

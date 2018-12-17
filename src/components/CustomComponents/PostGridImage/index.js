@@ -71,12 +71,11 @@ class PostGridImage extends Component {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
-        onPress={() => this.showImageModal.setModalVisible(true)}
+        onPress={() =>
+          this.showImageModal.setModalVisible(true, this.props.images)
+        }
       >
-        <ShowImageModal
-          ref={ref => (this.showImageModal = ref)}
-          images={this.props.images}
-        />
+        <ShowImageModal ref={ref => (this.showImageModal = ref)} />
         {this._renderImage()}
       </TouchableOpacity>
     );

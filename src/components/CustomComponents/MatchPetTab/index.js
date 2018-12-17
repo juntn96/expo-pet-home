@@ -8,6 +8,9 @@ import {
 } from "react-native";
 import { Title, Button, Icon } from "native-base";
 import PetList from "./PetList";
+import InfoModal from "./InfoModal";
+import ChatModal from "../ChatModal";
+import MessageServices from "../../../services/MessageServices";
 
 class MatchPetTab extends Component {
   constructor(props) {
@@ -17,6 +20,10 @@ class MatchPetTab extends Component {
     };
   }
 
+  _onChatPress = async conversation => {
+    this.chatModal.setModalVisible(true, conversation);
+  };
+
   render() {
     return (
       <View
@@ -25,7 +32,19 @@ class MatchPetTab extends Component {
           backgroundColor: "#2A2E40",
         }}
       >
-        <PetList userData={this.props.userData} onMatch={this._showPopup} />
+        <InfoModal
+          ref={ref => (this.infoModal = ref)}
+          userData={this.props.userData}
+        />
+        <ChatModal
+          ref={ref => (this.chatModal = ref)}
+          userData={this.props.userData}
+        />
+        <PetList
+          userData={this.props.userData}
+          onChatPress={this._onChatPress}
+          toast={this.props.toast}
+        />
         <View
           style={{
             position: "absolute",
@@ -53,6 +72,7 @@ class MatchPetTab extends Component {
           </TouchableOpacity>
           <View style={{ flex: 1 }} />
           <TouchableOpacity
+            onPress={() => this.infoModal.setModalVisible(true)}
             style={{
               width: 30,
               height: 30,
@@ -62,7 +82,7 @@ class MatchPetTab extends Component {
             }}
           >
             <Icon
-              name="ios-notifications-outline"
+              name="ios-information-circle-outline"
               style={{ color: "#EC466A", fontSize: 26 }}
             />
           </TouchableOpacity>

@@ -45,7 +45,7 @@ class Vote extends PureComponent {
         notification: {
           tokens: [postData.ownerId.expoToken],
           data: {
-            message: `đã ${
+            message: `${userData.appName} đã ${
               type === 1 ? "up vote" : "down vote"
             } bài viết của bạn`,
             content: {
@@ -90,7 +90,7 @@ class Vote extends PureComponent {
     const { voteCount, loading, voted } = this.state;
     const { type } = this.props;
     const activeColor = !voted ? "#B5B5B5" : type === 1 ? "#EC466A" : "#FF8EBC";
-    const typeIcon = type === 1 ? "ios-arrow-up" : "ios-arrow-down";
+    const typeIcon = type === 1 ? "md-thumbs-up" : "md-thumbs-down";
     return (
       <CustomButton
         transparent

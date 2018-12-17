@@ -6,10 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   View,
+  Alert,
 } from "react-native";
 import LikeNumber from "./LikeNumber";
 import PetServices from "../../../../services/PetServices";
 import ListPopup from "./ListPopup";
+import MessageServices from "../../../../services/MessageServices";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -137,7 +139,9 @@ class AnimatedOptionBar extends Component {
           {viewableItem === index ? (
             <ListPopup
               userData={this.props.userData}
+              item={item}
               ref={ref => (this.listPopup = ref)}
+              toast={this.props.toast}
             />
           ) : null}
           <Image
@@ -145,7 +149,26 @@ class AnimatedOptionBar extends Component {
             style={styles.icon}
           />
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.85} style={styles.button}>
+        <TouchableOpacity
+          activeOpacity={0.85}
+          style={styles.button}
+          onPress={async () => {
+            try {
+              const users = [
+                {
+                  user: this.props.userData._id,
+                },
+                {
+                  user: item.ownerId,
+                },
+              ];
+              const data = await MessageServices.createConversation(users);
+              this.props.onChatPress(data);
+            } catch (error) {
+              throw error;
+            }
+          }}
+        >
           <Image
             source={require("../../../../assets/icons/ic_talk.png")}
             style={styles.icon}

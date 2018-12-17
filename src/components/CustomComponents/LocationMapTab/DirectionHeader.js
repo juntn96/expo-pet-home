@@ -145,13 +145,23 @@ const styles = StyleSheet.create({
   animateView: {
     position: "absolute",
     top: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "#00cc99",
+    left: 10,
+    right: 10,
+
     paddingTop: 20,
   },
   container: {
+    backgroundColor: "#00cc99",
     flexDirection: "row",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderBottomColor: "#00000030",
+    borderLeftWidth: 0.6,
+    borderLeftColor: "#00000020",
+    borderTopWidth: 0.3,
+    borderTopColor: "#00000010",
+    borderRightWidth: 0.3,
+    borderRightColor: "#00000010",
   },
   back: {
     justifyContent: "center",

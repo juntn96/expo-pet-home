@@ -84,10 +84,11 @@ class EditPetTab extends Component {
           onReload={this._requestGetPet}
         />
         <CustomHeader
-          title="Đã đăng ký"
+          title="Pet của bạn"
           buttonLeft="md-menu"
           buttonRight="md-add"
           actionRight={() => this.editModal.setModalVisible(true)}
+          actionLeft={() => this.props.navigation.openDrawer()}
         />
         <FlatList
           contentInset={{ bottom: 20 }}

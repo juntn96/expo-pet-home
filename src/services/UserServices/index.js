@@ -49,6 +49,27 @@ const getNotifications = async userId => {
   }
 };
 
+const getNotificationsByType = async (userId, type) => {
+  try {
+    const funcUrl = `app/notification/getType/${userId}/${type}`;
+    const data = await ApiServices.get(funcUrl);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const sendNotification = async notification => {
+  try {
+    const funcUrl = `app/notification/add`;
+    const method = "POST";
+    const data = await ApiServices.requestOption(method, funcUrl, notification);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const findUser = async userId => {
   try {
     const funcUrl = `app/user/${userId}`;
@@ -65,4 +86,6 @@ export default {
   registerToken,
   removeToken,
   getNotifications,
+  getNotificationsByType,
+  sendNotification
 };

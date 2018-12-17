@@ -1,5 +1,16 @@
 import ApiServices from "../ApiServices";
 
+const createConversation = async users => {
+  try {
+    const url = `conversation/add`;
+    const method = "POST";
+    const data = await ApiServices.requestOption(method, url, { users });
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getAllConversation = async userId => {
   try {
     const url = `conversation/${userId}`;
@@ -32,7 +43,8 @@ const addMessage = async message => {
 };
 
 export default {
+  createConversation,
   getAllConversation,
   getMessages,
-  addMessage
+  addMessage,
 };

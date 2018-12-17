@@ -43,7 +43,6 @@ class PetList extends Component {
 
   _onViewableItemsChanged = ({ viewableItems }) => {
     if (viewableItems.length === 1) {
-      console.log("Visible item are", viewableItems[0].index);
       this.setState({ viewableItem: viewableItems[0].index });
     }
   };
@@ -107,6 +106,8 @@ class PetList extends Component {
                 onIgnore={this._removeItem}
                 onReload={this._requestGetPet}
                 viewableItem={this.state.viewableItem}
+                onChatPress={this.props.onChatPress}
+                toast={this.props.toast}
               />
             </View>
             <View

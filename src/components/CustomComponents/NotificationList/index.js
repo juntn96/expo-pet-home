@@ -38,17 +38,10 @@ class NotificationList extends Component {
           <Thumbnail circular source={{ uri: item.sender.avatar }} />
         </Left>
         <Body>
-          <Text>
-            <Text
-              style={{
-                fontWeight: "bold",
-              }}
-            >
-              {item.sender.appName}
-            </Text>
-            <Text> {item.message} </Text>
+          <Text>{item.message}</Text>
+          <Text note style={{ fontSize: 10 }}>
+            {new Date(item.createdAt).toLocaleTimeString()}
           </Text>
-          <Text note style={{fontSize: 10}} >{new Date(item.createdAt).toLocaleTimeString()}</Text>
         </Body>
         <Right>
           <TouchableOpacity

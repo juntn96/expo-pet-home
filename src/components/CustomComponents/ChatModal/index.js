@@ -54,6 +54,7 @@ class ChatModal extends Component {
       });
       messages = messages.reverse();
       this.setState({ messages });
+      return true;
     } catch (error) {
       throw error;
     }

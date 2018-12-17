@@ -7,6 +7,7 @@ import {
   ActionSheetIOS,
   Alert,
   AlertIOS,
+  TouchableOpacity,
 } from "react-native";
 import { Container, List, ListItem, Button, Text } from "native-base";
 import PostItem from "../CustomComponents/PostList/PostItem";
@@ -15,6 +16,7 @@ import PostOptionModal from "../CustomComponents/PostOptionModal";
 import EditPostModal from "../CustomComponents/EditPostModal";
 
 import PostServices from "../../services/PostServices";
+import AnimatedOptionBar from "./AnimatedHeader/AnimatedOptionBar";
 
 const animatedValue = new Animated.Value(0);
 const AnimatedList = Animated.createAnimatedComponent(FlatList);
@@ -26,12 +28,17 @@ class ProfileScreen extends React.Component {
     this.state = {
       postData: [],
       loading: false,
+      tab: 0,
     };
   }
 
   componentDidMount() {
     this.requestGetByOwner();
   }
+
+  _onChangeTab = tab => {
+    this.setState({ tab });
+  };
 
   requestGetByOwner = async () => {
     this._setLoading(true);
@@ -100,6 +107,12 @@ class ProfileScreen extends React.Component {
           animatedValue={animatedValue}
           navigation={this.props.navigation}
         />
+
+        {/* <AnimatedOptionBar
+          animatedValue={animatedValue}
+          tab={this.state.tab}
+          onChangeTab={this._onChangeTab}
+        /> */}
         <AnimatedList
           onScroll={Animated.event(
             [
@@ -131,7 +144,7 @@ class ProfileScreen extends React.Component {
           keyExtractor={item => item._id}
           contentContainerStyle={{
             paddingBottom: 20,
-            paddingTop: 220,
+            paddingTop: 260,
             padding: 10,
           }}
           refreshControl={

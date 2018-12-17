@@ -16,6 +16,7 @@ import {
 import CustomHeader from "../CustomComponents/CustomHeader";
 import MatchPetTab from "../CustomComponents/MatchPetTab";
 import EditPetTab from "../CustomComponents/EditPetTab";
+import RequestPetTab from "../CustomComponents/RequestPetTab";
 
 export default class extends Component {
   constructor(props) {
@@ -76,7 +77,11 @@ export default class extends Component {
               </TabHeading>
             }
           >
-            <View />
+            <RequestPetTab
+              navigation={this.props.navigation}
+              userData={this.props.userData}
+              toast={this.props.toast}
+            />
           </Tab>
         </Tabs>
       </Container>

@@ -36,7 +36,6 @@ class EditModal extends Component {
 
   setModalVisible = (visible, petInfo) => {
     this.petInfo = petInfo;
-    console.log(petInfo);
     this.setState({ modalVisible: visible });
     this.setState({
       name: petInfo ? petInfo.name : undefined,
@@ -195,7 +194,7 @@ class EditModal extends Component {
             title="Đăng ký pet"
             buttonLeft="md-close"
             actionLeft={() => this.setModalVisible(false)}
-            buttonRight="md-add"
+            buttonRight={this.petInfo ? "md-checkmark" : "md-add"}
             actionRight={() => this._requestAddPet()}
           />
           <Content>

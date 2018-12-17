@@ -1,6 +1,13 @@
 import React, { Component } from "react";
-import { View, FlatList, Dimensions, Animated, Image } from "react-native";
-
+import {
+  View,
+  FlatList,
+  Dimensions,
+  Animated,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import ShowImage from "./ShowImage";
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 class AnimatedPetImage extends Component {
@@ -34,7 +41,10 @@ class AnimatedPetImage extends Component {
           ],
         }}
       >
-        <View
+        <ShowImage ref={ref => (this.showImage = ref)} />
+        <TouchableOpacity
+          activeOpacity={0.75}
+          onPress={() => this.showImage.setModalVisible(true, item.images)}
           style={{
             borderRadius: SCREEN_WIDTH / 1.5,
             width: SCREEN_WIDTH / 1.5,
@@ -52,7 +62,7 @@ class AnimatedPetImage extends Component {
               height: "100%",
             }}
           />
-        </View>
+        </TouchableOpacity>
       </Animated.View>
     );
   }

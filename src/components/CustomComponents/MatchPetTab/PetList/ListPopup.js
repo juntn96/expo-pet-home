@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, Animated, TouchableOpacity, FlatList } from "react-native";
 import PetServices from "../../../../services/PetServices";
+import UserServices from "../../../../services/UserServices";
 
 const animatedValue = new Animated.Value(0);
 const AnimatedButton = Animated.createAnimatedComponent(TouchableOpacity);
@@ -28,13 +29,9 @@ class ListPopup extends Component {
     };
   }
 
-  // componentDidMount() {
-  //   this._requestGetListPet();
-  // }
-
   show = async () => {
-    animatedValue.stopAnimation();
     await asyncNextFrame();
+    animatedValue.stopAnimation();
     if (this.state.canRender) {
       this.hide();
     } else {
@@ -57,6 +54,51 @@ class ListPopup extends Component {
     }).start(() => {
       this.setState({ canRender: undefined });
     });
+  };
+
+  _onItemPress = async item => {
+    try {
+      // const { item } = this.props;
+      const requestPet = this.props.item;
+      // console.log("my item: ", item);
+      // console.log("pet item: ", requestPet);
+      const { userData } = this.props;
+      const receiver = await this._getReceiverInfo(requestPet.ownerId);
+      const notification = {
+        tokens: [receiver.expoToken],
+        data: {
+          message: `${
+            userData.appName
+          } đã gửi lời mời ghép cặp với Pet của bạn`,
+          content: {
+            requestPet: requestPet._id,
+            ownerPet: item._id,
+            status: "pending",
+          },
+          sender: userData._id,
+          receiver: receiver._id,
+          type: "pet",
+        },
+      };
+      await UserServices.sendNotification(notification);
+      this.props.toast({
+        message: "Đã gửi yêu cầu ghép cặp",
+        duration: 3000,
+        theme: "light",
+      });
+      this.hide();
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  _getReceiverInfo = async id => {
+    try {
+      const info = await UserServices.findUser(id);
+      return info;
+    } catch (error) {
+      throw error;
+    }
   };
 
   _requestGetListPet = async () => {
@@ -107,19 +149,16 @@ class ListPopup extends Component {
           ],
         }}
       >
-        <View
-          ref={ref => (this.view = ref)}
-          style={{
-            flex: 1,
-          }}
-        >
+        <View ref={ref => (this.view = ref)} style={{}}>
           <FlatList
             data={listPet}
             keyExtractor={item => item._id}
+            showsVerticalScrollIndicator={false}
             renderItem={({ item }) => {
               return (
                 <TouchableOpacity
                   activeOpacity={0.7}
+                  onPress={() => this._onItemPress(item)}
                   style={{
                     padding: 4,
                     borderRadius: 5,
