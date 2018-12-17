@@ -1,11 +1,23 @@
 import { createStackNavigator } from "react-navigation";
 import LocationHome from "../../containers/LocationHome";
+import LocationDetail from '../../components/CustomComponents/LocationListTab/LocationDetail';
+import SearchLocation from '../../components/CustomComponents/LocationListTab/SearchLocation';
+import ProductDetail from '../../components/CustomComponents/LocationListTab/ProductDetail';
 
 const LocationRoute = createStackNavigator(
   {
     LocationHome: {
       screen: LocationHome,
     },
+    LocationDetail: {
+      screen: LocationDetail,
+    },
+    SearchLocation: {
+      screen: SearchLocation
+    },
+    ProductDetail: {
+      screen: ProductDetail
+    }
   },
   {
     navigationOptions: {

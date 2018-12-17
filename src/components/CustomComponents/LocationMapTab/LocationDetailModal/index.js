@@ -182,7 +182,7 @@ class LocationDetailModal extends Component {
                     {locationItem.name}
                   </Text>
                   <Text note style={{ fontSize: 14, marginBottom: 4 }}>
-                    Thach That, Hoa Lac, Ha Noi
+                    
                   </Text>
                   <Text style={{ fontSize: 14 }}>
                     {locationItem.description}

@@ -3,6 +3,7 @@ import { View, Dimensions, ScrollView } from "react-native";
 import { Container } from "native-base";
 
 import TabBar from "./TabBar";
+import LocationListTab from '../CustomComponents/LocationListTab';
 import LocationMapTab from "../CustomComponents/LocationMapTab";
 import TabContainer from "./TabContainer";
 
@@ -59,11 +60,8 @@ export default class extends Component {
       if (value.screen === "LIST") {
         return (
           <TabContainer key={value.index}>
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: "green",
-              }}
+            <LocationListTab
+              navigation={this.props.navigation}
             />
           </TabContainer>
         );
