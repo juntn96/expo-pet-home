@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Image, TouchableOpacity } from "react-native";
+import { View, Image, TouchableOpacity, ActionSheetIOS } from "react-native";
 import {
   Card,
   CardItem,
@@ -15,11 +15,15 @@ import Comment from "./Comment";
 import Vote from "./Vote";
 import PostGridImage from "../../PostGridImage";
 import ReadMoreText from "../../ReadMoreText";
+import ChatModal from "../../ChatModal";
+import MessageServices from "../../../../services/MessageServices";
 
 class PostItem extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      renderChatModal: false,
+    };
   }
 
   _optionPress = () => {
@@ -37,14 +41,55 @@ class PostItem extends Component {
     }
   };
 
+  _onUserPress = () => {
+    const { postData, userData } = this.props;
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ["Bỏ qua", "Gửi tin nhắn"],
+        cancelButtonIndex: 0,
+      },
+      async buttonIndex => {
+        if (buttonIndex === 1) {
+          try {
+            const users = [
+              {
+                user: postData.ownerId._id,
+              },
+              {
+                user: userData._id,
+              },
+            ];
+            const conversation = await MessageServices.createConversation(
+              users
+            );
+            this.setState({ renderChatModal: true }, () => {
+              this.chatModal.setModalVisible(true, conversation);
+            });
+          } catch (error) {
+            throw error;
+          }
+        }
+      }
+    );
+  };
+
   render() {
     const { postData, userData } = this.props;
     const date = new Date(postData.createdAt);
     return (
       <Card>
+        {this.state.renderChatModal === true ? (
+          <ChatModal ref={ref => (this.chatModal = ref)} userData={userData} />
+        ) : null}
         <CardItem>
           <Left>
-            <Thumbnail source={{ uri: postData.ownerId.avatar }} />
+            <TouchableOpacity
+              disabled={postData.ownerId._id === userData._id}
+              activeOpacity={0.8}
+              onPress={this._onUserPress}
+            >
+              <Thumbnail source={{ uri: postData.ownerId.avatar }} />
+            </TouchableOpacity>
             <View>
               <Text style={{ alignSelf: "flex-start" }}>
                 {postData.ownerId.appName}

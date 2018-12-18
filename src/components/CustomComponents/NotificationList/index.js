@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { TouchableOpacity, FlatList } from "react-native";
+import { TouchableOpacity, FlatList, RefreshControl } from "react-native";
 import {
   List,
   Left,
@@ -18,18 +18,29 @@ class NotificationList extends Component {
     super(props);
     this.state = {
       notifications: [],
+      loading: false,
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this._requestGetNotification();
+  }
+
+  _requestGetNotification = async () => {
+    this._setLoading(true);
     try {
       const { userData } = this.props.auth;
       const result = await UserServices.getNotifications(userData._id);
-      this.setState({ notifications: result });
+      this.setState({ notifications: result.reverse() });
     } catch (error) {
       throw error;
     }
-  }
+    this._setLoading(false);
+  };
+
+  _setLoading = loading => {
+    this.setState({ loading });
+  };
 
   _renderItem = ({ item }) => {
     return (
@@ -40,7 +51,7 @@ class NotificationList extends Component {
         <Body>
           <Text>{item.message}</Text>
           <Text note style={{ fontSize: 10 }}>
-            {new Date(item.createdAt).toLocaleTimeString()}
+            {new Date(item.createdAt).toLocaleString()}
           </Text>
         </Body>
         <Right>
@@ -65,6 +76,12 @@ class NotificationList extends Component {
         data={notifications}
         keyExtractor={item => item._id}
         renderItem={this._renderItem}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.loading}
+            onRefresh={this._requestGetNotification}
+          />
+        }
       />
     );
   }

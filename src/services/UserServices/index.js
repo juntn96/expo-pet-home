@@ -70,6 +70,20 @@ const sendNotification = async notification => {
   }
 };
 
+const hideNotification = async (notificationId, userId) => {
+  try {
+    const funcUrl = `app/notification/hide`;
+    const method = "POST";
+    const data = await ApiServices.requestOption(method, funcUrl, {
+      notificationId,
+      userId,
+    });
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const findUser = async userId => {
   try {
     const funcUrl = `app/user/${userId}`;
@@ -87,5 +101,6 @@ export default {
   removeToken,
   getNotifications,
   getNotificationsByType,
-  sendNotification
+  sendNotification,
+  hideNotification
 };

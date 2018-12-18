@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, Image, Dimensions } from "react-native";
+import { View, Text, Image, Dimensions, TouchableOpacity } from "react-native";
 import PetServices from "../../../../services/PetServices";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -32,7 +32,9 @@ class PetInfo extends Component {
     if (!petInfo) return null;
 
     return (
-      <View
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => this.props.onInfoPress(this.props.petId)}
         style={{
           width: SCREEN_WIDTH / 2.5,
         }}
@@ -46,7 +48,7 @@ class PetInfo extends Component {
           }}
         />
         <Text style={{ color: "#FFF" }}>{petInfo.name}</Text>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

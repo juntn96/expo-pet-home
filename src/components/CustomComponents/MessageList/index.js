@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, FlatList } from "react-native";
+import { View, FlatList, RefreshControl } from "react-native";
 import { List, Left, Body, ListItem, Thumbnail, Text } from "native-base";
 import { connect } from "react-redux";
 import MessageServices from "../../../services/MessageServices";
@@ -11,6 +11,7 @@ class MessageList extends Component {
     super(props);
     this.state = {
       conversation: [],
+      loading: false,
     };
   }
 
@@ -19,6 +20,7 @@ class MessageList extends Component {
   }
 
   _requestGetConversation = async () => {
+    this.setState({ loading: true });
     try {
       const { userData } = this.props.auth;
       const result = await MessageServices.getAllConversation(userData._id);
@@ -26,6 +28,7 @@ class MessageList extends Component {
     } catch (error) {
       throw error;
     }
+    this.setState({ loading: false });
   };
 
   _renderItem = ({ item }) => {
@@ -65,7 +68,9 @@ class MessageList extends Component {
             >
               {receiver[0].user.appName}
             </Text>
-            <Text note style={{fontSize: 10}} >{date.toLocaleTimeString()}</Text>
+            <Text note style={{ fontSize: 10 }}>
+              {date.toLocaleTimeString()}
+            </Text>
           </View>
           <Text note numberOfLines={1}>
             {lastMes}
@@ -78,7 +83,11 @@ class MessageList extends Component {
   render() {
     const { conversation } = this.state;
     return (
-      <View>
+      <View
+        style={{
+          flex: 1
+        }}
+      >
         <ChatModal
           ref={ref => {
             this.chatModel = ref;
@@ -89,6 +98,12 @@ class MessageList extends Component {
           data={conversation}
           keyExtractor={item => item._id}
           renderItem={this._renderItem}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.loading}
+              onRefresh={this._requestGetConversation}
+            />
+          }
         />
       </View>
     );

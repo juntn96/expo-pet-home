@@ -122,6 +122,21 @@ const requestMatch = async data => {
   }
 };
 
+const changeStatus = async (notificationId, status, notification) => {
+  try {
+    const url = `pet/changeRequestStatus`;
+    const method = "POST";
+    const result = await ApiServices.requestOption(method, url, {
+      notificationId,
+      status,
+      notification
+    });
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // const getRequest = async (userId) => {
 //   try {
 //     const url = ``
@@ -144,4 +159,5 @@ export default {
   ignore,
   isLiked,
   requestMatch,
+  changeStatus,
 };

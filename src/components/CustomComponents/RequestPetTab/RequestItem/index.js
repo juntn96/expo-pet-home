@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { View, FlatList, Dimensions, Image, SectionList } from "react-native";
+import {
+  View,
+  FlatList,
+  Dimensions,
+  Image,
+  SectionList,
+  TouchableOpacity,
+  ActionSheetIOS,
+} from "react-native";
 import { Button, Text } from "native-base";
 import PetInfo from "./PetInfo";
 import OptionsBar from "./OptionsBar";
@@ -14,7 +22,9 @@ class RequestItem extends Component {
     const { item, userData } = this.props;
 
     return (
-      <View
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onLongPress={() => this.props.onLongPress(item)}
         style={{
           borderWidth: 5,
           borderColor: "#FFF",
@@ -30,7 +40,14 @@ class RequestItem extends Component {
             marginBottom: 4,
           }}
         >
-          <PetInfo petId={userData._id === item.sender._id ? item.content.ownerPet : item.content.requestPet} />
+          <PetInfo
+            petId={
+              userData._id === item.sender._id
+                ? item.content.ownerPet
+                : item.content.requestPet
+            }
+            onInfoPress={this.props.onInfoPress}
+          />
           <View
             style={{
               flex: 1,
@@ -43,14 +60,22 @@ class RequestItem extends Component {
               style={{ width: 30, height: 30 }}
             />
           </View>
-          <PetInfo petId={userData._id === item.sender._id ? item.content.requestPet : item.content.ownerPet} />
+          <PetInfo
+            petId={
+              userData._id === item.sender._id
+                ? item.content.requestPet
+                : item.content.ownerPet
+            }
+            onInfoPress={this.props.onInfoPress}
+          />
         </View>
         <OptionsBar
           userData={this.props.userData}
           item={item}
-          
+          onChangeStatus={this.props.onChangeStatus}
+          onChatPress={this.props.onChatPress}
         />
-      </View>
+      </TouchableOpacity>
     );
   }
 }

@@ -241,7 +241,7 @@ class AddPostTab extends Component {
             <Text style={styles.textUsername}>
               {userData ? userData.appName : ""}
             </Text>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               activeOpacity={0.7}
               style={styles.settingContainer}
               onPress={() =>
@@ -249,7 +249,7 @@ class AddPostTab extends Component {
               }
             >
               <Icon name="md-settings" style={styles.settingIcon} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <PostCategories
             categories={postCategories}

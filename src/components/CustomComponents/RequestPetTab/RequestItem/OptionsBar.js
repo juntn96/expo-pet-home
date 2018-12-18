@@ -1,12 +1,69 @@
 import React, { Component } from "react";
-import { View, FlatList, Dimensions, Image, SectionList } from "react-native";
+import {
+  View,
+  FlatList,
+  Dimensions,
+  Image,
+  SectionList,
+  Alert,
+} from "react-native";
 import { Button, Text } from "native-base";
+import PetServices from "../../../../services/PetServices";
+import MessageServices from "../../../../services/MessageServices";
 
 class OptionsBar extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
+
+  _requestChangeStatus = async status => {
+    if (status === "decline") {
+      Alert.alert(
+        "Bạn có chắc muốn từ chối lời mời này?",
+        undefined,
+        [
+          {
+            text: "Không",
+            style: "cancel",
+          },
+          {
+            text: "Có",
+            onPress: () => {
+              this._request(status);
+            },
+          },
+        ],
+        {
+          cancelable: true,
+        }
+      );
+    } else {
+      this._request(status);
+    }
+  };
+
+  _request = async status => {
+    try {
+      const { item, userData } = this.props;
+      const notification = {
+        tokens: [item.sender.expoToken],
+        data: {
+          message: `${userData.appName} đã ${
+            status === "accept" ? "chấp nhận" : "từ chối"
+          } ghép đôi với Pet của bạn`,
+          content: item.content,
+          sender: item.sender._id,
+          receiver: item.receiver._id,
+          type: "pet",
+        },
+      };
+      await PetServices.changeStatus(item._id, status, notification);
+      this.props.onChangeStatus();
+    } catch (error) {
+      throw error;
+    }
+  };
 
   _buttonBar = () => {
     return (
@@ -21,7 +78,12 @@ class OptionsBar extends Component {
             paddingRight: 50,
           }}
         >
-          <Button small danger block>
+          <Button
+            small
+            danger
+            block
+            onPress={() => this._requestChangeStatus("decline")}
+          >
             <Text>Từ chối</Text>
           </Button>
         </View>
@@ -31,7 +93,12 @@ class OptionsBar extends Component {
             paddingLeft: 50,
           }}
         >
-          <Button small success block>
+          <Button
+            small
+            success
+            block
+            onPress={() => this._requestChangeStatus("accept")}
+          >
             <Text>Chấp nhận</Text>
           </Button>
         </View>
@@ -69,6 +136,7 @@ class OptionsBar extends Component {
   };
 
   _statusAccept = () => {
+    const { userData, item } = this.props;
     return (
       <View
         style={{
@@ -77,9 +145,29 @@ class OptionsBar extends Component {
       >
         <Text>
           <Text style={{ color: "#2ecc71", fontSize: 12 }}>
-            Lời mời đã được chấp nhận.{" "}
+            {userData._id === item.sender._id
+              ? "Lời mời đã được chấp nhận. "
+              : "Bạn đã chấp nhận lời mời này. "}
           </Text>
-          <Text style={{ fontWeight: "bold", color: "#2ecc71", fontSize: 13 }}>
+          <Text
+            style={{ fontWeight: "bold", color: "#2ecc71", fontSize: 13 }}
+            onPress={async () => {
+              try {
+                const users = [
+                  {
+                    user: item.sender._id,
+                  },
+                  {
+                    user: item.receiver._id,
+                  },
+                ];
+                const data = await MessageServices.createConversation(users);
+                this.props.onChatPress(data);
+              } catch (error) {
+                throw error;
+              }
+            }}
+          >
             Liên lạc ngay nào
           </Text>
         </Text>
@@ -108,7 +196,9 @@ class OptionsBar extends Component {
     if (userData._id === item.sender._id) {
       return this._statusBar();
     }
-
+    if (item.content.status === "accept") {
+      return this._statusAccept();
+    }
     return this._buttonBar();
   }
 }
