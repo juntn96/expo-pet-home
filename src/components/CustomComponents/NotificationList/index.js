@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { TouchableOpacity, FlatList } from "react-native";
+import { TouchableOpacity, FlatList, RefreshControl } from "react-native";
 import {
   List,
   Left,
@@ -13,47 +13,46 @@ import {
 import UserServices from "../../../services/UserServices";
 import { connect } from "react-redux";
 
-
 class NotificationList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       notifications: [],
+      loading: false,
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this._requestGetNotification();
+  }
+
+  _requestGetNotification = async () => {
+    this._setLoading(true);
     try {
       const { userData } = this.props.auth;
       const result = await UserServices.getNotifications(userData._id);
-      this.setState({ notifications: result });
+      this.setState({ notifications: result.reverse() });
     } catch (error) {
       throw error;
     }
-  }
+    this._setLoading(false);
+  };
+
+  _setLoading = loading => {
+    this.setState({ loading });
+  };
 
   _renderItem = ({ item }) => {
-    console.log(item)
     return (
       <ListItem thumbnail>
         <Left>
-          <Thumbnail
-            circular
-            source={require("../../../assets/images/bg1.png")}
-          />
+          <Thumbnail circular source={{ uri: item.sender.avatar }} />
         </Left>
         <Body>
-          <Text>
-            <Text
-              style={{
-                fontWeight: "bold",
-              }}
-            >
-              {item.from.appName}
-            </Text>
-            <Text> đã bình luận về bài viết của bạn </Text>
+          <Text>{item.message}</Text>
+          <Text note style={{ fontSize: 10 }}>
+            {new Date(item.createdAt).toLocaleString()}
           </Text>
-          <Text note>1h</Text>
         </Body>
         <Right>
           <TouchableOpacity
@@ -75,8 +74,14 @@ class NotificationList extends Component {
     return (
       <FlatList
         data={notifications}
-        key={item => item._id}
+        keyExtractor={item => item._id}
         renderItem={this._renderItem}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.loading}
+            onRefresh={this._requestGetNotification}
+          />
+        }
       />
     );
   }

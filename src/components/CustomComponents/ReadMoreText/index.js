@@ -26,17 +26,24 @@ class ReadMoreText extends PureComponent {
 
   async componentDidMount() {
     try {
+      this.isMounted = true;
       await asyncNextFrame();
+      if (!this.isMounted) return;
       this.maxHeight = await asyncMeasure(this.textView);
       this.setState({ measure: true });
       await asyncNextFrame();
+      if (!this.isMounted) return;
       this.minHeight = await asyncMeasure(this.textView);
       if (this.maxHeight > this.minHeight) {
         this.setState({ showReadMore: true });
       }
     } catch (error) {
-      throw error
+      throw error;
     }
+  }
+
+  componentWillUnmount() {
+    this.isMounted = false;
   }
 
   _showText = () => {

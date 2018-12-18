@@ -52,6 +52,7 @@ const uploadImage = async image => {
   } catch (error) {
     if (axios.isCancel(error)) {
       console.log("upload image canceled");
+      throw error;
     } else {
       throw error;
     }

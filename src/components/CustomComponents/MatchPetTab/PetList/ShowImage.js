@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { View, Text, Modal, FlatList, Dimensions, Image } from "react-native";
-import CustomHeader from "../CustomHeader";
+import CustomHeader from "../../CustomHeader";
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const SCREEN_WIDTH = Dimensions.get("window").width;
-class ShowImageModal extends Component {
+
+class ShowImage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -43,7 +44,6 @@ class ShowImageModal extends Component {
                 bottom: 0,
                 zIndex: -1,
               }}
-              horizontal
               data={images}
               keyExtractor={item => item._id}
               pagingEnabled
@@ -76,4 +76,4 @@ class ShowImageModal extends Component {
   }
 }
 
-export default ShowImageModal;
+export default ShowImage;

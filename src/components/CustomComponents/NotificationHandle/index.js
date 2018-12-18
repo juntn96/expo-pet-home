@@ -67,10 +67,7 @@ class NotificationHandle extends Component {
     return (
       <Animated.View style={[styles.container, { opacity: animOpacity }]}>
         <View style={styles.body}>
-          <Text>
-            <Text style={styles.name}>{notification.sender.appName}</Text>
-            <Text>{` ${notification.message}`}</Text>
-          </Text>
+          <Text>{` ${notification.message}`}</Text>
         </View>
       </Animated.View>
     );
