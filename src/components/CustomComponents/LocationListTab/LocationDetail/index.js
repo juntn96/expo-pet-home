@@ -1,9 +1,9 @@
 
 
 import React, { Component } from 'react';
-import { View, TextInput, Dimensions, Platform, FlatList, ScrollView } from 'react-native';
-import { Container, Header, Right, Icon, Button, Text , Left, Body} from 'native-base';
-import { Divider, Card, DropDownMenu, Examples, Screen, Image, Subtitle, Caption, TouchableOpacity, Title } from '@shoutem/ui';
+import { View,  Dimensions, FlatList, ScrollView } from 'react-native';
+import { Container, Header, Right, Icon, Button , Left, Body} from 'native-base';
+import { Divider, Card, Screen, Image, Subtitle, Caption, TouchableOpacity, Title, Lightbox } from '@shoutem/ui';
 import { MapCard } from '../DetailCard/index';
 import { Rating } from 'react-native-elements';
 
@@ -125,16 +125,18 @@ export default class LocationDetail extends Component {
       onPress={this._onPress}
       >
       <Card style={styles.card3}>
-        <Image
-          style={{
-            flex: 1,
-            alignSelf: 'stretch',
-            width: undefined,
-            height: undefined
-          }}
-          source={{uri: item.secure_url}}
-          borderRadius='5'
-        />
+        
+          <Image
+            style={{
+              flex: 1,
+              alignSelf: 'stretch',
+              width: undefined,
+              height: undefined
+            }}
+            source={{uri: item.secure_url}}
+            borderRadius='5'
+          />
+        
       </Card>
     </TouchableOpacity>
   );
@@ -334,5 +336,12 @@ const styles = {
     marginTop: 10,
     marginLeft: 8,
     borderRadius: 5,
+    shadowColor: "#CACACA",
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 2,
+      width: 0,
+    },
   },
 };

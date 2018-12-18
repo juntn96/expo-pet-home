@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TextInput, Dimensions, Platform, FlatList, ScrollView } from 'react-native';
+import { View, TextInput, Dimensions, FlatList, ScrollView } from 'react-native';
 import { Container, Header, Text } from 'native-base';
 import { Card, Screen, Image, Subtitle, TouchableOpacity, Caption } from '@shoutem/ui';
 import { Rating } from 'react-native-elements';
@@ -345,6 +345,13 @@ const styles = {
     marginTop: 10,
     marginLeft: 8,
     borderRadius: 5,
+    shadowColor: "#CACACA",
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 2,
+      width: 0,
+    },
   },
   card2: {
     width: (width - 28)/2,
@@ -352,6 +359,13 @@ const styles = {
     marginTop: 10,
     marginLeft: 4,
     borderRadius: 5,
+    shadowColor: "#CACACA",
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 2,
+      width: 0,
+    },
   },
   card3:{
     width: width * 0.75,

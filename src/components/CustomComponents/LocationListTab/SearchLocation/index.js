@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { View, TextInput, Dimensions, Platform, FlatList, ScrollView, Keyboard } from 'react-native';
-import { Container, Header, Item, Input, Icon, Button, Text, Left, Body } from 'native-base';
-import { Card, DropDownMenu, Examples, Screen, Image, Subtitle, Caption, TouchableOpacity } from '@shoutem/ui';
+import { View, TextInput, Dimensions } from 'react-native';
+import { Container, Header, Icon, Button } from 'native-base';
+import {  Screen, Image, TouchableOpacity } from '@shoutem/ui';
 import LocationList from '../LocationList';
 import FilterModal from '../FilterModal';
 const { width, height } = Dimensions.get('window');
@@ -35,6 +35,7 @@ class SearchLocation extends Component {
   _onShowFilter = () => {
 
   }
+  
   _onBack = () => {
     this.props.navigation.goBack(null);
   }
