@@ -4,6 +4,117 @@ import { Container, Header, Text } from 'native-base';
 import { Card, Screen, Image, Subtitle, TouchableOpacity, Caption } from '@shoutem/ui';
 import { Rating } from 'react-native-elements';
 
+const listLocation = [
+  {
+    _id : "5bec5615a9f642048071e793",
+    name : "Azzan",
+    long: 105.883068640442,
+    lat: 20.7562527745751,
+    systemRating: 1,
+    ownerId: "5bedc434a767a332a4d45ef5",
+    address: "FPT University",
+    description: "Nơi họp nhóm mèo con",
+    images: [
+        {
+            public_id: "mliywb8odq4tdqekmk8r",
+            width: 300,
+            height: 250,
+            format: "jpg",
+            bytes: 18369,
+            secure_url: "https://res.cloudinary.com/pet-home-fu/image/upload/v1543597350/mliywb8odq4tdqekmk8r.jpg"
+        },
+        {
+            public_id: "anhbx6su0g1dm5wy7yfa",
+            width: 300,
+            height: 250,
+            format: "jpg",
+            bytes: 18369,
+            secure_url: "https://res.cloudinary.com/pet-home-fu/image/upload/v1543597350/anhbx6su0g1dm5wy7yfa.jpg"
+        },
+        {
+          public_id: "mliywb8odq4tdqekmk8q",
+          width: 300,
+          height: 250,
+          format: "jpg",
+          bytes: 18369,
+          secure_url: "https://res.cloudinary.com/pet-home-fu/image/upload/v1543597350/mliywb8odq4tdqekmk8r.jpg"
+      },
+    ],
+  },
+  {
+    _id : "5bec5615a9f642048071e794",
+    name : "Simdo",
+    long: 105.883068640442,
+    lat: 20.7562527745751,
+    systemRating: 2,
+    ownerId: "5bedc434a767a332a4d45ef5",
+    address: "Tân xã",
+    description: "Công viên tân xã",
+    images: [
+        {
+            public_id: "mliywb8odq4tdqekmk8r1",
+            width: 300,
+            height: 250,
+            format: "jpg",
+            bytes: 18369,
+            secure_url: "https://res.cloudinary.com/pet-home-fu/image/upload/v1543597350/mliywb8odq4tdqekmk8r.jpg"
+        },
+        {
+            public_id: "anhbx6su0g1dm5wy7yfa2",
+            width: 300,
+            height: 250,
+            format: "jpg",
+            bytes: 18369,
+            secure_url: "https://res.cloudinary.com/pet-home-fu/image/upload/v1543597350/anhbx6su0g1dm5wy7yfa.jpg"
+        },
+        {
+          public_id: "mliywb8odq4tdqekmk8q3",
+          width: 300,
+          height: 250,
+          format: "jpg",
+          bytes: 18369,
+          secure_url: "https://res.cloudinary.com/pet-home-fu/image/upload/v1543597350/mliywb8odq4tdqekmk8r.jpg"
+      },
+    ],
+  },
+  {
+    _id : "5bec5615a9f642048071e795",
+    name : "Azzan",
+    long: 105.883068640442,
+    lat: 20.7562527745751,
+    systemRating: 3,
+    ownerId: "5bedc434a767a332a4d45ef5",
+    address: "Fsoft hòa lạc",
+    description: "Shop thú cưng",
+    images: [
+        {
+            public_id: "mliywb8odq4tdqekmk8r4",
+            width: 300,
+            height: 250,
+            format: "jpg",
+            bytes: 18369,
+            secure_url: "https://res.cloudinary.com/pet-home-fu/image/upload/v1543597350/mliywb8odq4tdqekmk8r.jpg"
+        },
+        {
+            public_id: "anhbx6su0g1dm5wy7yfa5",
+            width: 300,
+            height: 250,
+            format: "jpg",
+            bytes: 18369,
+            secure_url: "https://res.cloudinary.com/pet-home-fu/image/upload/v1543597350/anhbx6su0g1dm5wy7yfa.jpg"
+        },
+        {
+          public_id: "mliywb8odq4tdqekmk8q6",
+          width: 300,
+          height: 250,
+          format: "jpg",
+          bytes: 18369,
+          secure_url: "https://res.cloudinary.com/pet-home-fu/image/upload/v1543597350/mliywb8odq4tdqekmk8r.jpg"
+      },
+    ],
+  },
+]
+
 const { width, height } = Dimensions.get('window');
 class LocationListTab extends Component {
   constructor(props) {
@@ -32,15 +143,18 @@ class LocationListTab extends Component {
     });
   }
 
-  _onPress = () => {
-    this.props.navigation.navigate("LocationDetail");
+  _onPress(item){
+    console.log(item)
+    this.props.navigation.navigate("LocationDetail", {
+      data: item
+    });
   }
 
-  _renderItem = item => (
+  _renderItem = ({item}) => (
     <TouchableOpacity 
-      key={item} 
+      key={item._id} 
       styleName="flexible"
-      onPress={this._onPress}
+      onPress={this._onPress(item)}
       >
       <Card style={styles.card3}>
         <View style={{
@@ -54,7 +168,7 @@ class LocationListTab extends Component {
               width: undefined,
               height: undefined
             }}
-            source={require('../../../assets/images/park.jpg')}
+            source={{uri: item.images[0].secure_url}}
             borderRadius='5'
           />
         </View>
@@ -62,15 +176,16 @@ class LocationListTab extends Component {
           paddingLeft: 10,
           height: 100
         }}>
-          <Subtitle numberOfLines={3}>Công viên, địa điểm công cộng</Subtitle>
+          <Subtitle numberOfLines={3}>{item.name}</Subtitle>
           <View styleName="horizontal">
-              <Caption styleName="collapsible" numberOfLines={2}>{"Công viên, địa điểm công cộng"}</Caption>
+              <Caption styleName="collapsible" numberOfLines={2}>{item.address}</Caption>
             </View>
           <Rating
             type="star"
-            startingValue={3.6}
+            startingValue={item.systemRating}
             imageSize={10}
             style={{ paddingVertical: 10 }}
+            readonly
           />
         </View>
       </Card>
@@ -212,7 +327,7 @@ class LocationListTab extends Component {
             }}>Địa điểm nổi bật:</Text>
 
             <FlatList
-              data={[0, 1, 2, 3, 4, 5, 6]}
+              data={listLocation}
               keyExtractor={(item, index) => index.toString()}
               showsHorizontalScrollIndicator={false}
               renderItem={this._renderItem}

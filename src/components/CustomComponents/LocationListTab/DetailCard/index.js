@@ -67,7 +67,7 @@ export class MapCard extends React.Component {
     if (!this.state.shouldRenderMap) {
       return;
     }
-
+    const { lat, long } = this.props;
     return (
       <MapView
         cacheEnabled={Platform.OS === 'android'}
@@ -75,15 +75,15 @@ export class MapCard extends React.Component {
         loadingBackgroundColor="#f9f5ed"
         loadingEnabled={false}
         initialRegion={{
-          latitude: 21.0056564248676,
-          longitude: 105.526973092165,
+          latitude: lat,
+          longitude: long,
           latitudeDelta: 0.003,
           longitudeDelta: 0.003,
         }}>
         <MapView.Marker 
           coordinate={{ 
-            latitude: 21.0056564248676, 
-            longitude: 105.526973092165 
+            latitude: lat,
+            longitude: long,
           }} 
           title={'Azzan'} />
       </MapView>
