@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { View, TextInput, Dimensions, Platform, FlatList, ScrollView, Keyboard } from 'react-native';
 import { Container, Header, Item, Input, Icon, Button, Text, Left, Body } from 'native-base';
 import { Card, DropDownMenu, Examples, Screen, Image, Subtitle, Caption, TouchableOpacity } from '@shoutem/ui';
-import Layout from '../../../../constants/layout';
-import LocationList from '../LocationList'
+import LocationList from '../LocationList';
+import FilterModal from '../FilterModal';
 const { width, height } = Dimensions.get('window');
 class SearchLocation extends Component {
   constructor(props) {
@@ -25,31 +25,22 @@ class SearchLocation extends Component {
 
   _onFocus = () => {
     this.setState({showCancel: !this.state.showCancel});
-    console.log("_onFocus")
+
   }
 
   _onSearch = () => {
 
   }
 
-  _dismissKeyboard = () => {
-    Keyboard.dismiss();
-    console.log("_dismissKeyboard")
-  }
+  _onShowFilter = () => {
 
+  }
   _onBack = () => {
     this.props.navigation.goBack(null);
   }
 
   render() {
     console.disableYellowBox = true; 
-    let defaultListProps = {
-      key: 'list',
-      setRef: view => {
-        this._list = view;
-      },
-      contentContainerStyle: { paddingTop: Layout.HEADER_HEIGHT },
-    };
     const { navigation } = this.props;
     const textSearch = navigation.getParam('textSearch', 'NO-ID');
     return (
@@ -61,12 +52,7 @@ class SearchLocation extends Component {
               marginTop: 10,
             }}
           >    
-            <Button 
-              onPress={this._onBack}
-              transparent              
-              >
-              <Icon name='arrow-back' style={{marginLeft: 0, marginRight: 10}}/>
-            </Button>
+            
             <View  
               style={{
                 flex: 1,
@@ -75,6 +61,12 @@ class SearchLocation extends Component {
               <View
                 style={styles.searchBar}
               >
+                <Button 
+                  onPress={this._onBack}
+                  transparent              
+                  >
+                  <Icon name='arrow-back' style={{marginLeft: 0, marginRight: 10}}/>
+                </Button>
                 <View
                   style={{
                     flex: 1,
@@ -102,23 +94,26 @@ class SearchLocation extends Component {
                   />
                 </View>
               </View>
-              { this.state.showCancel ? <TouchableOpacity 
+              <TouchableOpacity 
                 style={{
                   marginLeft: 10,
                   marginRight: 10,
                   justifyContent: 'center',
                 }}
-                onPress={this._dismissKeyboard}
+                onPress={() => this.filterModal.setVisibleModal(true)}
                 >
-                <Text style={{
-                  fontFamily:"OpenSans-Bold"                     
-                }}>Hủy</Text>
-              </TouchableOpacity> : null}
-                   
+                <Image 
+                  source={require('../../../../assets/icons/icons8-filter.png')}
+                  style={{ 
+                    width: 25,
+                    height: 25
+                    }}/>
+              </TouchableOpacity>                   
             </View> 
           </Header>
-          <LocationList {...defaultListProps} navigation={this.props.navigation}/>   
-        </Screen>       
+          <LocationList navigation={this.props.navigation}/>   
+        </Screen>
+        <FilterModal ref={ref => (this.filterModal = ref)} />       
       </Container>
     );
   }

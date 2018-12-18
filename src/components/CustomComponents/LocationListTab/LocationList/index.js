@@ -13,7 +13,7 @@ import LocationListItem from '../LocationListItem'
 
 export default class LocationList extends React.Component {
   state = {
-    // renderContents: false,
+    renderContents: false,
   };
 
   componentDidMount() {
@@ -28,17 +28,9 @@ export default class LocationList extends React.Component {
 
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-
-  }
-
-  scrollTo(opts) {
-    this._scrollView._component.scrollTo(opts);
-  }
-
   render() {
     return (
-      <View onLayout={this.props.onLayout} style={styles.container}>
+      <View style={styles.container}>
         {/* {this.state.renderContents ? ( */}
           <FlatList
             ref={view => {
@@ -69,7 +61,6 @@ export default class LocationList extends React.Component {
     return (
       <LocationListItem
         onPress={() => this._handlePressLocation(item)}
-        brewery={item}
       />
     );
   }
@@ -83,6 +74,7 @@ export default class LocationList extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 10,
     backgroundColor: '#FBFBFB',
   },
 });

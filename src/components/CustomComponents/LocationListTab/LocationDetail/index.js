@@ -2,8 +2,8 @@
 
 import React, { Component } from 'react';
 import { View, TextInput, Dimensions, Platform, FlatList, ScrollView } from 'react-native';
-import { Container, Header, Item, Input, Icon, Button, Text , Left, Body} from 'native-base';
-import { Divider, Card, DropDownMenu, Examples, Screen, Image, Subtitle, Caption, TouchableOpacity } from '@shoutem/ui';
+import { Container, Header, Right, Icon, Button, Text , Left, Body} from 'native-base';
+import { Divider, Card, DropDownMenu, Examples, Screen, Image, Subtitle, Caption, TouchableOpacity, Title } from '@shoutem/ui';
 import { MapCard } from '../DetailCard/index';
 import { Rating } from 'react-native-elements';
 
@@ -12,6 +12,7 @@ const { width, height } = Dimensions.get('window');
 const locationProduct =  {
   long: 105.883068640442,
   lat: 20.7562527745751,
+  name : "Azzan",
   systemRating: 0,
   ownerId: "5bedc434a767a332a4d45ef5",
   typeId: {
@@ -163,7 +164,7 @@ export default class LocationDetail extends Component {
             <Subtitle>{item.name}</Subtitle>
             <View styleName="horizontal v-center space-between">
               <View styleName="horizontal">
-                <Subtitle styleName="md-gutter-right">{item.price}</Subtitle>
+                <Caption styleName="md-gutter-right">${item.price}</Caption>
               </View>
             </View>
           </View>
@@ -174,7 +175,6 @@ export default class LocationDetail extends Component {
   
 
   render() {
-    const name = this.props.navigation.state.params.name;
     return (
       <Container>
         <Header
@@ -191,8 +191,9 @@ export default class LocationDetail extends Component {
             </Button>
           </Left>
           <Body>
-            <Text>{name}</Text>
+            <Title>{locationProduct.name}</Title>
           </Body>
+          <Right />
         </Header>
         <Screen style={{backgroundColor: '#FCFCFC'}}>
           <ScrollView>
@@ -281,7 +282,7 @@ export default class LocationDetail extends Component {
                   type="star"
                   startingValue={locationProduct.systemRating}
                   imageSize={20}
-                  style={{ paddingRight: 10 }}
+                  style={{ marginTop:10, paddingRight: 10 }}
                   readonly
                 />
               </View>

@@ -3,25 +3,22 @@ import {
   Image,
   Platform,
   StyleSheet,
-  Text,
   TouchableHighlight,
   View,
 } from 'react-native';
 import FadeIn from 'react-native-fade-in-image';
 import TouchableNativeFeedback from '@expo/react-native-touchable-native-feedback-safe';
 import { MaterialIcons } from '@expo/vector-icons';
-
+import { Rating } from 'react-native-elements';
 import Layout from '../../../../constants/layout';
-import { RegularText, BoldText } from '../StyledText';
+import { RegularText } from '../StyledText';
 
 export default class LocationListItem extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    return nextProps.brewery !== this.props.brewery;
+  _renderAddressText() {    
+    return "addressText";
   }
 
   render() {
-    let { smallLogo, name } = this.props.brewery;
-
     return (
       <TouchableNativeFeedback
         delayPressIn={80}
@@ -43,32 +40,25 @@ export default class LocationListItem extends React.Component {
             />
           </FadeIn>
         </View>
-
         <View style={styles.infoContainer}>
           <RegularText style={styles.name}>{"name"}</RegularText>
-
           <RegularText style={styles.address}>
             {this._renderAddressText()}
           </RegularText>
-          <RegularText style={styles.hours}>
-            {this._renderStar()}
-          </RegularText>
+          <Rating
+            type="star"
+            startingValue={2}
+            imageSize={10}
+            style={{ paddingVertical: 10 }}
+            readonly
+          />
         </View>
-
         <View style={styles.buttonContainer}>
           <MaterialIcons name="chevron-right" size={30} color="#b8c3c9" />
         </View>
       </TouchableNativeFeedback>
     );
-  }
-
-  _renderStar() {
-    return "star"
-  }
-
-  _renderAddressText() {    
-    return "addressText";
-  }
+  } 
 }
 
 const styles = StyleSheet.create({

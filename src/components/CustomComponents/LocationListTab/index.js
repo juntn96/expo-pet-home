@@ -143,18 +143,15 @@ class LocationListTab extends Component {
     });
   }
 
-  _onPress(item){
-    console.log(item)
-    this.props.navigation.navigate("LocationDetail", {
-      data: item
-    });
+  _onPress = () => {
+    this.props.navigation.navigate("LocationDetail");
   }
 
   _renderItem = ({item}) => (
     <TouchableOpacity 
       key={item._id} 
       styleName="flexible"
-      onPress={this._onPress(item)}
+      onPress={this._onPress}
       >
       <Card style={styles.card3}>
         <View style={{
