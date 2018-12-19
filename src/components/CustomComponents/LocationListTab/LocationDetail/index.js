@@ -110,6 +110,12 @@ const locationProduct =  {
 
 export default class LocationDetail extends Component {
   
+  constructor(props) {
+    super(props);
+    const { navigation } = this.props;
+    const _id = navigation.getParam('_id', 'NO-ID');
+  }
+
   _onBack = () => {
     this.props.navigation.goBack(null);
   }
@@ -118,13 +124,13 @@ export default class LocationDetail extends Component {
     this.props.navigation.navigate("ProductDetail");
   }
 
-  _renderItem = ({item}) => (
+  _renderLocationImage = ({item}) => (
     <TouchableOpacity 
       key={item._id} 
       styleName="flexible"
       onPress={this._onPress}
       >
-      <Card style={styles.card3}>
+      <Card style={styles.imageLocation}>
         
           <Image
             style={{
@@ -177,6 +183,7 @@ export default class LocationDetail extends Component {
   
 
   render() {
+    
     return (
       <Container>
         <Header
@@ -203,7 +210,7 @@ export default class LocationDetail extends Component {
               data={locationProduct.images}
               keyExtractor={(item, index) => index.toString()}
               showsHorizontalScrollIndicator={false}
-              renderItem={this._renderItem}
+              renderItem={this._renderLocationImage}
               horizontal
             /> : null}
             <View
@@ -330,18 +337,20 @@ export default class LocationDetail extends Component {
 }
 
 const styles = {
+  imageLocation: {
+    width: height / 4,
+    height: height / 4,
+    marginTop: 10,
+    marginLeft: 8,
+    borderRadius: 5,
+    backgroundColor: '#FCFCFC',
+  },
   card3:{
     width: height / 3,
     height: height / 3,
     marginTop: 10,
     marginLeft: 8,
     borderRadius: 5,
-    shadowColor: "#CACACA",
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 2,
-      width: 0,
-    },
+    backgroundColor: '#FCFCFC',
   },
 };

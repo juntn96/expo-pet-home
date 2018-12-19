@@ -143,15 +143,17 @@ class LocationListTab extends Component {
     });
   }
 
-  _onPress = () => {
-    this.props.navigation.navigate("LocationDetail");
+  _onPress = (item) => {
+    this.props.navigation.navigate("LocationDetail", {
+      _id: item._id
+    });
   }
 
   _renderItem = ({item}) => (
     <TouchableOpacity 
       key={item._id} 
       styleName="flexible"
-      onPress={this._onPress}
+      onPress={() => this._onPress(item)}
       >
       <Card style={styles.card3}>
         <View style={{
@@ -255,7 +257,7 @@ class LocationListTab extends Component {
                 marginLeft: 8, 
                 marginTop: 30, 
                 marginBottom: 15,
-                color: '#767676',
+                color: '#444444',
                 fontSize: 30,
                 fontFamily: 'OpenSans-Bold'
               }}>Chúng tôi có thể giúp gì bạn?</Text>
@@ -318,7 +320,7 @@ class LocationListTab extends Component {
               marginLeft: 8, 
               marginTop: 30, 
               marginBottom: 15,
-              color: '#767676',
+              color: '#444444',
               fontSize: 30,
               fontFamily: 'OpenSans-Bold'
             }}>Địa điểm nổi bật:</Text>
@@ -345,13 +347,9 @@ const styles = {
     marginTop: 10,
     marginLeft: 8,
     borderRadius: 5,
-    shadowColor: "#CACACA",
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 2,
-      width: 0,
-    },
+    backgroundColor: '#FCFCFC',
+    borderColor: '#A3A3A3',
+    borderWidth: 0.5,
   },
   card2: {
     width: (width - 28)/2,
@@ -359,13 +357,9 @@ const styles = {
     marginTop: 10,
     marginLeft: 4,
     borderRadius: 5,
-    shadowColor: "#CACACA",
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 2,
-      width: 0,
-    },
+    backgroundColor: '#FCFCFC',
+    borderColor: '#A3A3A3',
+    borderWidth: 0.5,
   },
   card3:{
     width: width * 0.75,
@@ -373,6 +367,7 @@ const styles = {
     marginTop: 10,
     marginLeft: 8,
     borderRadius: 5,
+    backgroundColor: '#FCFCFC',
   },
   searchBar: {
     flex: 1,
