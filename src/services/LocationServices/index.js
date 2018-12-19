@@ -30,7 +30,25 @@ const getLocationByCategory = async data => {
   }
 };
 
+const searchLocation = async data => {
+  try {
+    const url = API_URL + 'location/searchAllLocations';
+    const result = await axios.get(url, {
+      params: {
+        search_keyword: data.textSearch
+      },
+      paramsSerializer: params => {
+        return qs.stringify(params)
+      } 
+    });
+    return result.data.listLocations;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   getLocation,
   getLocationByCategory,
+  searchLocation
 };

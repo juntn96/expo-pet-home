@@ -29,7 +29,7 @@ export default class ProductDetail extends Component {
 
   _requestGetLocation = async () => {
     try {
-      const result = await LocationServices.getLocationByCategory({
+      const result = await LocationServices.searchLocation({
         typeIdArray: [{ typeId: "5bedabb2b3c51a06927c35bb"}]
       });
       this.setState({ listLocations: result });

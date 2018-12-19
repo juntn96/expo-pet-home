@@ -29,6 +29,7 @@ export default class LocationList extends React.Component {
   }
 
   render() {
+    const { data } = this.props;
     return (
       <View style={styles.container}>
         {/* {this.state.renderContents ? ( */}
@@ -39,7 +40,7 @@ export default class LocationList extends React.Component {
             contentContainerStyle={this.props.contentContainerStyle}
             renderItem={this._renderItem}
             style={styles.container}
-            data={[0, 1, 2, 3, 4, 5, 6]}
+            data={data}
             keyExtractor={(item, index) => index.toString()}
           />
         {/* ) : (
@@ -61,6 +62,7 @@ export default class LocationList extends React.Component {
     return (
       <LocationListItem
         onPress={() => this._handlePressLocation(item)}
+        data={item}
       />
     );
   }

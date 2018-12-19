@@ -1,18 +1,45 @@
 import React, { Component } from 'react';
-import { View, TextInput, Dimensions } from 'react-native';
-import { Container, Header, Icon, Button } from 'native-base';
-import {  Screen, Image, TouchableOpacity } from '@shoutem/ui';
+import { View, TextInput, Dimensions, Platform } from 'react-native';
+import { Container, Header, Icon, Button, Spinner } from 'native-base';
+import { Text, Screen, Image, TouchableOpacity } from '@shoutem/ui';
 import LocationList from '../LocationList';
 import FilterModal from '../FilterModal';
+import LocationServices from "../../../../services/LocationServices";
+import { Constants } from "expo";
+
 const { width, height } = Dimensions.get('window');
 class SearchLocation extends Component {
   constructor(props) {
     super(props);
+    const { navigation } = this.props;
+    const textSearch = navigation.getParam('textSearch', 'NO-ID');
     this.state = {
-      textSearch: '',
-      showCancel: false
+      textSearch: textSearch,
+      loading: true,
+      listLocations: [],
     };
   }
+
+  componentDidMount() {
+    if (Platform.OS === "android" && !Constants.isDevice) {
+      console.log(
+        "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
+      );
+    } else {
+      this._requestGetLocation();
+    }
+  }
+
+  _requestGetLocation = async () => {
+    try {
+      const result = await LocationServices.searchLocation({
+        textSearch: this.state.textSearch
+      });
+      this.setState({ listLocations: result, loading: false });
+    } catch (error) {
+      throw error;
+    }
+  };
 
   _onChangeText = text => {
     this.setState({textSearch: text});
@@ -29,7 +56,7 @@ class SearchLocation extends Component {
   }
 
   _onSearch = () => {
-
+    this._requestGetLocation();
   }
 
   _onShowFilter = () => {
@@ -42,8 +69,14 @@ class SearchLocation extends Component {
 
   render() {
     console.disableYellowBox = true; 
-    const { navigation } = this.props;
-    const textSearch = navigation.getParam('textSearch', 'NO-ID');
+    const { loading, listLocations } = this.state;
+    if (loading) {
+      return (
+        <View style={styles.background}>
+          <Spinner color="#615c70" />
+        </View>
+      );
+    }
     return (
       <Container>
         <Screen style={{backgroundColor: '#FCFCFC'}}>
@@ -91,7 +124,7 @@ class SearchLocation extends Component {
                     onChangeText={this._onChangeText}
                     onBlur={this._onBlur}
                     onFocus={this._onFocus}
-                    value={textSearch}
+                    value={this.state.textSearch}
                   />
                 </View>
               </View>
@@ -112,7 +145,11 @@ class SearchLocation extends Component {
               </TouchableOpacity>                   
             </View> 
           </Header>
-          <LocationList navigation={this.props.navigation}/>   
+          {listLocations.length === 0 ? 
+          <View style={{flex: 1, justifyContent: 'center',alignItems: 'center'}}>
+            <Text> Không có kết quả nào </Text>
+          </View> : 
+          <LocationList data={this.state.listLocations} navigation={this.props.navigation}/> }
         </Screen>
         <FilterModal ref={ref => (this.filterModal = ref)} />       
       </Container>
@@ -135,6 +172,10 @@ const styles = {
       height: 2,
       width: 0,
     },
+  },
+  emptyResult: {
+    alignItems: "center",
+    justifyContent: "center"
   }
 };
 
