@@ -13,6 +13,23 @@ const getLocation = async userLocation => {
   }
 };
 
+const getSuggestLocation = async () => {
+  try {
+    const url = API_URL + 'admin/getLocation';
+    const result = await axios.get(url, {
+      params: {
+        typeIdArray: data.typeIdArray
+      },
+      paramsSerializer: params => {
+        return qs.stringify(params)
+      } 
+    });
+    return result.data.locations;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getLocationByCategory = async data => {
   try {
     const url = API_URL + 'location/locationByCategory';
@@ -47,8 +64,27 @@ const searchLocation = async data => {
   }
 };
 
+const getLocationDetail = async data => {
+  try {
+    const url = API_URL + `/location/locationProduct`;
+    const result = await axios.get(url, {
+      params: {
+        ownerId: data._id
+      },
+      paramsSerializer: params => {
+        return qs.stringify(params)
+      } 
+    });
+    return result.data.listLocations;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   getLocation,
   getLocationByCategory,
-  searchLocation
+  searchLocation,
+  getSuggestLocation,
+  getLocationDetail
 };

@@ -1,11 +1,13 @@
 
 
 import React, { Component } from 'react';
-import { View,  Dimensions, FlatList, ScrollView } from 'react-native';
+import { View,  Dimensions, FlatList, ScrollView, Platform } from 'react-native';
 import { Container, Header, Right, Icon, Button , Left, Body} from 'native-base';
-import { Divider, Card, Screen, Image, Subtitle, Caption, TouchableOpacity, Title, Lightbox } from '@shoutem/ui';
+import { Divider, Card, Screen, Image, Subtitle, Caption, TouchableOpacity, Title, Spinner } from '@shoutem/ui';
 import { MapCard } from '../DetailCard/index';
 import { Rating } from 'react-native-elements';
+import LocationServices from '../../../../services/LocationServices';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -112,17 +114,43 @@ export default class LocationDetail extends Component {
   
   constructor(props) {
     super(props);
-    const { navigation } = this.props;
-    const _id = navigation.getParam('_id', 'NO-ID');
+    this.state = {
+      loading: true,
+      locationDetail: {}
+    };
+  }
+
+  componentDidMount() {
+    if (Platform.OS === "android" && !Constants.isDevice) {
+      console.log(
+        "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
+      );
+    } else {
+      this._requestGetLocationDetail();
+    }
   }
 
   _onBack = () => {
     this.props.navigation.goBack(null);
   }
 
-  _onPressProduct = () => {
-    this.props.navigation.navigate("ProductDetail");
+  _onPressProduct = (item) => {
+    this.props.navigation.navigate("ProductDetail", {
+      item: item
+    });
   }
+
+  _requestGetLocationDetail = async () => {
+    const { navigation } = this.props;
+    const _id = navigation.getParam('_id', 'NO-ID');
+    console.log(_id);
+    try {
+      const result = await LocationServices.getLocationDetail({_id: _id});
+      this.setState({ locationDetail: result , loading: false});
+    } catch (error) {
+      throw error;
+    }
+  };
 
   _renderLocationImage = ({item}) => (
     <TouchableOpacity 
@@ -153,7 +181,7 @@ export default class LocationDetail extends Component {
       <TouchableOpacity 
         key={item._id} 
         styleName="flexible"
-        onPress={this._onPressProduct}
+        onPress={() => this._onPressProduct(item)}
         >
         <Card style={styles.card3}>
           <Image
@@ -183,7 +211,8 @@ export default class LocationDetail extends Component {
   
 
   render() {
-    
+    const { loading, locationDetail } = this.state;
+    console.log(locationDetail)
     return (
       <Container>
         <Header

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, TextInput, Dimensions, FlatList, ScrollView } from 'react-native';
+import { View, TextInput, Dimensions, FlatList, ScrollView, Platform } from 'react-native';
 import { Container, Header, Text } from 'native-base';
-import { Card, Screen, Image, Subtitle, TouchableOpacity, Caption } from '@shoutem/ui';
+import { Card, Screen, Image, Subtitle, TouchableOpacity, Caption, Spinner } from '@shoutem/ui';
 import { Rating } from 'react-native-elements';
+import LocationServices from '../../../services/LocationServices';
 
 const listLocation = [
   {
@@ -121,9 +122,30 @@ class LocationListTab extends Component {
     super(props);
     this.state = {
       textSearch: '',
-      showCancel: false
+      showCancel: false,
+      loading: true,
+      listSuggestLocation: []
     };
   }
+
+  componentDidMount() {
+    if (Platform.OS === "android" && !Constants.isDevice) {
+      console.log(
+        "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
+      );
+    } else {
+      this._requestGetLocation();
+    }
+  }
+
+  _requestGetLocation = async () => {
+    try {
+      const result = await LocationServices.getSuggestLocation();
+      this.setState({ listSuggestLocation: result , loading: false});
+    } catch (error) {
+      throw error;
+    }
+  };
 
   _onChangeText = text => {
     this.setState({textSearch: text});
@@ -160,7 +182,18 @@ class LocationListTab extends Component {
           width: width * 0.75,
           height: height / 3 - 50
         }}>
+          { item.images.length === 0 ?
           <Image
+            style={{
+              flex: 1,
+              alignSelf: 'stretch',
+              width: undefined,
+              height: undefined
+            }}
+            source={require('../../../assets/images/iconfinder_image_default.png')}
+            borderRadius='5'
+          />
+          : <Image
             style={{
               flex: 1,
               alignSelf: 'stretch',
@@ -169,7 +202,7 @@ class LocationListTab extends Component {
             }}
             source={{uri: item.images[0].secure_url}}
             borderRadius='5'
-          />
+          />}
         </View>
         <View style={{
           paddingLeft: 10,
@@ -193,6 +226,37 @@ class LocationListTab extends Component {
 
   render() {
     console.disableYellowBox = true; 
+    const { loading, listSuggestLocation } = this.state;
+    if (loading) {
+      return (
+        <View style={styles.background}>
+          <Spinner color="#615c70" />
+        </View>
+      );
+    }
+    if (listSuggestLocation.length === 0) {
+      return (
+        <Container>
+          <Header
+            transparent
+            style={{
+              marginTop: 10,
+            }}
+          >            
+            <Left>
+              <Button 
+                onPress={this._onBack}
+                transparent >
+                <Icon name='arrow-back' />
+              </Button>
+            </Left>
+          </Header>
+          <View style={styles.background}>
+            <Text>Không có dữ liệu</Text>
+          </View>
+        </Container>      
+      );
+    }
     return (
       <Container>
         <Screen style={{backgroundColor: '#FCFCFC'}}>
@@ -324,15 +388,18 @@ class LocationListTab extends Component {
               fontSize: 30,
               fontFamily: 'OpenSans-Bold'
             }}>Địa điểm nổi bật:</Text>
-
-            <FlatList
-              data={listLocation}
-              keyExtractor={(item, index) => index.toString()}
-              showsHorizontalScrollIndicator={false}
-              renderItem={this._renderItem}
-              horizontal
-              style={{ marginBottom: 60}}
-            />  
+            { loading === true ? 
+              <View style={{flex: 1, justifyContent: 'center',alignItems: 'center'}}>
+                <Spinner/>
+              </View> :
+              <FlatList
+                data={listSuggestLocation}
+                keyExtractor={(item, index) => index.toString()}
+                showsHorizontalScrollIndicator={false}
+                renderItem={this._renderItem}
+                horizontal
+                style={{ marginBottom: 60}}
+              /> }
           </ScrollView>   
         </Screen>       
       </Container>
@@ -366,8 +433,11 @@ const styles = {
     height: height / 3 + 50,
     marginTop: 10,
     marginLeft: 8,
+    marginRight: 8,
     borderRadius: 5,
     backgroundColor: '#FCFCFC',
+    borderColor: '#A3A3A3',
+    borderWidth: 0.5,
   },
   searchBar: {
     flex: 1,

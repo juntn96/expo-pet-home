@@ -10,11 +10,13 @@ const { width, height } = Dimensions.get('window');
 export default class ProductDetail extends Component {
   constructor(props) {
     super(props);
-
+    const { navigation } = this.props;
+    const item = navigation.getParam('item', 'NO-ID');
     this.state = {
       loading: true,
-      listLocations: [],
+      productDetail: item,
     };
+
   }
 
   componentDidMount() {
@@ -46,37 +48,38 @@ export default class ProductDetail extends Component {
   }
   
   render() {
-    const { loading, listLocations } = this.state;
-    if (loading) {
-      return (
-        <View style={styles.background}>
-          <Spinner color="#615c70" />
-        </View>
-      );
-    }
-    if (listLocations.length === 0) {
-      return (
-        <Container>
-          <Header
-            transparent
-            style={{
-              marginTop: 10,
-            }}
-          >            
-            <Left>
-              <Button 
-                onPress={this._onBack}
-                transparent >
-                <Icon name='arrow-back' />
-              </Button>
-            </Left>
-          </Header>
-          <View style={styles.background}>
-            <Text>Không có bài viết</Text>
-          </View>
-        </Container>      
-      );
-    }
+    // const { loading, listLocations } = this.state;
+    // if (loading) {
+    //   return (
+    //     <View style={styles.background}>
+    //       <Spinner color="#615c70" />
+    //     </View>
+    //   );
+    // }
+    // if (listLocations.length === 0) {
+    //   return (
+    //     <Container>
+    //       <Header
+    //         transparent
+    //         style={{
+    //           marginTop: 10,
+    //         }}
+    //       >            
+    //         <Left>
+    //           <Button 
+    //             onPress={this._onBack}
+    //             transparent >
+    //             <Icon name='arrow-back' />
+    //           </Button>
+    //         </Left>
+    //       </Header>
+    //       <View style={styles.background}>
+    //         <Text>Không có bài viết</Text>
+    //       </View>
+    //     </Container>      
+    //   );
+    // }
+    // console.log(this.state.productDetail)
     return (
       <Container>
         <Header

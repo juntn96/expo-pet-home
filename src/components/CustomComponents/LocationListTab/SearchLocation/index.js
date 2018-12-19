@@ -58,13 +58,13 @@ class SearchLocation extends Component {
   _onSearch = () => {
     this._requestGetLocation();
   }
-
-  _onShowFilter = () => {
-
-  }
   
   _onBack = () => {
     this.props.navigation.goBack(null);
+  }
+
+  _onSelect = () => {
+    
   }
 
   render() {
@@ -151,7 +151,7 @@ class SearchLocation extends Component {
           </View> : 
           <LocationList data={this.state.listLocations} navigation={this.props.navigation}/> }
         </Screen>
-        <FilterModal ref={ref => (this.filterModal = ref)} />       
+        <FilterModal onSelect={this._onSelect} ref={ref => (this.filterModal = ref)} />       
       </Container>
     );
   }
