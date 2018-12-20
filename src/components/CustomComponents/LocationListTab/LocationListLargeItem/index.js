@@ -90,7 +90,7 @@ const styles = {
   card3:{
     width: width - 16,
     height: height / 3 + 50,
-    marginTop: 10,
+    marginTop: 5,
     marginLeft: 8,
     marginRight: 8,
     borderRadius: 5,

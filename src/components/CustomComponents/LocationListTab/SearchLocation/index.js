@@ -142,23 +142,51 @@ class SearchLocation extends Component {
                   />
                 </View>
               </View>
-              <TouchableOpacity 
-                style={{
-                  marginLeft: 10,
-                  marginRight: 10,
-                  justifyContent: 'center',
-                }}
-                onPress={() => this.filterModal.setVisibleModal(true)}
-                >
-                <Image 
-                  source={require('../../../../assets/icons/icons8-filter.png')}
-                  style={{ 
-                    width: 25,
-                    height: 25
-                    }}/>
-              </TouchableOpacity>                   
+              {/* <View style={{alignItems: 'center', justifyContent: 'center', alignSelf: 'center'}}>
+                <TouchableOpacity 
+                  style={{
+                    marginLeft: 10,
+                    marginRight: 10,
+                    justifyContent: 'center',
+                  }}
+                  onPress={() => {this.filterModal.setVisibleModal(true)}}
+                  >
+                  <Image 
+                    source={require('../../../../assets/icons/icons8-filter.png')}
+                    style={{ 
+                      width: 25,
+                      height: 25
+                      }}/>
+                </TouchableOpacity>  
+              </View>                  */}
             </View> 
           </Header>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {this.filterModal.setVisibleModal(true)}}
+            // style={[
+            //   styles.item,
+            //   {
+            //     borderColor:
+            //       selectedCategoryId === item._id ? "#EC466A" : "#615c70",
+            //     backgroundColor:
+            //       selectedCategoryId === item._id ? "#EC466A" : "#FFFFFF",
+            //   },
+            // ]}
+            style={styles.item} 
+          >
+            <Text
+              // style={[
+              //   styles.text,
+              //   {
+              //     color: selectedCategoryId === item._id ? "#FFFFFF" : "#615c70",
+              //   },
+              // ]}
+              style={styles.text}
+            >
+              Bộ lọc
+            </Text>
+          </TouchableOpacity>
           {listLocations.length === 0 ? 
           <View style={{flex: 1, justifyContent: 'center',alignItems: 'center'}}>
             <Text> Không có kết quả nào </Text>
@@ -190,7 +218,28 @@ const styles = {
   emptyResult: {
     alignItems: "center",
     justifyContent: "center"
-  }
+  },
+  item: {
+    height: 40,
+    width: 60,
+    borderRadius: 5,
+    margin: 10,
+    marginTop: 16,
+    marginLeft: 6,
+    marginRight: 6,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: 'center',
+    borderColor: '#DADADA',
+    borderWidth: 0.5,
+  },
+  text: {
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 6,
+    marginBottom: 6,
+    color: "#615c70",
+  },
 };
 
 export default SearchLocation;
