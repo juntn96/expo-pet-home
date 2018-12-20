@@ -6,7 +6,7 @@ import {
   StyleSheet
 } from 'react-native';
 import { connect } from 'react-redux';
-import { MapView } from 'expo';
+import { MapView, Circle } from 'expo';
 import Layout from '../../../../constants/layout';
 export class MapCard extends React.Component {
   state = {
@@ -80,12 +80,22 @@ export class MapCard extends React.Component {
           latitudeDelta: 0.003,
           longitudeDelta: 0.003,
         }}>
-        <MapView.Marker 
+        {/* <MapView.Marker 
           coordinate={{ 
             latitude: lat,
             longitude: long,
           }} 
-          title={name} />
+          title={name} /> */}
+        <MapView.Circle
+          center={{
+            latitude: lat,
+            longitude: long,
+          }}
+          radius={40}
+          strokeWidth={2}
+          strokeColor="#3399ff"
+          fillColor="#80bfff"
+        />
       </MapView>
     );
   }

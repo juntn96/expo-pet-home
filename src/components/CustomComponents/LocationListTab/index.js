@@ -370,7 +370,7 @@ class LocationListTab extends Component {
                 fontSize: 30,
                 fontFamily: 'OpenSans-Bold'
               }}>Địa điểm nổi bật:</Text>
-              <View style={styles.background}>
+              <View style={{flex: 1, justifyContent: 'center',alignItems: 'center', backgroundColor: '#FCFCFC'}}>
                 <Text>Không có dữ liệu</Text>
               </View>
             </ScrollView>   
@@ -581,9 +581,10 @@ const styles = {
       height: 2,
       width: 0,
     },
-    address: {
-      marginRight: 20
-    }
+    
+  },
+  address: {
+    marginRight: 20
   }
 };
 

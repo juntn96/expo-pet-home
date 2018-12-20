@@ -59,6 +59,7 @@ export default class LocationList extends React.Component {
   }
 
   _renderItem = ({ item }) => {
+    console.log(item)
     return (
       <LocationListItem
         onPress={() => this._handlePressLocation(item)}
