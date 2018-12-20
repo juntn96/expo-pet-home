@@ -126,7 +126,7 @@ export default class LocationDetail extends Component {
         "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
       );
     } else {
-      this._requestGetLocationDetail();
+      // this._requestGetLocationDetail();
     }
   }
 
@@ -140,17 +140,17 @@ export default class LocationDetail extends Component {
     });
   }
 
-  _requestGetLocationDetail = async () => {
-    const { navigation } = this.props;
-    const _id = navigation.getParam('_id', 'NO-ID');
-    console.log(_id);
-    try {
-      const result = await LocationServices.getLocationDetail({_id: _id});
-      this.setState({ locationDetail: result , loading: false});
-    } catch (error) {
-      throw error;
-    }
-  };
+  // _requestGetLocationDetail = async () => {
+  //   const { navigation } = this.props;
+  //   const _id = navigation.getParam('_id', 'NO-ID');
+  //   console.log(_id);
+  //   try {
+  //     const result = await LocationServices.getLocationDetail({_id: _id});
+  //     this.setState({ locationDetail: result , loading: false});
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // };
 
   _renderLocationImage = ({item}) => (
     <TouchableOpacity 
