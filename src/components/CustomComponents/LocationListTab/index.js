@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TextInput, Dimensions, FlatList, ScrollView, Platform } from 'react-native';
+import { View, TextInput, Dimensions, FlatList, ScrollView, Platform, RefreshControl } from 'react-native';
 import { Container, Header, Text } from 'native-base';
 import { Card, Screen, Image, Subtitle, TouchableOpacity, Caption, Spinner } from '@shoutem/ui';
 import { Rating } from 'react-native-elements';
@@ -124,7 +124,8 @@ class LocationListTab extends Component {
       textSearch: '',
       showCancel: false,
       loading: true,
-      listSuggestLocation: []
+      listSuggestLocation: [],
+      refreshing: false,
     };
   }
 
@@ -141,7 +142,11 @@ class LocationListTab extends Component {
   _requestGetLocation = async () => {
     try {
       const result = await LocationServices.getSuggestLocation();
-      this.setState({ listSuggestLocation: result , loading: false});
+      this.setState({ 
+        listSuggestLocation: result , 
+        loading: false,
+        refreshing: false,
+      });
     } catch (error) {
       throw error;
     }
@@ -167,8 +172,14 @@ class LocationListTab extends Component {
 
   _onPress = (item) => {
     this.props.navigation.navigate("LocationDetail", {
-      _id: item._id
+      _id: item._id,
+      ownerId: item.ownerId
     });
+  }
+
+  _onRefresh = () => {
+    this.setState({refreshing: true});
+    this._requestGetLocation();
   }
 
   _renderItem = ({item}) => (
@@ -208,10 +219,10 @@ class LocationListTab extends Component {
           paddingLeft: 10,
           height: 100
         }}>
-          <Subtitle numberOfLines={3}>{item.name}</Subtitle>
-          <View styleName="horizontal">
-              <Caption styleName="collapsible" numberOfLines={2}>{item.address}</Caption>
-            </View>
+          <Subtitle numberOfLines={1}>{item.name}</Subtitle>
+          <View styleName="horizontal" >
+              <Caption styleName="collapsible" numberOfLines={1} style={styles.address} >{item.address}</Caption>
+          </View>
           <Rating
             type="star"
             startingValue={item.systemRating}
@@ -227,33 +238,143 @@ class LocationListTab extends Component {
   render() {
     console.disableYellowBox = true; 
     const { loading, listSuggestLocation } = this.state;
-    if (loading) {
-      return (
-        <View style={styles.background}>
-          <Spinner color="#615c70" />
-        </View>
-      );
-    }
     if (listSuggestLocation.length === 0) {
       return (
         <Container>
-          <Header
-            transparent
-            style={{
-              marginTop: 10,
-            }}
-          >            
-            <Left>
-              <Button 
-                onPress={this._onBack}
-                transparent >
-                <Icon name='arrow-back' />
-              </Button>
-            </Left>
-          </Header>
-          <View style={styles.background}>
-            <Text>Không có dữ liệu</Text>
-          </View>
+          <Screen style={{backgroundColor: '#FCFCFC'}}>
+            <Header
+              transparent
+              style={{
+                marginTop: 10,
+              }}
+            >            
+              <View  
+                style={{
+                  flex: 1,
+                  flexDirection: 'row'
+                }}>
+                <View
+                  style={styles.searchBar}
+                >
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      marginLeft: 20,
+                    }}
+                  >
+                    <TextInput
+                      placeholder="Tìm kiếm địa điểm"
+                      clearButtonMode={"while-editing"}
+                      underlineColorAndroid="transparent"
+                      numberOfLines={1}
+                      style={{
+                        borderBottomWidth: 0,
+                        flex: 1,
+                        fontFamily:"OpenSans-Bold"                     
+                      }}                   
+                      returnKeyLabel="Tìm"
+                      returnKeyType="search"
+                      placeholderTextColor={'#A4A4A4'}
+                      onSubmitEditing={this._onSearch}
+                      onChangeText={this._onChangeText}
+                      onBlur={this._onBlur}
+                      onFocus={this._onFocus}
+                    />
+                  </View>
+                </View>
+                { this.state.showCancel ? <TouchableOpacity 
+                  style={{
+                    marginLeft: 10,
+                    marginRight: 10,
+                    justifyContent: 'center',
+                  }}
+                  onPress={this._onBlur}
+                  >
+                  <Text style={{
+                    fontFamily:"OpenSans-Bold"                     
+                  }}>Hủy</Text>
+                </TouchableOpacity> : null}
+                    
+              </View>
+            </Header>
+            <ScrollView styleName="light">
+              <Text style={{
+                  marginLeft: 8, 
+                  marginTop: 30, 
+                  marginBottom: 15,
+                  color: '#444444',
+                  fontSize: 30,
+                  fontFamily: 'OpenSans-Bold'
+                }}>Chúng tôi có thể giúp gì bạn?</Text>
+              <View style={{
+                flexDirection: 'row'
+              }}>
+                <TouchableOpacity styleName="flexible">
+                <Card style={styles.card1}>
+                  <View style={{
+                      width: (width - 28)/2,
+                      height: height / 3 - 50
+                    }}>
+                    <Image
+                      style={{
+                        flex: 1,
+                        alignSelf: 'stretch',
+                        width: undefined,
+                        height: undefined
+                      }}
+                      source={require('../../../assets/images/park.jpg')}
+                      borderRadius='5'
+                    />
+                  </View>
+                  <View style={{
+                    paddingLeft: 10,
+                    height: 50
+                  }}>
+                    <Subtitle>Công viên, địa điểm công cộng</Subtitle>
+                  </View>
+                </Card>
+                </TouchableOpacity>
+                <TouchableOpacity styleName="flexible">
+                  <Card style={styles.card2}>
+                    <View style={{
+                        width: (width - 28)/2,
+                        height: height / 3 - 50
+                      }}>
+                      <Image
+                        style={{
+                          flex: 1,
+                          alignSelf: 'stretch',
+                          width: undefined,
+                          height: undefined
+                        }}
+                        source={require('../../../assets/images/pet-store.jpg')}
+                        borderRadius='5'
+                      />
+                    </View>
+                    <View style={{                  
+                      paddingLeft: 10,
+                      height: 50
+                    }}>
+                      <Subtitle>Shop thú cưng, dịch vụ</Subtitle>
+                    </View>
+                  </Card>
+                </TouchableOpacity>
+              </View>   
+
+              <Text style={{
+                marginLeft: 8, 
+                marginTop: 30, 
+                marginBottom: 15,
+                color: '#444444',
+                fontSize: 30,
+                fontFamily: 'OpenSans-Bold'
+              }}>Địa điểm nổi bật:</Text>
+              <View style={styles.background}>
+                <Text>Không có dữ liệu</Text>
+              </View>
+            </ScrollView>   
+          </Screen>     
         </Container>      
       );
     }
@@ -316,7 +437,14 @@ class LocationListTab extends Component {
                    
             </View>
           </Header>
-          <ScrollView styleName="light">
+          <ScrollView 
+            styleName="light" 
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh}
+              />
+            }>
             <Text style={{
                 marginLeft: 8, 
                 marginTop: 30, 
@@ -453,6 +581,9 @@ const styles = {
       height: 2,
       width: 0,
     },
+    address: {
+      marginRight: 20
+    }
   }
 };
 

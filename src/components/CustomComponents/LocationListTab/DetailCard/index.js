@@ -67,7 +67,7 @@ export class MapCard extends React.Component {
     if (!this.state.shouldRenderMap) {
       return;
     }
-    const { lat, long } = this.props;
+    const { lat, long, name } = this.props;
     return (
       <MapView
         cacheEnabled={Platform.OS === 'android'}
@@ -85,7 +85,7 @@ export class MapCard extends React.Component {
             latitude: lat,
             longitude: long,
           }} 
-          title={'Azzan'} />
+          title={name} />
       </MapView>
     );
   }

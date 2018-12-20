@@ -15,7 +15,7 @@ const getLocation = async userLocation => {
 
 const getSuggestLocation = async () => {
   try {
-    const url = API_URL + 'admin/getLocation';
+    const url = API_URL + 'location/getAllActiveLocation';
     const result = await axios.get(url);
     return result.data.locations;
   } catch (error) {
@@ -62,13 +62,14 @@ const getLocationDetail = async data => {
     const url = API_URL + 'location/locationProduct';
     const result = await axios.get(url, {
       params: {
-        ownerId: data._id
+        _id: data._id,
+        ownerId: data.ownerId
       },
       paramsSerializer: params => {
         return qs.stringify(params)
       } 
     });
-    return result.data.locationProduct;
+    return result.data.locationDetail;
   } catch (error) {
     throw error;
   }

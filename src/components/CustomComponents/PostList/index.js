@@ -62,24 +62,25 @@ class PostList extends PureComponent {
       );
     }
     return (
-      <FlatList
-        onScroll={this.props.onScroll}
-        scrollEventThrottle={200}
-        showsVerticalScrollIndicator={false}
-        data={postData}
-        renderItem={this._renderItem}
-        keyExtractor={item => item._id}
-        contentContainerStyle={{
-          marginLeft: 10,
-          marginRight: 10,
-        }}
-        refreshControl={
-          <RefreshControl
-            refreshing={loading}
-            onRefresh={() => this.props.getPost(postType)}
-          />
-        }
-      />
+      // <FlatList
+      //   onScroll={this.props.onScroll}
+      //   scrollEventThrottle={200}
+      //   showsVerticalScrollIndicator={false}
+      //   data={postData}
+      //   renderItem={this._renderItem}
+      //   keyExtractor={item => item._id}
+      //   contentContainerStyle={{
+      //     marginLeft: 10,
+      //     marginRight: 10,
+      //   }}
+      //   refreshControl={
+      //     <RefreshControl
+      //       refreshing={loading}
+      //       onRefresh={() => this.props.getPost(postType)}
+      //     />
+      //   }
+      // />
+      <View></View>
     );
   }
 }

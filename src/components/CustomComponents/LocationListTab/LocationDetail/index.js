@@ -1,7 +1,7 @@
 
 
 import React, { Component } from 'react';
-import { View,  Dimensions, FlatList, ScrollView, Platform } from 'react-native';
+import { View,  Dimensions, FlatList, ScrollView, Platform, RefreshControl } from 'react-native';
 import { Container, Header, Right, Icon, Button , Left, Body} from 'native-base';
 import { Divider, Card, Screen, Image, Subtitle, Caption, TouchableOpacity, Title, Spinner } from '@shoutem/ui';
 import { MapCard } from '../DetailCard/index';
@@ -126,7 +126,7 @@ export default class LocationDetail extends Component {
         "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
       );
     } else {
-      // this._requestGetLocationDetail();
+      this._requestGetLocationDetail();
     }
   }
 
@@ -140,17 +140,24 @@ export default class LocationDetail extends Component {
     });
   }
 
-  // _requestGetLocationDetail = async () => {
-  //   const { navigation } = this.props;
-  //   const _id = navigation.getParam('_id', 'NO-ID');
-  //   console.log(_id);
-  //   try {
-  //     const result = await LocationServices.getLocationDetail({_id: _id});
-  //     this.setState({ locationDetail: result , loading: false});
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // };
+  _requestGetLocationDetail = async () => {
+    const { navigation } = this.props;
+    const _id = navigation.getParam('_id', 'NO-ID');
+    const ownerId = navigation.getParam('ownerId', 'NO-ID');
+    try {
+      const result = await LocationServices.getLocationDetail({
+        _id: _id,
+        ownerId: ownerId
+      });
+      this.setState({ 
+        locationDetail: result , 
+        loading: false,
+        isFetching: false
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
 
   _renderLocationImage = ({item}) => (
     <TouchableOpacity 
@@ -158,19 +165,17 @@ export default class LocationDetail extends Component {
       styleName="flexible"
       onPress={this._onPress}
       >
-      <Card style={styles.imageLocation}>
-        
-          <Image
-            style={{
-              flex: 1,
-              alignSelf: 'stretch',
-              width: undefined,
-              height: undefined
-            }}
-            source={{uri: item.secure_url}}
-            borderRadius='5'
-          />
-        
+      <Card style={styles.imageLocation}>     
+        <Image
+          style={{
+            flex: 1,
+            alignSelf: 'stretch',
+            width: undefined,
+            height: undefined
+          }}
+          source={{uri: item.secure_url}}
+          borderRadius='5'
+        />   
       </Card>
     </TouchableOpacity>
   );
@@ -182,29 +187,37 @@ export default class LocationDetail extends Component {
         key={item._id} 
         styleName="flexible"
         onPress={() => this._onPressProduct(item)}
-        >
-        <Card style={styles.card3}>
-          <Image
-            style={{
-              flex: 1,
-              alignSelf: 'stretch',
-              width: undefined,
-              height: undefined,
-            }}
-            source={{uri: item.images[0]}}
-            borderRadius='5'
-          />
-          <View style={{
-                    paddingLeft: 10,
-                  }}>
-            <Subtitle>{item.name}</Subtitle>
-            <View styleName="horizontal v-center space-between">
-              <View styleName="horizontal">
-                <Caption styleName="md-gutter-right">${item.price}</Caption>
+        >       
+          <Card style={styles.cardProduct}>
+            <View style={{
+              width: height / 3,
+              height: height / 3 - 50
+            }}> 
+              <Image
+                style={{
+                  flex: 1,
+                  alignSelf: 'stretch',
+                  width: undefined,
+                  height: undefined,
+                }}
+                source={{uri: item.images[0]}}
+                borderRadius='5'
+              />
+            </View>      
+            <View style={{
+              paddingLeft: 10,
+              height: 50
+            }}>
+              <View styleName="horizontal v-center space-between">
+                <Subtitle numberOfLines={1}>{item.name}</Subtitle>
+              </View>
+              <View styleName="horizontal v-center space-between">
+                <View styleName="horizontal">
+                  <Caption styleName="md-gutter-right">Giá: {item.price}đ</Caption>
+                </View>
               </View>
             </View>
-          </View>
-        </Card>
+          </Card>
       </TouchableOpacity>
     )
   }
@@ -212,15 +225,20 @@ export default class LocationDetail extends Component {
 
   render() {
     const { loading, locationDetail } = this.state;
-    console.log(locationDetail)
+    if(loading) {
+      return (
+        <View style={{flex: 1, justifyContent: 'center',alignItems: 'center', backgroundColor: '#FCFCFC'}}>
+          <Spinner/>
+        </View>
+      )
+    }
     return (
       <Container>
         <Header
           transparent
           style={{
             marginTop: 10,
-          }}
-        >            
+          }}>            
           <Left>
             <Button 
               onPress={this._onBack}
@@ -228,15 +246,15 @@ export default class LocationDetail extends Component {
               <Icon name='arrow-back' />
             </Button>
           </Left>
-          <Body>
-            <Title>{locationProduct.name}</Title>
-          </Body>
+          <View style={styles.nameLocation}>
+            <Title>{locationDetail.name}</Title>
+          </View>
           <Right />
         </Header>
         <Screen style={{backgroundColor: '#FCFCFC'}}>
           <ScrollView>
-            {locationProduct.images.length > 0 ? <FlatList
-              data={locationProduct.images}
+            {locationDetail.images.length > 0 ? <FlatList
+              data={locationDetail.images}
               keyExtractor={(item, index) => index.toString()}
               showsHorizontalScrollIndicator={false}
               renderItem={this._renderLocationImage}
@@ -263,7 +281,7 @@ export default class LocationDetail extends Component {
                 }}>
                 <Subtitle>Thông tin chi tiết</Subtitle>
                 <Caption style={{paddingRight: 10}}>
-                  {locationProduct.description}
+                  {locationDetail.description}
                 </Caption>
                 <Divider styleName="line" />
               </View>
@@ -290,12 +308,12 @@ export default class LocationDetail extends Component {
                 }}>
                 <Subtitle>Địa chỉ</Subtitle>
                 <Caption style={{paddingRight: 10}}>
-                  {locationProduct.address}
+                  {locationDetail.address}
                 </Caption>
                 <Divider styleName="line" />
               </View>
             </View>  
-            <MapCard lat={locationProduct.lat} long={locationProduct.long}/>
+            <MapCard lat={locationDetail.lat} long={locationDetail.long} name={locationDetail.name}/>
             <View
               style={{
                 flex: 1,
@@ -318,7 +336,7 @@ export default class LocationDetail extends Component {
                 <Subtitle>Đánh giá</Subtitle>
                 <Rating
                   type="star"
-                  startingValue={locationProduct.systemRating}
+                  startingValue={locationDetail.systemRating}
                   imageSize={20}
                   style={{ marginTop:10, paddingRight: 10 }}
                   readonly
@@ -326,7 +344,7 @@ export default class LocationDetail extends Component {
               </View>
             </View> 
             
-            { locationProduct.products.length > 0 ? <View
+            { locationDetail.products.length > 0 ? <View
               style={{
                 flex: 1,
                 flexDirection: 'row',
@@ -349,8 +367,8 @@ export default class LocationDetail extends Component {
               </View>
             </View> 
              : null}
-            { locationProduct.products.length > 0 ? <FlatList
-              data={locationProduct.products}
+            { locationDetail.products.length > 0 ? <FlatList
+              data={locationDetail.products}
               keyExtractor={(item, index) => index.toString()}
               showsHorizontalScrollIndicator={false}
               renderItem={this._renderProduct}
@@ -374,7 +392,7 @@ const styles = {
     borderRadius: 5,
     backgroundColor: '#FCFCFC',
   },
-  card3:{
+  cardProduct:{
     width: height / 3,
     height: height / 3,
     marginTop: 10,
@@ -382,4 +400,8 @@ const styles = {
     borderRadius: 5,
     backgroundColor: '#FCFCFC',
   },
+  nameLocation: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 };
