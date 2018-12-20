@@ -55,7 +55,7 @@ class LocationListTab extends Component {
   
   _onSearch = () => {
     this.props.navigation.navigate('SearchLocation', {
-      textSearch: this.state.textSearch,
+      textSearch: this.state.textSearch.trim(),
     });
   }
 
@@ -109,16 +109,25 @@ class LocationListTab extends Component {
           height: 100
         }}>
           <Subtitle numberOfLines={1}>{item.name}</Subtitle>
-          <View styleName="horizontal" >
-              <Caption styleName="collapsible" numberOfLines={1} style={styles.address} >{item.address}</Caption>
-          </View>
           <Rating
             type="star"
             startingValue={item.systemRating}
-            imageSize={10}
+            imageSize={15}
             style={{ paddingVertical: 10 }}
             readonly
           />
+          <View styleName="horizontal" style={{flexDirection: "row", alignItems: 'center',justifyContent: 'center'}}>
+            <Image 
+              source={require('../../../assets/icons/iconfinder_thefreeforty_location.png')}
+              style={{ 
+                marginRight: 8,
+                width: 15,
+                height: 15,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}/>
+            <Caption styleName="collapsible" numberOfLines={1} style={styles.address} >{item.address}</Caption>
+          </View>       
         </View>
       </Card>
     </TouchableOpacity>

@@ -13,6 +13,7 @@ class SearchLocation extends Component {
     super(props);
     const { navigation } = this.props;
     const textSearch = navigation.getParam('textSearch', 'NO-ID');
+    console.log(textSearch);
     this.state = {
       textSearch: textSearch,
       loading: true,
@@ -26,7 +27,13 @@ class SearchLocation extends Component {
         "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
       );
     } else {
-      this._requestGetLocation();
+      const { navigation } = this.props;
+      const textSearch = navigation.getParam('textSearch', 'NO-ID');
+      if(textSearch === ''){
+        this._requestGetAllLocation();
+      } else {
+        this._requestGetLocation();
+      }
     }
   }
 
@@ -35,6 +42,15 @@ class SearchLocation extends Component {
       const result = await LocationServices.searchLocation({
         textSearch: this.state.textSearch
       });
+      this.setState({ listLocations: result, loading: false });
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  _requestGetAllLocation = async () => {
+    try {
+      const result = await LocationServices.searchAllLocation();
       this.setState({ listLocations: result, loading: false });
     } catch (error) {
       throw error;
@@ -85,8 +101,7 @@ class SearchLocation extends Component {
             style={{
               marginTop: 10,
             }}
-          >    
-            
+          >              
             <View  
               style={{
                 flex: 1,
@@ -97,7 +112,7 @@ class SearchLocation extends Component {
               >
                 <Button 
                   onPress={this._onBack}
-                  transparent              
+                  transparent        
                   >
                   <Icon name='arrow-back' style={{marginLeft: 0, marginRight: 10}}/>
                 </Button>
@@ -105,7 +120,6 @@ class SearchLocation extends Component {
                   style={{
                     flex: 1,
                     justifyContent: "center",
-                    marginLeft: 20,
                   }}
                 >
                   <TextInput

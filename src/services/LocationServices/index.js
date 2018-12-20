@@ -57,6 +57,16 @@ const searchLocation = async data => {
   }
 };
 
+const searchAllLocation = async () => {
+  try {
+    const url = API_URL + 'location/getAllActiveLocation';
+    const result = await axios.get(url);
+    return result.data.locations;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getLocationDetail = async data => {
   try {
     const url = API_URL + 'location/locationProduct';
@@ -80,5 +90,6 @@ export default {
   getLocationByCategory,
   searchLocation,
   getSuggestLocation,
-  getLocationDetail
+  getLocationDetail,
+  searchAllLocation
 };

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { View, TextInput, Dimensions, FlatList, ScrollView, Platform, RefreshControl } from 'react-native';
-import { Container, Header, Text } from 'native-base';
-import { Card, Screen, Image, Subtitle, TouchableOpacity, Caption, Spinner } from '@shoutem/ui';
+import { View, Dimensions } from 'react-native';
+import { Card, Image, Subtitle, TouchableOpacity, Caption } from '@shoutem/ui';
 import { Rating } from 'react-native-elements'; 
 const { width, height } = Dimensions.get('window');
 
@@ -61,16 +60,25 @@ export default class LocationListLargeItem extends Component {
             height: 100
           }}>
             <Subtitle numberOfLines={1}>{item.name}</Subtitle>
-            <View styleName="horizontal" >
-                <Caption styleName="collapsible" numberOfLines={1} style={styles.address} >{item.address}</Caption>
-            </View>
             <Rating
               type="star"
               startingValue={item.systemRating}
-              imageSize={10}
+              imageSize={15}
               style={{ paddingVertical: 10 }}
               readonly
             />
+            <View styleName="horizontal" style={{flexDirection: "row", alignItems: 'center',justifyContent: 'center'}}>
+              <Image 
+                source={require('../../../../assets/icons/iconfinder_thefreeforty_location.png')}
+                style={{ 
+                  marginRight: 8,
+                  width: 15,
+                  height: 15,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}/>
+              <Caption styleName="collapsible" numberOfLines={1} style={styles.address} >{item.address}</Caption>
+            </View>           
           </View>
         </Card>
       </TouchableOpacity>
@@ -88,4 +96,8 @@ const styles = {
     borderRadius: 5,
     backgroundColor: '#FCFCFC',
   },
+  address: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 };
