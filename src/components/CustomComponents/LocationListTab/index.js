@@ -543,8 +543,8 @@ const styles = {
     marginLeft: 8,
     borderRadius: 5,
     backgroundColor: '#FCFCFC',
-    borderColor: '#A3A3A3',
-    borderWidth: 0.5,
+    // borderColor: '#A3A3A3',
+    // borderWidth: 0.5,
   },
   card2: {
     width: (width - 28)/2,
@@ -553,8 +553,8 @@ const styles = {
     marginLeft: 4,
     borderRadius: 5,
     backgroundColor: '#FCFCFC',
-    borderColor: '#A3A3A3',
-    borderWidth: 0.5,
+    // borderColor: '#A3A3A3',
+    // borderWidth: 0.5,
   },
   card3:{
     width: width * 0.75,
@@ -564,8 +564,8 @@ const styles = {
     marginRight: 8,
     borderRadius: 5,
     backgroundColor: '#FCFCFC',
-    borderColor: '#A3A3A3',
-    borderWidth: 0.5,
+    // borderColor: '#A3A3A3',
+    // borderWidth: 0.5,
   },
   searchBar: {
     flex: 1,
