@@ -94,6 +94,20 @@ const findUser = async userId => {
   }
 };
 
+const editInfo = async (userId, updateOption) => {
+  try {
+    const method = "POST";
+    const funcUrl = "app/user/editInfo";
+    const data = await ApiServices.requestOption(method, funcUrl, {
+      userId,
+      updateOption,
+    });
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   login,
   findUser,
@@ -102,5 +116,6 @@ export default {
   getNotifications,
   getNotificationsByType,
   sendNotification,
-  hideNotification
+  hideNotification,
+  editInfo,
 };
