@@ -9,67 +9,41 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import LocationListItem from '../LocationListItem'
+import LocationListLargeItem from '../LocationListLargeItem'
 
 export default class LocationList extends React.Component {
-  state = {
-    renderContents: false,
-  };
-
-  componentDidMount() {
-
-  }
-
-  componentWillUnmount() {
-
-  }
-
-  componentDidUpdate() {
-
-  }
-
   render() {
     const { data } = this.props;
     return (
       <View style={styles.container}>
-        {/* {this.state.renderContents ? ( */}
-          <FlatList
-            ref={view => {
-              this._scrollView = view;
-            }}
-            contentContainerStyle={this.props.contentContainerStyle}
-            renderItem={this._renderItem}
-            style={styles.container}
-            data={data}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        {/* ) : (
-          <View
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: 75,
-            }}>
-            <ActivityIndicator />
-          </View>
-        )} */}
+        <FlatList
+          ref={view => {
+            this._scrollView = view;
+          }}
+          contentContainerStyle={this.props.contentContainerStyle}
+          renderItem={this._renderItem}
+          style={styles.container}
+          data={data}
+          keyExtractor={(item, index) => index.toString()}
+        />
       </View>
     );
   }
 
   _renderItem = ({ item }) => {
-    console.log(item)
     return (
-      <LocationListItem
+      <LocationListLargeItem
         onPress={() => this._handlePressLocation(item)}
-        data={item}
+        item={item}
       />
     );
   }
 
   _handlePressLocation = item => {
-    this.props.navigation.navigate('LocationDetail');
+    this.props.navigation.navigate("LocationDetail", {
+      _id: item._id,
+      ownerId: item.ownerId
+    });
   };
 
 }
