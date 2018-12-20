@@ -84,7 +84,7 @@ class PostItem extends Component {
         <CardItem>
           <Left>
             <TouchableOpacity
-              disabled={postData.ownerId._id === userData._id}
+              disabled={userData ? postData.ownerId._id === userData._id : true}
               activeOpacity={0.8}
               onPress={this._onUserPress}
             >

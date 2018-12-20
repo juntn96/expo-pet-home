@@ -54,9 +54,9 @@ class AnimatedNavBar extends Component {
         </View>
         <View style={{ flex: 1 }} />
         <View>
-          <Button transparent>
+          {/* <Button transparent>
             <Icon name="md-more" style={{ color: "#EC466A" }} />
-          </Button>
+          </Button> */}
         </View>
       </Animated.View>
     );

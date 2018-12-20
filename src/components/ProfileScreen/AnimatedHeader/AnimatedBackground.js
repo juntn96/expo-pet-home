@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import {
-  Image,
-  Animated,
-} from "react-native";
+import { Image, Animated } from "react-native";
 
 const HEADER_MAX_HEIGHT = 200;
 
@@ -52,7 +49,7 @@ class AnimatedBackground extends Component {
         }}
       >
         <Image
-          source={require("../../../assets/images/bg2.png")}
+          source={{ uri: userData.background }}
           style={{ width: "100%", height: "100%", resizeMode: "cover" }}
         />
       </Animated.View>
