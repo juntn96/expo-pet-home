@@ -132,6 +132,7 @@ class Map extends Component {
                 <View
                   style={{
                     width: Dimensions.get("window").width / 2.5,
+                    borderRadius: 5
                   }}
                 >
                   <Image
@@ -141,6 +142,7 @@ class Map extends Component {
                       height: Dimensions.get("window").width / 2.5,
                       resizeMode: "cover",
                       marginBottom: 10,
+                      borderRadius: 5
                     }}
                   />
                   <Text
@@ -152,9 +154,9 @@ class Map extends Component {
                   >
                     {marker.name}
                   </Text>
-                  <Text numberOfLines={3} lineBreakMode="tail">
+                  {/* <Text numberOfLines={3} lineBreakMode="tail">
                     {marker.description}
-                  </Text>
+                  </Text> */}
                 </View>
               </Callout>
             </Marker>

@@ -55,7 +55,7 @@ class LocationDetailModal extends Component {
 
   render() {
     const { locationItem } = this.state;
-
+    console.log(locationItem);
     const headerOpacity = animatedValue.interpolate({
       inputRange: [0, SCREEN_HEIGHT / 2.5 - 54, SCREEN_HEIGHT / 2.5],
       outputRange: [0, 0, 1],

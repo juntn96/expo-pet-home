@@ -1,8 +1,8 @@
 
 
 import React, { Component } from 'react';
-import { View,  Dimensions, FlatList, ScrollView, Platform, RefreshControl } from 'react-native';
-import { Container, Header, Right, Icon, Button , Left, Body} from 'native-base';
+import { View,  Dimensions, FlatList, ScrollView, Platform, Text } from 'react-native';
+import { Container, Header, Right, Icon, Button , Left} from 'native-base';
 import { Divider, Card, Screen, Image, Subtitle, Caption, TouchableOpacity, Title, Spinner } from '@shoutem/ui';
 import { MapCard } from '../DetailCard/index';
 import { Rating } from 'react-native-elements';
@@ -241,6 +241,34 @@ export default class LocationDetail extends Component {
                   style={{ marginTop:10, paddingRight: 10 }}
                   readonly
                 />
+                <View
+                  style={{
+                    backgroundColor: "#FCFCFC",
+                    padding: 10,
+                    marginBottom: 10,
+                  }}
+                >
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: "row",
+                    }}
+                  >
+                    <Image
+                      style={{width: 36, height: 36, borderRadius: 18}}
+                      source={{ uri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-3.png'}}
+                    />
+                    <View style={{flex: 1}}>
+                      <Text style={{ flex: 1, fontWeight: "500", textAlign: "right" }}>Td Chien</Text>
+                      <Text note style={{ fontSize: 12, textAlign: "right" }}>
+                        11/11/2018
+                      </Text>
+                    </View>
+                  </View>
+                  <Text style={{ fontSize: 14 , marginTop: 6}}>
+                    Nới lí tưởng để cho pet đi dạo
+                  </Text>                
+                </View>
               </View>
             </View> 
             
