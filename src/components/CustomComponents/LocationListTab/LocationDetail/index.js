@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { View,  Dimensions, FlatList, ScrollView, Platform, Text } from 'react-native';
 import { Container, Header, Right, Icon, Button , Left} from 'native-base';
-import { Divider, Card, Screen, Image, Subtitle, Caption, TouchableOpacity, Title, Spinner } from '@shoutem/ui';
+import { Divider, Card, Screen, Image, Subtitle, Caption, TouchableOpacity, Title, Spinner, Tile } from '@shoutem/ui';
 import { MapCard } from '../DetailCard/index';
 import { Rating } from 'react-native-elements';
 import LocationServices from '../../../../services/LocationServices';
@@ -37,6 +37,12 @@ export default class LocationDetail extends Component {
   _onPressProduct = (item) => {
     this.props.navigation.navigate("ProductDetail", {
       item: item
+    });
+  }
+
+  _onShowRating = (locationDetail) => {
+    this.props.navigation.navigate("RatingComment", {
+      locationDetail: locationDetail,
     });
   }
 
@@ -230,8 +236,7 @@ export default class LocationDetail extends Component {
                   height: 25
                   }}/>
               <View style={{
-                marginRight: 10, 
-                paddingRight: 60, 
+                flex: 1,
                 }}>
                 <Subtitle>Đánh giá</Subtitle>
                 <Rating
@@ -243,9 +248,12 @@ export default class LocationDetail extends Component {
                 />
                 <View
                   style={{
+                    flex: 1,
                     backgroundColor: "#FCFCFC",
                     padding: 10,
                     marginBottom: 10,
+                    marginTop: 6,
+                    marginRight: 10,
                   }}
                 >
                   <View
@@ -259,16 +267,21 @@ export default class LocationDetail extends Component {
                       source={{ uri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-3.png'}}
                     />
                     <View style={{flex: 1}}>
-                      <Text style={{ flex: 1, fontWeight: "500", textAlign: "right" }}>Td Chien</Text>
-                      <Text note style={{ fontSize: 12, textAlign: "right" }}>
+                      <Text style={{ flex: 1, fontWeight: "500", textAlign: "right", fontFamily: 'OpenSans-Bold' }}>Td Chien</Text>
+                      <Text note style={{ fontSize: 12, textAlign: "right", fontFamily: 'OpenSans-Light' }}>
                         11/11/2018
                       </Text>
                     </View>
                   </View>
-                  <Text style={{ fontSize: 14 , marginTop: 6}}>
+                  <Text style={{ fontSize: 14 , marginTop: 12}}>
                     Nới lí tưởng để cho pet đi dạo
                   </Text>                
                 </View>
+                <TouchableOpacity     
+                  styleName="flexible"
+                  onPress={() => this._onShowRating(locationDetail)}>
+                  <Text style={{color: '#FF8EBC', textAlign: 'right', fontFamily: 'OpenSans-Bold'}}>Xem tất cả 27 nhận xét</Text>
+                </TouchableOpacity>
               </View>
             </View> 
             

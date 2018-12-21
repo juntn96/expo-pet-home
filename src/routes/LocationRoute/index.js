@@ -3,6 +3,7 @@ import LocationHome from "../../containers/LocationHome";
 import LocationDetail from '../../components/CustomComponents/LocationListTab/LocationDetail';
 import SearchLocation from '../../components/CustomComponents/LocationListTab/SearchLocation';
 import ProductDetail from '../../components/CustomComponents/LocationListTab/ProductDetail';
+import RatingComment from '../../components/CustomComponents/LocationListTab/Rating';
 
 const LocationRoute = createStackNavigator(
   {
@@ -17,7 +18,10 @@ const LocationRoute = createStackNavigator(
     },
     ProductDetail: {
       screen: ProductDetail
-    }
+    },
+    RatingComment: {
+      screen: RatingComment
+    },
   },
   {
     navigationOptions: {

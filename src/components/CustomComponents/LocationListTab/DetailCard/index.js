@@ -80,18 +80,12 @@ export class MapCard extends React.Component {
           latitudeDelta: 0.003,
           longitudeDelta: 0.003,
         }}>
-        {/* <MapView.Marker 
-          coordinate={{ 
-            latitude: lat,
-            longitude: long,
-          }} 
-          title={name} /> */}
         <MapView.Circle
           center={{
             latitude: lat,
             longitude: long,
           }}
-          radius={40}
+          radius={65}
           strokeWidth={2}
           strokeColor="#3399ff"
           fillColor="#80bfff"
@@ -103,7 +97,7 @@ export class MapCard extends React.Component {
 
 const styles = StyleSheet.create({
   map: {
-    height: 150,
+    height: 200,
     width: Layout.window.width - 20,
   },
   card: {

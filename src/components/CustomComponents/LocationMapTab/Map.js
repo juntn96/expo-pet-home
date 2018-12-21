@@ -11,7 +11,7 @@ import {
 import { MapView, Constants, Location, Permissions } from "expo";
 import { markerType } from "../../../utils/fakeData";
 import GoogleMap from "../../../services/GoogleMap";
-const { Marker, Polyline, Callout } = MapView;
+const { Marker, Polyline, Callout, Circle } = MapView;
 
 class Map extends Component {
   constructor(props) {
@@ -154,9 +154,9 @@ class Map extends Component {
                   >
                     {marker.name}
                   </Text>
-                  {/* <Text numberOfLines={3} lineBreakMode="tail">
+                  <Text numberOfLines={3} lineBreakMode="tail">
                     {marker.description}
-                  </Text> */}
+                  </Text>
                 </View>
               </Callout>
             </Marker>
