@@ -32,22 +32,25 @@ class ReportModal extends Component {
     });
   };
 
-  _selectReport = async content => {
+  _selectReport = async description => {
     this._setLoading(true);
     try {
       const data = {
         postId: this.postData._id,
-        userReportId: this.postData.ownerId._id,
-        content,
+        reporterId: this.props.userData._id,
+        description,
       };
-      const result = await PostServices.report(data);
-      this.props.toast({ message: result, theme: "dark", duration: 3000 });
+      await PostServices.report(data);
+      this.props.toast({
+        message: "Báo cáo bài viết thành công",
+        theme: "dark",
+        duration: 3000,
+      });
     } catch (error) {
       throw error;
     }
     this._setLoading(false);
     this.setModalVisible(false);
-    this.props.modalCallback();
   };
 
   _setLoading = loading => {

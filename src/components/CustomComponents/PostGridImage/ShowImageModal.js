@@ -8,17 +8,19 @@ class ShowImageModal extends Component {
     super(props);
     this.state = {
       modalVisible: false,
+      images: [],
     };
   }
 
-  setModalVisible = modalVisible => {
+  setModalVisible = (modalVisible, images) => {
     this.setState({
       modalVisible,
+      images,
     });
   };
 
   render() {
-    const { modalVisible } = this.state;
+    const { modalVisible, images } = this.state;
     return (
       <Modal visible={modalVisible} transparent={true} animationType="fade">
         <View
@@ -31,41 +33,43 @@ class ShowImageModal extends Component {
             buttonLeft="md-close"
             actionLeft={() => this.setModalVisible(false)}
           />
-          <FlatList
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: -1
-            }}
-            horizontal
-            data={this.props.images}
-            keyExtractor={item => item._id}
-            pagingEnabled
-            renderItem={({ item }) => {
-              return (
-                <View
-                  style={{
-                    width: SCREEN_WIDTH,
-                    height: SCREEN_HEIGHT,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Image
-                    source={{ uri: item.url }}
+          {modalVisible ? (
+            <FlatList
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                zIndex: -1,
+              }}
+              horizontal
+              data={images}
+              keyExtractor={item => item._id}
+              pagingEnabled
+              renderItem={({ item }) => {
+                return (
+                  <View
                     style={{
-                      resizeMode: "contain",
-                      width: "100%",
-                      height: "100%",
+                      width: SCREEN_WIDTH,
+                      height: SCREEN_HEIGHT,
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
-                  />
-                </View>
-              );
-            }}
-          />
+                  >
+                    <Image
+                      source={{ uri: item.url }}
+                      style={{
+                        resizeMode: "contain",
+                        width: "100%",
+                        height: "100%",
+                      }}
+                    />
+                  </View>
+                );
+              }}
+            />
+          ) : null}
         </View>
       </Modal>
     );

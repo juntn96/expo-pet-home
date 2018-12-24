@@ -80,7 +80,7 @@ class CustomDrawer extends Component {
             loginRequired={false}
             style={styles.buttonBody}
             onCustomPress={() => {
-              this.props.navigation.navigate("HomeRoute");
+              this.props.navigation.navigate("Home");
             }}
           >
             <Icon name="ios-home-outline" style={styles.iconBody} />

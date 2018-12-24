@@ -74,6 +74,16 @@ const getPostByOwner = async ownerId => {
   }
 };
 
+const getPostById = async postId => {
+  try {
+    const url = `post/getById/${postId}`;
+    const data = await ApiServices.get(url);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const searchPostByText = async text => {
   try {
     const url = `post/search?title=${text}`;
@@ -107,7 +117,7 @@ const vote = async voteData => {
 
 const report = async report => {
   try {
-    const url = `post/report/add`;
+    const url = `report/addReport`;
     const method = "POST";
     const data = await ApiServices.requestOption(method, url, report);
     return data.result;
@@ -175,4 +185,5 @@ export default {
   getComments,
   editComment,
   deleteComment,
+  getPostById,
 };

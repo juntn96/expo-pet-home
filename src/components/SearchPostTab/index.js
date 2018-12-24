@@ -100,6 +100,7 @@ class SearchPostTab extends Component {
         <ReportModal
           ref={ref => (this.reportModal = ref)}
           toast={this.props.toast}
+          userData={userData}
         />
         <Header
           transparent

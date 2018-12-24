@@ -1,25 +1,10 @@
 import React, { Component } from "react";
-import {
-  View,
-  FlatList,
-  Dimensions,
-  Animated,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-import {
-  Title,
-  Header,
-  Left,
-  Right,
-  Body,
-  Text,
-  Icon,
-  Button,
-} from "native-base";
+import { View, FlatList, Dimensions, Animated } from "react-native";
+import { Text } from "native-base";
 import AnimatedTitle from "./AnimatedTitle";
 import AnimatedOptionBar from "./AnimatedOptionBar";
 import AnimatedPetImage from "./AnimatedPetImage";
+import PetServices from "../../../../services/PetServices";
 
 const AnimatedList = Animated.createAnimatedComponent(FlatList);
 
@@ -31,8 +16,36 @@ const animatedValue = new Animated.Value(0);
 class PetList extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      listPet: [],
+      viewableItem: 0,
+    };
   }
+
+  componentDidMount() {
+    this._requestGetPet();
+  }
+
+  _requestGetPet = async () => {
+    try {
+      const { userData } = this.props;
+      const result = await PetServices.getPet(userData._id);
+      this.setState({ listPet: result });
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  _removeItem = item => {
+    const tmp = this.state.listPet.filter(pet => pet._id !== item._id);
+    this.setState({ listPet: tmp });
+  };
+
+  _onViewableItemsChanged = ({ viewableItems }) => {
+    if (viewableItems.length === 1) {
+      this.setState({ viewableItem: viewableItems[0].index });
+    }
+  };
 
   _renderItem = ({ item, index }) => {
     return (
@@ -56,8 +69,15 @@ class PetList extends Component {
             marginTop: 10,
           }}
         >
-          <Text note style={{ color: "#FFF", marginBottom: 10, marginTop: 10 }}>
-            Hoàng thượng cần tuyển phi tần :D
+          <Text
+            style={{
+              color: "#FFF",
+              marginBottom: 10,
+              marginTop: 10,
+              fontSize: 16,
+            }}
+          >
+            {item.description}
           </Text>
           <AnimatedPetImage
             animatedValue={animatedValue}
@@ -81,7 +101,13 @@ class PetList extends Component {
               <AnimatedOptionBar
                 animatedValue={animatedValue}
                 item={item}
+                userData={this.props.userData}
                 index={index}
+                onIgnore={this._removeItem}
+                onReload={this._requestGetPet}
+                viewableItem={this.state.viewableItem}
+                onChatPress={this.props.onChatPress}
+                toast={this.props.toast}
               />
             </View>
             <View
@@ -95,19 +121,21 @@ class PetList extends Component {
                 style={{
                   marginLeft: 10,
                   marginRight: 10,
-                  marginTop: 30,
+                  marginTop: 40,
                 }}
               >
                 <Text>
                   <Text style={{ fontWeight: "bold", color: "#FFF" }}>
-                    Kitty:{" "}
+                    {item.name}
                   </Text>
                   <Text
                     style={{
                       color: "#FFF",
                     }}
                   >
-                    Mèo, Cái, Scottish, 1 Tuổi
+                    {`: loài ${item.breed}, giới tính ${item.gender}, giống ${
+                      item.branch
+                    }, ${item.age} tuổi `}
                   </Text>
                 </Text>
               </View>
@@ -119,6 +147,7 @@ class PetList extends Component {
   };
 
   render() {
+    const { listPet } = this.state;
     return (
       <AnimatedList
         showsHorizontalScrollIndicator={false}
@@ -139,10 +168,11 @@ class PetList extends Component {
           }
         )}
         horizontal
-        data={[1, 2, 3, 4, 5, 6]}
-        keyExtractor={item => item + ""}
+        data={listPet}
+        keyExtractor={item => item._id}
         pagingEnabled
         renderItem={this._renderItem}
+        onViewableItemsChanged={this._onViewableItemsChanged}
       />
     );
   }

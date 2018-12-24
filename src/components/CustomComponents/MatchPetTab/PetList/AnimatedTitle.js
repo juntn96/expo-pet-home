@@ -11,7 +11,7 @@ class AnimatedTitle extends Component {
   }
 
   render() {
-    const { index, animatedValue} = this.props
+    const { index, animatedValue, item} = this.props
 
     const animateScale = animatedValue.interpolate({
       inputRange: [
@@ -38,7 +38,7 @@ class AnimatedTitle extends Component {
             },
           ]}
         >
-          {"Boss " + index }
+          {item.name}
         </Title>
       </Animated.View>
     );

@@ -11,7 +11,7 @@ import {
 import { MapView, Constants, Location, Permissions } from "expo";
 import { markerType } from "../../../utils/fakeData";
 import GoogleMap from "../../../services/GoogleMap";
-const { Marker, Polyline, Callout } = MapView;
+const { Marker, Polyline, Callout, Circle } = MapView;
 
 class Map extends Component {
   constructor(props) {
@@ -132,6 +132,7 @@ class Map extends Component {
                 <View
                   style={{
                     width: Dimensions.get("window").width / 2.5,
+                    borderRadius: 5
                   }}
                 >
                   <Image
@@ -141,6 +142,7 @@ class Map extends Component {
                       height: Dimensions.get("window").width / 2.5,
                       resizeMode: "cover",
                       marginBottom: 10,
+                      borderRadius: 5
                     }}
                   />
                   <Text

@@ -62,7 +62,7 @@ class TabBar extends Component {
         >
           <Icon name="ios-navigate-outline" style={styles.icon} />
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
             this._onPress(2);
@@ -70,7 +70,7 @@ class TabBar extends Component {
           style={styles.tab}
         >
           <Icon name="ios-bookmark-outline" style={styles.icon} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </Animated.View>
     );
   }

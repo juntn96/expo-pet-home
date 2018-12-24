@@ -41,8 +41,43 @@ const removeToken = async userId => {
 
 const getNotifications = async userId => {
   try {
-    const funcUrl = `app/user/notification/${userId}`;
+    const funcUrl = `app/notification/${userId}`;
     const data = await ApiServices.get(funcUrl);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getNotificationsByType = async (userId, type) => {
+  try {
+    const funcUrl = `app/notification/getType/${userId}/${type}`;
+    const data = await ApiServices.get(funcUrl);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const sendNotification = async notification => {
+  try {
+    const funcUrl = `app/notification/add`;
+    const method = "POST";
+    const data = await ApiServices.requestOption(method, funcUrl, notification);
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const hideNotification = async (notificationId, userId) => {
+  try {
+    const funcUrl = `app/notification/hide`;
+    const method = "POST";
+    const data = await ApiServices.requestOption(method, funcUrl, {
+      notificationId,
+      userId,
+    });
     return data.result;
   } catch (error) {
     throw error;
@@ -59,10 +94,28 @@ const findUser = async userId => {
   }
 };
 
+const editInfo = async (userId, updateOption) => {
+  try {
+    const method = "POST";
+    const funcUrl = "app/user/editInfo";
+    const data = await ApiServices.requestOption(method, funcUrl, {
+      userId,
+      updateOption,
+    });
+    return data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   login,
   findUser,
   registerToken,
   removeToken,
   getNotifications,
+  getNotificationsByType,
+  sendNotification,
+  hideNotification,
+  editInfo,
 };

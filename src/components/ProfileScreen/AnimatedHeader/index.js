@@ -1,11 +1,18 @@
 import React, { Component } from "react";
-import { View, Animated, Dimensions } from "react-native";
+import {
+  View,
+  Animated,
+  Dimensions,
+  TouchableOpacity,
+  ActionSheetIOS,
+} from "react-native";
 
 import AnimatedBackground from "./AnimatedBackground";
 import AnimatedAvatar from "./AnimatedAvatar";
 import AnimatedName from "./AnimatedName";
 import AnimatedNavBar from "./AnimatedNavBar";
 import { Button, Icon } from "native-base";
+import EditInfoModal from "./EditInfoModal";
 
 const HEADER_MAX_HEIGHT = 200;
 const HEADER_MIN_HEIGHT = 74;
@@ -15,6 +22,24 @@ class AnimatedHeader extends Component {
   constructor(props) {
     super(props);
   }
+
+  componentDidMount() {
+
+  }
+
+  _onPress = () => {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ["Bỏ qua", "Thay ảnh nền", "Thay ảnh đại diện", "Đổi tên"],
+        cancelButtonIndex: 0,
+      },
+      buttonIndex => {
+        if (buttonIndex !== 0) {
+          this.editModal.getWrappedInstance().setModalVisible(true, buttonIndex);
+        }
+      }
+    );
+  };
 
   render() {
     const { userData, animatedValue } = this.props;
@@ -42,21 +67,33 @@ class AnimatedHeader extends Component {
           height: HEADER_MAX_HEIGHT,
         }}
       >
-        <AnimatedNavBar animatedValue={animatedValue} navigation={this.props.navigation} />
-        <AnimatedBackground animatedValue={animatedValue} userData={userData} />
-        <View
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: BODY_HEIGHT,
-          }}
-        >
-          <AnimatedAvatar animatedValue={animatedValue} userData={userData} />
+        <EditInfoModal
+          userData={userData}
+          ref={ref => (this.editModal = ref)}
+        />
+        <TouchableOpacity activeOpacity={0.7} onPress={this._onPress}>
+          <AnimatedNavBar
+            animatedValue={animatedValue}
+            navigation={this.props.navigation}
+          />
+          <AnimatedBackground
+            animatedValue={animatedValue}
+            userData={userData}
+          />
+          <View
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: BODY_HEIGHT,
+            }}
+          >
+            <AnimatedAvatar animatedValue={animatedValue} userData={userData} />
 
-          <AnimatedName animatedValue={animatedValue} userData={userData} />
-        </View>
+            <AnimatedName animatedValue={animatedValue} userData={userData} />
+          </View>
+        </TouchableOpacity>
       </Animated.View>
     );
   }

@@ -27,7 +27,6 @@ class LocationDetailModal extends Component {
   }
 
   setModalVisible = (visible, locationItem) => {
-    // console.log(locationItem);
     this.setState({
       modalVisible: visible,
       locationItem: locationItem,
@@ -55,7 +54,6 @@ class LocationDetailModal extends Component {
 
   render() {
     const { locationItem } = this.state;
-
     const headerOpacity = animatedValue.interpolate({
       inputRange: [0, SCREEN_HEIGHT / 2.5 - 54, SCREEN_HEIGHT / 2.5],
       outputRange: [0, 0, 1],
@@ -182,7 +180,7 @@ class LocationDetailModal extends Component {
                     {locationItem.name}
                   </Text>
                   <Text note style={{ fontSize: 14, marginBottom: 4 }}>
-                    Thach That, Hoa Lac, Ha Noi
+                    
                   </Text>
                   <Text style={{ fontSize: 14 }}>
                     {locationItem.description}
