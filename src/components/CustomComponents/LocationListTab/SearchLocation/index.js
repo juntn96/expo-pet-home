@@ -29,11 +29,11 @@ class SearchLocation extends Component {
     } else {
       const { navigation } = this.props;
       const textSearch = navigation.getParam('textSearch', 'NO-ID');
-      if(textSearch === ''){
-        this._requestGetAllLocation();
-      } else {
+      // if(textSearch === ''){
+      //   this._requestGetAllLocation();
+      // } else {
         this._requestGetLocation();
-      }
+      // }
     }
   }
 
