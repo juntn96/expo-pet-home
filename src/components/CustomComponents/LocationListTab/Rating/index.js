@@ -55,7 +55,7 @@ export default class RatingComment extends Component {
         >
           <Image
             style={{width: 40, height: 40, borderRadius: 20}}
-            source={{ uri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-3.png'}}
+            source={{ uri: 'https://res.cloudinary.com/pet-home-fu/image/upload/v1543597350/anhbx6su0g1dm5wy7yfa.jpg'}}
           />
           <View style={{flex: 1, marginLeft: 10}}>
             <Text style={{ flex: 1, fontWeight: "500", fontFamily: 'OpenSans-Bold' }}>Td Chien</Text>
@@ -108,38 +108,57 @@ export default class RatingComment extends Component {
                   marginTop: 10,
                   marginBottom: 4,
                   marginLeft:10,
-                  height: 90
+                  height: 45
                 }}>
                   {"Đánh giá"}
                 </Text> 
                 <TouchableOpacity     
                   styleName="flexible"
-                  onPress={() => this._onWriteComment("jsjs")}>
-                  <Text 
-                    style={{
-                      textAlign: 'right', 
-                      fontFamily: 'OpenSans-Bold', 
-                      marginRight: 10,
-                      marginTop: 20,
-                      // alignItems: 'center'
-                    }}>
-                      Viết đánh giá
-                  </Text>
+                  onPress={() => this._onWriteComment("jsjs")}
+                  style={{borderRadius: 5,
+                    borderColor: '#615c70',
+                    alignItems: 'flex-end'
+                  }}
+                  >
+                  <View style={{ flex: 1, flexDirection: 'row'}}>
+                    <Text 
+                      style={{
+                        textAlign: 'right', 
+                        fontFamily: 'OpenSans-Bold', 
+                        marginRight: 10,
+                        marginTop: 20,
+                      }}>
+                        Viết đánh giá
+                    </Text>
+                    <Icon
+                      name="ios-create-outline"
+                      style={{ 
+                        color: "#00cc99",
+                        marginTop: 15,
+                        marginRight: 10,
+                      }}
+                    />
+                  </View>
                 </TouchableOpacity>          
               </View>             
               <View style={{
                 flex: 1,
                 flexDirection: 'row',
                 marginLeft:10,
-                marginTop: 10,
+                // marginTop: 10,
                 alignItems: 'center',
               }}>
                 <Rating
                   type="star"
                   startingValue={systemRating}
                   imageSize={20}
-                  style={{ marginTop:10, paddingRight: 10, alignItems: 'center',
-                  alignSelf: 'center' }}
+                  style={{ 
+                    marginTop:10, 
+                    paddingRight: 10, 
+                    alignItems: 'center',
+                    alignSelf: 'center', 
+                    backgroundColor: '#FCFCFC',                    
+                  }}
                   readonly
                 />
                 <Text style={{

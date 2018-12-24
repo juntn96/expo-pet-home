@@ -18,6 +18,12 @@ class SearchLocation extends Component {
       textSearch: textSearch,
       loading: true,
       listLocations: [],
+      lat: '',
+      long: '',
+      radius: '',
+      ratingGt: '',
+      ratingLt: '',
+      typeIdArray: []
     };
   }
 
@@ -27,20 +33,20 @@ class SearchLocation extends Component {
         "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
       );
     } else {
-      const { navigation } = this.props;
-      const textSearch = navigation.getParam('textSearch', 'NO-ID');
-      if(textSearch === ''){
-        this._requestGetAllLocation();
-      } else {
-        this._requestGetLocation();
-      }
+      this._requestGetLocation();
     }
   }
 
   _requestGetLocation = async () => {
     try {
       const result = await LocationServices.searchLocation({
-        textSearch: this.state.textSearch
+        textSearch: this.state.textSearch,
+        lat: this.state.lat,
+        long: this.state.long,
+        radius: this.state.radius,
+        ratingGt: this.state.ratingGt,
+        ratingLt: this.state.ratingLt,
+        typeIdArray: this.state.typeIdArray       
       });
       this.setState({ listLocations: result, loading: false });
     } catch (error) {

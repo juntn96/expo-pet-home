@@ -264,7 +264,7 @@ export default class LocationDetail extends Component {
                   >
                     <Image
                       style={{width: 36, height: 36, borderRadius: 18}}
-                      source={{ uri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-3.png'}}
+                      source={{ uri: 'https://res.cloudinary.com/pet-home-fu/image/upload/v1543597350/anhbx6su0g1dm5wy7yfa.jpg'}}
                     />
                     <View style={{flex: 1}}>
                       <Text style={{ flex: 1, fontWeight: "500", textAlign: "right", fontFamily: 'OpenSans-Bold' }}>Td Chien</Text>
