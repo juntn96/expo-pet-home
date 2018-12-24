@@ -45,7 +45,13 @@ const searchLocation = async data => {
     const url = API_URL + 'location/searchAllLocations';
     const result = await axios.get(url, {
       params: {
-        search_keyword: data.textSearch
+        search_keyword: data.textSearch,
+        lat: data.lat,
+        long: data.long,
+        radius: data.radius,
+        ratingGt: data.ratingGt,
+        ratingLt: data.ratingLt,
+        typeIdArray: data.typeIdArray
       },
       paramsSerializer: params => {
         return qs.stringify(params)
