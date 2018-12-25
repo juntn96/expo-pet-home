@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { View, Text, Animated, TouchableOpacity } from "react-native";
+import { Rating } from "react-native-elements";
 
 class LocationItem extends Component {
   constructor(props) {
@@ -50,7 +51,7 @@ class LocationItem extends Component {
           onPress={this._onPress}
           ref={ref => (this.locationItem = ref)}
           style={{
-            backgroundColor: "#c5c5c590",
+            backgroundColor: "#81ecec50",
             marginLeft: 10,
             marginRight: 10,
             padding: 10,
@@ -72,52 +73,20 @@ class LocationItem extends Component {
               alignItems: "center",
             }}
           >
-            <View
+            <Rating
+              type="custom"
+              startingValue={item.systemRating}
+              imageSize={15}
+              readonly
               style={{
-                width: 10,
-                height: 10,
+                borderWidth: 3,
                 borderRadius: 10,
-                backgroundColor: "#00cc99",
-                marginRight: 4,
+                backgroundColor: "#FFF",
+                borderColor: "#FFF"
               }}
+              ratingBackgroundColor="#FFF"
             />
-            <View
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 10,
-                backgroundColor: "#00cc99",
-                marginRight: 4,
-              }}
-            />
-            <View
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 10,
-                backgroundColor: "#00cc99",
-                marginRight: 4,
-              }}
-            />
-            <View
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 10,
-                backgroundColor: "#00cc99",
-                marginRight: 4,
-              }}
-            />
-            <View
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 10,
-                backgroundColor: "#615c70",
-                marginRight: 10,
-              }}
-            />
-            <Text style={{ fontSize: 12 }}>{`${
+            <Text style={{ fontSize: 12, marginLeft: 8 }}>{`${
               item.systemRating
             }/5 - Cách bạn ${item.distance}`}</Text>
           </View>

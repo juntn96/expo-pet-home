@@ -51,7 +51,7 @@ class TabBar extends Component {
           }}
           style={styles.tab}
         >
-          <Icon name="ios-list-box-outline" style={styles.icon} />
+          <Icon name="ios-list-box-outline" style={{color: this.props.tabIndex === 0 ? "#EC466A" : "#00000030"}} />
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.7}
@@ -60,7 +60,7 @@ class TabBar extends Component {
           }}
           style={styles.tab}
         >
-          <Icon name="ios-navigate-outline" style={styles.icon} />
+          <Icon name="ios-navigate-outline" style={{color: this.props.tabIndex === 1 ? "#EC466A" : "#00000030"}} />
         </TouchableOpacity>
         {/* <TouchableOpacity
           activeOpacity={0.7}
@@ -95,14 +95,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   icon: {
-    color: "#EC466A",
+    
   },
   mapState: {
     position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: "transparent",
+    backgroundColor: "#FFFFFF96",
   },
   listState: {
     backgroundColor: "#FFFFFF",
