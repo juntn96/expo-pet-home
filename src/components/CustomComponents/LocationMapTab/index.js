@@ -59,7 +59,7 @@ export default class extends Component {
       const { userLocation } = this.state;
       const result = await LocationServices.getLocation({
         ...userLocation,
-        radius: 3000,
+        radius: 5000,
       });
       this.setState({ listLocations: result });
     } catch (error) {
@@ -99,7 +99,13 @@ export default class extends Component {
   };
 
   _onCalloutPress = locationItem => {
-    this.detailModal.setModalVisible(true, locationItem);
+    // this.detailModal.setModalVisible(true, locationItem);
+    console.log(locationItem)
+    this.props.navigation.navigate("LocationDetail", {
+      _id: locationItem._id,
+      ownerId: locationItem.ownerId,
+      userData: this.props.userData,
+    });
   };
 
   _showDirectionHeader = () => {

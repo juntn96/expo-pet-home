@@ -18,6 +18,12 @@ class SearchLocation extends Component {
       textSearch: textSearch,
       loading: true,
       listLocations: [],
+      lat: '',
+      long: '',
+      radius: '',
+      ratingGt: '',
+      ratingLt: '',
+      typeIdArray: []
     };
   }
 
@@ -27,9 +33,7 @@ class SearchLocation extends Component {
         "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
       );
     } else {
-      const { navigation } = this.props;
-      const textSearch = navigation.getParam('textSearch', 'NO-ID');
-      if(textSearch === ''){
+      if(this.state.textSearch === ''){
         this._requestGetAllLocation();
       } else {
         this._requestGetLocation();
@@ -40,7 +44,13 @@ class SearchLocation extends Component {
   _requestGetLocation = async () => {
     try {
       const result = await LocationServices.searchLocation({
-        textSearch: this.state.textSearch
+        textSearch: this.state.textSearch,
+        lat: this.state.lat,
+        long: this.state.long,
+        radius: this.state.radius,
+        ratingGt: this.state.ratingGt,
+        ratingLt: this.state.ratingLt,
+        typeIdArray: this.state.typeIdArray       
       });
       this.setState({ listLocations: result, loading: false });
     } catch (error) {
@@ -79,8 +89,12 @@ class SearchLocation extends Component {
     this.props.navigation.goBack(null);
   }
 
-  _onSelect = () => {
-    
+  _onSelect = (data) => {
+    console.log(data)
+  }
+
+  _onPressFilter = (data) => {
+    console.log(data)
   }
 
   render() {
@@ -88,7 +102,7 @@ class SearchLocation extends Component {
     const { loading, listLocations } = this.state;
     if (loading) {
       return (
-        <View style={styles.background}>
+        <View style={{flex: 1, justifyContent: 'center',alignItems: 'center'}}>
           <Spinner color="#615c70" />
         </View>
       );
@@ -193,7 +207,7 @@ class SearchLocation extends Component {
           </View> : 
           <LocationList data={this.state.listLocations} navigation={this.props.navigation}/> }
         </Screen>
-        <FilterModal onSelect={this._onSelect} ref={ref => (this.filterModal = ref)} />       
+        <FilterModal onPressFilter={data => this._onPressFilter(data)} onSelect={this._onSelect} ref={ref => (this.filterModal = ref)} />       
       </Container>
     );
   }

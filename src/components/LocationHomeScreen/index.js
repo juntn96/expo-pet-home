@@ -3,7 +3,7 @@ import { View, Dimensions, ScrollView } from "react-native";
 import { Container } from "native-base";
 
 import TabBar from "./TabBar";
-import LocationListTab from '../CustomComponents/LocationListTab';
+import LocationListTab from "../CustomComponents/LocationListTab";
 import LocationMapTab from "../CustomComponents/LocationMapTab";
 import TabContainer from "./TabContainer";
 
@@ -28,7 +28,7 @@ const SCREENS = [
 
 export default class extends Component {
   state = {
-    tabIndex: 2,
+    tabIndex: 0,
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -48,6 +48,7 @@ export default class extends Component {
   };
 
   _onTabPress = index => {
+    this.setState({ tabIndex: index });
     this.tabs.scrollTo({
       x: index * SCREEN_WIDTH,
       y: 0,
@@ -62,6 +63,8 @@ export default class extends Component {
           <TabContainer key={value.index}>
             <LocationListTab
               navigation={this.props.navigation}
+              userData={this.props.userData}
+              toast={this.props.toast}
             />
           </TabContainer>
         );
@@ -73,6 +76,8 @@ export default class extends Component {
               showTabBar={this._showTabBar}
               locationData={locationData}
               navigation={this.props.navigation}
+              userData={this.props.userData}
+              toast={this.props.toast}
             />
           </TabContainer>
         );
@@ -110,6 +115,7 @@ export default class extends Component {
         <TabBar
           ref={ref => (this.tabBar = ref)}
           onTabPress={this._onTabPress}
+          tabIndex={this.state.tabIndex}
         />
       </Container>
     );
