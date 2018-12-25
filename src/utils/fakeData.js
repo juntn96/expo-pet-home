@@ -299,3 +299,27 @@ export const markerType = {
     thumbnail: require("../assets/images/thumbnail_home.png"),
   },
 };
+
+// 1 = hospital, 2 = sos, 3 = store, 4 = home, 5 = park
+export const listMarkerImage = [
+  {
+    marker: require("../assets/icons/marker_hospital.png"),
+    thumbnail: require("../assets/images/thumbnail_hospital.png"),
+  },
+  {
+    marker: require("../assets/icons/marker_sos.png"),
+    thumbnail: require("../assets/images/thumbnail_sos.png"),
+  },
+  {
+    marker: require("../assets/icons/marker_store.png"),
+    thumbnail: require("../assets/images/thumbnail_store.png"),
+  },
+  {
+    marker: require("../assets/icons/marker_home.png"),
+    thumbnail: require("../assets/images/thumbnail_home.png"),
+  },
+  {
+    marker: require("../assets/icons/marker_park.png"),
+    thumbnail: require("../assets/images/thumbnail_park.png"),
+  },
+];

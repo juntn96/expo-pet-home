@@ -9,9 +9,9 @@ import {
   View,
 } from "react-native";
 import { MapView, Constants, Location, Permissions } from "expo";
-import { markerType } from "../../../utils/fakeData";
+import { listMarkerImage } from "../../../utils/fakeData";
 import GoogleMap from "../../../services/GoogleMap";
-const { Marker, Polyline, Callout } = MapView;
+const { Marker, Polyline, Callout, Circle } = MapView;
 
 class Map extends Component {
   constructor(props) {
@@ -111,7 +111,8 @@ class Map extends Component {
       >
         {selectLocation ? <Marker coordinate={selectLocation} /> : null}
         {locationData.map(marker => {
-          // const markerImage = markerType[marker.type].marker;
+          console.log(marker)
+          const markerImage = listMarkerImage[marker.typeId.typeLocation - 1].marker;
           return (
             <Marker
               ref={ref => (this.markers[marker._id] = ref)}
@@ -123,7 +124,7 @@ class Map extends Component {
                 this._onMarkerPress(marker);
               }}
             >
-              {/* <Image source={markerImage} /> */}
+              <Image source={markerImage} />
               <Callout
                 onPress={() => {
                   this._onCalloutPress(marker);
@@ -132,6 +133,7 @@ class Map extends Component {
                 <View
                   style={{
                     width: Dimensions.get("window").width / 2.5,
+                    borderRadius: 5,
                   }}
                 >
                   <Image
@@ -141,6 +143,7 @@ class Map extends Component {
                       height: Dimensions.get("window").width / 2.5,
                       resizeMode: "cover",
                       marginBottom: 10,
+                      borderRadius: 5,
                     }}
                   />
                   <Text

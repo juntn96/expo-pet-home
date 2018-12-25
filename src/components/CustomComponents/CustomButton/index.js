@@ -22,8 +22,13 @@ class CustomButton extends Component {
         });
       } else {
         const userData = await loginFb();
-        if (userData) {
+        if (userData._id) {
           login(userData);
+        } else {
+          this.props.toast({
+            message: userData,
+            duration: 3000,
+          });
         }
       }
     } else {
