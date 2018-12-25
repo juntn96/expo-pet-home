@@ -10,6 +10,8 @@ import { setLoading } from "../../../redux/actions/UIActions";
 
 import { connect } from "react-redux";
 
+import { toggle } from "../../../redux/actions/UIActions";
+
 class CustomTouchable extends Component {
   _onPress = async () => {
     const {
@@ -23,8 +25,10 @@ class CustomTouchable extends Component {
       setLoading(true);
       try {
         const userData = await loginFb();
-        if (userData) {
+        if (userData._id) {
           login(userData);
+        } else {
+          this.props.toast({ message: userData, duration: 3000 });
         }
       } catch (error) {
         throw error;
@@ -62,6 +66,9 @@ const mapDispatchToProps = dispatch => {
     },
     setLoading: loading => {
       dispatch(setLoading(loading));
+    },
+    toast: toast => {
+      dispatch(toggle(toast));
     },
   };
 };

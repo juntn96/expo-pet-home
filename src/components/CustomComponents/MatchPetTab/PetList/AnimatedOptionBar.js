@@ -159,7 +159,7 @@ class AnimatedOptionBar extends Component {
                   user: this.props.userData._id,
                 },
                 {
-                  user: item.ownerId,
+                  user: item.ownerId._id,
                 },
               ];
               const data = await MessageServices.createConversation(users);
