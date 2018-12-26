@@ -111,8 +111,8 @@ class Map extends Component {
       >
         {selectLocation ? <Marker coordinate={selectLocation} /> : null}
         {locationData.map(marker => {
-          console.log(marker)
-          const markerImage = listMarkerImage[marker.typeId.typeLocation - 1].marker;
+          // console.log(marker)
+          // const markerImage = listMarkerImage[marker.typeId.typeLocation - 1].marker;
           return (
             <Marker
               ref={ref => (this.markers[marker._id] = ref)}
@@ -124,7 +124,7 @@ class Map extends Component {
                 this._onMarkerPress(marker);
               }}
             >
-              <Image source={markerImage} />
+              {/* <Image source={markerImage} /> */}
               <Callout
                 onPress={() => {
                   this._onCalloutPress(marker);
@@ -136,7 +136,7 @@ class Map extends Component {
                     borderRadius: 5,
                   }}
                 >
-                  <Image
+                  {/* <Image
                     source={require("../../../assets/images/bg3.png")}
                     style={{
                       width: Dimensions.get("window").width / 2.5,
@@ -145,7 +145,7 @@ class Map extends Component {
                       marginBottom: 10,
                       borderRadius: 5,
                     }}
-                  />
+                  /> */}
                   <Text
                     numberOfLines={1}
                     lineBreakMode="tail"

@@ -18,15 +18,20 @@ import {
   Right,
   Title,
 } from "native-base";
+import { CheckBox } from 'react-native-elements';
+
 const { width, height } = Dimensions.get('window');
 
 export default class FilterModal extends Component {
   constructor(props) {
     super(props);
+    const { listPrivateCategories , listPublicCategories} = this.props;
     this.state = {
       visibleModal: false,
       selectedStarId: '',
-      selectedStar: ''
+      selectedStar: '',
+      listPrivateCategories: listPrivateCategories,
+      listPublicCategories: listPublicCategories
     };
   }
 
@@ -37,17 +42,56 @@ export default class FilterModal extends Component {
   };
 
   _onPress = visible => {
+    const { listPrivateCategories , listPublicCategories, selectedStar } = this.state;
+    const selectedPrivate = listPrivateCategories.filter( item => item.checked !== false);
+    const selectedPublic = listPublicCategories.filter( item => item.checked !== false);
+    const selectedAll = selectedPrivate.concat(selectedPublic);
     this.setState({
       visibleModal: visible,
     });
-    this.props.onPressFilter(this.state);
+    this.props.onPressFilter(selectedStar, selectedAll);
   }
 
   _onClearFilter = () => {
+    const { listPrivateCategories , listPublicCategories} = this.props;
     this.setState({ 
       selectedStarId: '',
-      selectedStar: '' 
+      selectedStar: '',
+      listPrivateCategories: listPrivateCategories,
+      listPublicCategories: listPublicCategories
     });
+  }
+
+  _onPressPrivateCheckbox = (item) => {
+    const newListPrivate = this.state.listPrivateCategories
+      .map(p => p._id === item._id ? ({ ...p, checked: !p.checked }) : p);
+    this.setState({ listPrivateCategories: newListPrivate});
+  }
+
+  _renderPrivateCategories = ({item}) => {
+    return (
+      <CheckBox
+        title={item.name}
+        onPress={() => this._onPressPrivateCheckbox(item)}
+        checked={item.checked}
+      />
+    )
+  }
+
+  _onPressPublicCheckbox = (item) => {
+    const newListPublic = this.state.listPublicCategories
+      .map(p => p._id === item._id ? ({ ...p, checked: !p.checked }) : p);
+    this.setState({ listPublicCategories: newListPublic});
+  }
+
+  _renderPublicCategories = ({item}) => {
+    return (
+      <CheckBox
+        title={item.name}
+        onPress={() => this._onPressPublicCheckbox(item)}
+        checked={item.checked}
+      />
+    )
   }
 
   _onPressStar = item => {
@@ -77,7 +121,7 @@ export default class FilterModal extends Component {
             styles.item,
             {
               borderColor:
-              selectedStarId === item.id ? "#FF8EBC" : "#615c70",
+              selectedStarId === item.id ? "#FF8EBC" : "#FF8EBC",
               backgroundColor:
               selectedStarId === item.id ? "#FF8EBC" : "#FFFFFF",
             },
@@ -96,11 +140,12 @@ export default class FilterModal extends Component {
           <Text style={{
             marginRight: 10,
             marginTop: 6,
-            color: selectedStarId === item.id ? "#FFFFFF" : "#615c70",
+            color: selectedStarId === item.id ? "#FFFFFF" : "#FF8EBC",
+            fontWeight: "bold"
           }}>{item.rating}</Text>
           <Icon
             name="star"
-            style={{ color: selectedStarId === item.id ? "#FFFFFF" : "#FFD845" }}
+            style={{ color: selectedStarId === item.id ? "#FFFFFF" : "#FF8EBC" }}
           />
         </View>
       </TouchableOpacity>
@@ -108,6 +153,7 @@ export default class FilterModal extends Component {
   }
 
   render() {
+    const { listPrivateCategories , listPublicCategories } = this.state;
     return (
       <Modal
         visible={this.state.visibleModal}
@@ -149,17 +195,56 @@ export default class FilterModal extends Component {
           </Header>
           <View style={styles.mainviewStyle}>
             <ScrollView style = {styles.scrollViewStyle}>
+              <Text style={{
+                marginLeft: 10,
+                marginBottom: 10,
+                marginTop: 10,
+                fontSize: 20,
+                color: "#505050",
+                fontFamily: "OpenSans-Bold",
+              }}>Đánh giá</Text>
               <FlatList
                 data={[{id: 0, rating: 3},{id: 1, rating: 4},{id: 2, rating: 5}]}
                 keyExtractor={(item, index) => index.toString()}
                 showsHorizontalScrollIndicator={false}
                 renderItem={this._renderStar}
                 horizontal
-                style={{ marginBottom: 60, marginTop: 10, alignContent: 'space-around', alignSelf: 'center'}}
+                style={{ marginBottom: 20, marginTop: 10, alignContent: 'space-around', alignSelf: 'center'}}
               />
-              <Text>Địa điểm công cộng, công viên</Text>
-              
-              <Text>Cửa hàng dịch vụ thú cưng</Text>
+              <Text style={{
+                marginLeft: 10,
+                marginBottom: 10,
+                color: "#505050",
+                fontSize: 20,
+                fontFamily: "OpenSans-Bold",
+              }}>Cửa hàng dịch vụ thú cưng</Text>
+              <FlatList
+                data={listPrivateCategories}
+                keyExtractor={(item, index) => index.toString()}
+                showsHorizontalScrollIndicator={false}
+                renderItem={this._renderPrivateCategories}
+                style={{ 
+                  marginBottom: 20,
+                  marginLeft: 10
+                }}
+              />
+              <Text style={{
+                marginLeft: 10,
+                marginBottom: 10,
+                color: "#505050",
+                fontSize: 20,
+                fontFamily: "OpenSans-Bold",
+              }}>Địa điểm công cộng, công viên</Text>
+              <FlatList
+                data={listPublicCategories}
+                keyExtractor={(item, index) => index.toString()}
+                showsHorizontalScrollIndicator={false}
+                renderItem={this._renderPublicCategories}
+                style={{ 
+                  marginBottom: 90,
+                  marginLeft: 10
+                }}
+              />
             </ScrollView>
             <View style={styles.footer}>
               <TouchableOpacity 

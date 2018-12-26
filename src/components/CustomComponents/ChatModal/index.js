@@ -78,6 +78,7 @@ class ChatModal extends Component {
 
   _onSend = async (messages = []) => {
     const { userData } = this.props;
+    console.log(messages[0].user._id)
     const data = {
       conversationId: this.conversation._id,
       message: messages[0],

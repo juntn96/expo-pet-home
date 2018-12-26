@@ -25,6 +25,16 @@ const getSuggestLocation = async () => {
   }
 };
 
+const getLocationCategoryWithType = async () => {
+  try {
+    const url = API_URL + "location/locationCategoriesWithType";
+    const result = await axios.get(url);
+    return result.data.locationCategories;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getLocationByCategory = async data => {
   try {
     const url = API_URL + "location/locationByCategory";
@@ -43,6 +53,13 @@ const getLocationByCategory = async data => {
 };
 
 const searchLocation = async data => {
+  console.log(data.typeIdArray)
+  let newtypeIdArray = []
+  if(data.typeIdArray.length > 0) {
+    newtypeIdArray = data.typeIdArray.map(item => {return {typeId: item._id}});
+  }
+  console.log("newtypeIdArray");
+  console.log(newtypeIdArray);
   try {
     const url = API_URL + "location/searchAllLocations";
     const result = await axios.get(url, {
@@ -53,7 +70,7 @@ const searchLocation = async data => {
         radius: data.radius,
         ratingGt: data.ratingGt,
         ratingLt: data.ratingLt,
-        typeIdArray: data.typeIdArray
+        typeIdArray: newtypeIdArray
       },
       paramsSerializer: params => {
         return qs.stringify(params);
@@ -117,6 +134,7 @@ const addReview = async review => {
 export default {
   getLocation,
   getLocationByCategory,
+  getLocationCategoryWithType,
   searchLocation,
   getSuggestLocation,
   getLocationDetail,
