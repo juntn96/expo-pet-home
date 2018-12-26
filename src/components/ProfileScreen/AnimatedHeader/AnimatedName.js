@@ -33,7 +33,7 @@ class AnimatedName extends Component {
 
     let nameTransY = animatedValue.interpolate({
       inputRange: [0, HEADER_MAX_HEIGHT],
-      outputRange: [-10, -27 + (nameSize.height * 0.7) / 2],
+      outputRange: [-10, (-27 + (nameSize.height * 0.7) / 2) - 80],
       extrapolate: "clamp",
     });
 
@@ -58,7 +58,7 @@ class AnimatedName extends Component {
               scale: nameScale,
             },
           ],
-          bottom: 0,
+          bottom: -80,
           left: 0,
         }}
       >
@@ -71,7 +71,7 @@ class AnimatedName extends Component {
           lineBreakMode={"tail"}
           style={{
             fontWeight: "bold",
-            fontSize: 20,
+            fontSize: 24,
             position: "absolute",
             bottom: 0,
             color: "#212121",

@@ -144,7 +144,7 @@ class ProfileScreen extends React.Component {
           keyExtractor={item => item._id}
           contentContainerStyle={{
             paddingBottom: 20,
-            paddingTop: 260,
+            paddingTop: 280,
             padding: 10,
           }}
           refreshControl={

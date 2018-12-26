@@ -16,15 +16,19 @@ export default class extends Component {
   constructor(props) {
     super(props);
 
+    const isNaV = this.props.navigation.getParam("type") === "navigation";
+
     this.state = {
       isHideAll: false,
       isHideDirection: true,
       userLocation: null,
       listLocations: [],
+      isNavigation: isNaV,
     };
   }
 
   componentDidMount() {
+    console.log(this.props.navigation.getParam("type"));
     if (Platform.OS === "android" && !Constants.isDevice) {
       console.log(
         "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
@@ -47,8 +51,11 @@ export default class extends Component {
             longitudeDelta: 0.01,
           },
         },
-        () => {
-          this._requestGetLocation();
+        async () => {
+          await this._requestGetLocation();
+          if (this.state.isNavigation === true) {
+            this._callByNavigation();
+          }
         }
       );
     }
@@ -61,6 +68,7 @@ export default class extends Component {
         ...userLocation,
         radius: 5000,
       });
+      console.log(result);
       this.setState({ listLocations: result });
     } catch (error) {
       throw error;
@@ -74,7 +82,9 @@ export default class extends Component {
       this.directionHeader.animateHide();
       this.simpleHeader.animateHide();
       this.smallList.moveDown();
-      showTabBar(isHideAll);
+      if (showTabBar) {
+        showTabBar(isHideAll);
+      }
     } else {
       if (!isHideDirection) {
         this.directionHeader.animateShow();
@@ -82,7 +92,9 @@ export default class extends Component {
       } else {
         this.simpleHeader.animateShow();
         this.smallList.moveUp();
-        showTabBar(isHideAll);
+        if (showTabBar) {
+          showTabBar(isHideAll);
+        }
       }
     }
     this.setState({
@@ -100,11 +112,12 @@ export default class extends Component {
 
   _onCalloutPress = locationItem => {
     // this.detailModal.setModalVisible(true, locationItem);
-    console.log(locationItem)
+    // console.log(locationItem);
     this.props.navigation.navigate("LocationDetail", {
       _id: locationItem._id,
       ownerId: locationItem.ownerId,
       userData: this.props.userData,
+      onDirectionPress: this.props.onDirectionPress
     });
   };
 
@@ -115,12 +128,16 @@ export default class extends Component {
       this.directionHeader.animateShow();
       this.simpleHeader.animateHide();
       this.smallList.moveDown();
-      showTabBar(false);
+      if (showTabBar) {
+        showTabBar(false);
+      }
     } else {
       this.directionHeader.animateHide();
       this.simpleHeader.animateShow();
       this.smallList.moveUp();
-      showTabBar(true);
+      if (showTabBar) {
+        showTabBar(true);
+      }
     }
     this.setState({
       isHideDirection: !isHideDirection,
@@ -166,7 +183,35 @@ export default class extends Component {
       this.directionHeader.setStartLocation(location);
       this.mapView.addSelectLocation(coordinate);
       this.mapView.moveToCoordinate(coordinate);
+    } else {
+      this.directionHeader.setDestinationLocation(location);
+      this.mapView.moveToCoordinate({
+        latitude: location.coordinate.latitude,
+        longitude: location.coordinate.longitude,
+      });
+      this.mapView.showCallout(location);
+      this.simpleHeader.setLocationItem(location);
     }
+  };
+
+  _callByNavigation = () => {
+    const location = this.props.navigation.getParam("locationItem");
+    const { userLocation } = this.state;
+    this.directionHeader.setDestinationLocation(location);
+    this.simpleHeader.setLocationItem(location);
+    let tmp = this.state.listLocations;
+    const index = tmp.findIndex(item => item._id === location._id)
+    if (index === -1) {
+      tmp.push(location);
+    }
+    this.setState({ listLocations: tmp });
+    this.mapView.startDirection(
+      { latitude: userLocation.latitude, longitude: userLocation.longitude },
+      {
+        latitude: location.coordinate.latitude,
+        longitude: location.coordinate.longitude,
+      }
+    );
   };
 
   render() {
@@ -195,6 +240,7 @@ export default class extends Component {
           navigation={this.props.navigation}
           onBackPress={this._clearLocationItem}
           onSearchPress={this._onSearchPress}
+          isNavigation={this.state.isNavigation}
         />
         {userLocation ? (
           <DirectionHeader

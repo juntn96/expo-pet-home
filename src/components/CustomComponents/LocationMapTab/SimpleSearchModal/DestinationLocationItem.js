@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { markerType } from "../../../../utils/fakeData";
+import { listMarkerImage } from "../../../../utils/fakeData";
 import { Text, ListItem, Thumbnail, Left, Body } from "native-base";
-
 
 class DestinationLocationItem extends Component {
   constructor(props) {
@@ -9,14 +8,21 @@ class DestinationLocationItem extends Component {
     this.state = {};
   }
 
-  render() {
+  _onPress = () => {
+    const { onItemPress, item } = this.props;
+    if (onItemPress) {
+      onItemPress(item, "destination");
+    }
+  };
 
-    const { item } = this.props
+  render() {
+    const { item } = this.props;
+    const thumb = listMarkerImage[item.typeId.typeLocation].thumbnail;
 
     return (
-      <ListItem thumbnail>
+      <ListItem thumbnail onPress={this._onPress}>
         <Left>
-          <Thumbnail small square source={markerType[item.type].thumbnail} />
+          <Thumbnail small square source={thumb} />
         </Left>
         <Body>
           <Text>{item.name}</Text>

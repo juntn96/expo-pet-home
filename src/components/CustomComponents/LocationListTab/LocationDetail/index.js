@@ -73,6 +73,7 @@ export default class LocationDetail extends Component {
         _id: _id,
         ownerId: ownerId,
       });
+      console.log((">>>>> ", result))
       const rv = await this._requestGetReview(_id);
       this.setState({
         locationDetail: result,
@@ -167,6 +168,7 @@ export default class LocationDetail extends Component {
     const { navigation } = this.props;
     const userData = navigation.getParam("userData", "NO-ID");
     const locationId = navigation.getParam("_id", "NO-ID");
+    const onDirectionPress = navigation.getParam("onDirectionPress", "NO-ID");
     if (loading) {
       return (
         <View
@@ -197,7 +199,16 @@ export default class LocationDetail extends Component {
           <View style={styles.nameLocation}>
             <Title>{locationDetail.name}</Title>
           </View>
-          <Right />
+          <Right>
+            <Button
+              transparent
+              onPress={() =>
+                onDirectionPress({ ...locationDetail, _id: locationId })
+              }
+            >
+              <Icon name="ios-navigate-outline" />
+            </Button>
+          </Right>
         </Header>
         <LocationReviewModal
           ref={ref => (this.reviewModal = ref)}
@@ -278,8 +289,8 @@ export default class LocationDetail extends Component {
               </View>
             </View>
             <MapCard
-              lat={locationDetail.lat}
-              long={locationDetail.long}
+              lat={locationDetail.coordinate.latitude}
+              long={locationDetail.coordinate.longitude}
               name={locationDetail.name}
             />
             <View

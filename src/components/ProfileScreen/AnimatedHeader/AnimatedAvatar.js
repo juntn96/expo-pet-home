@@ -1,11 +1,5 @@
 import React, { Component } from "react";
-import {
-  View,
-  Image,
-  Animated,
-  Dimensions,
-} from "react-native";
-
+import { View, Image, Animated, Dimensions } from "react-native";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -15,11 +9,9 @@ const AVATAR_MAX_SCALE = 1;
 const AVATAR_MIN_SCALE = 0.5;
 const AVATAR_SIZE = 80;
 
-
 const BODY_HEIGHT = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
-
-class componentName extends Component {
+class AnimatedAvatar extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -36,7 +28,10 @@ class componentName extends Component {
 
     let avatarTransY = animatedValue.interpolate({
       inputRange: [0, HEADER_MAX_HEIGHT],
-      outputRange: [AVATAR_SIZE - BODY_HEIGHT, -27 + (AVATAR_SIZE * AVATAR_MIN_SCALE) / 2 ],
+      outputRange: [
+        AVATAR_SIZE - BODY_HEIGHT,
+        -27 + (AVATAR_SIZE * AVATAR_MIN_SCALE) / 2 - 84,
+      ],
       extrapolate: "clamp",
     });
 
@@ -61,7 +56,7 @@ class componentName extends Component {
             },
           ],
           position: "absolute",
-          bottom: 0,
+          bottom: -84,
           left: 0,
         }}
       >
@@ -78,7 +73,7 @@ class componentName extends Component {
           }}
         >
           <Image
-            source={{uri: userData.avatar}}
+            source={{ uri: userData.avatar }}
             style={{
               width: AVATAR_SIZE,
               height: AVATAR_SIZE,
@@ -91,4 +86,4 @@ class componentName extends Component {
   }
 }
 
-export default componentName;
+export default AnimatedAvatar;

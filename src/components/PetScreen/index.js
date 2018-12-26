@@ -31,6 +31,8 @@ export default class extends Component {
           tabBarPosition="bottom"
           locked
           tabBarUnderlineStyle={{ backgroundColor: "#FFF" }}
+          initialPage={1}
+          
         >
           <Tab
             heading={

@@ -80,6 +80,7 @@ class LocationListTab extends Component {
       _id: item._id,
       ownerId: item.ownerId,
       userData: this.props.userData,
+      onDirectionPress: this.props.onDirectionPress
     });
   };
 

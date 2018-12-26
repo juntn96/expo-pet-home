@@ -105,7 +105,7 @@ class Map extends Component {
         ref={ref => (this.mapView = ref)}
         onPress={this._onMapPress}
         showsUserLocation={true}
-        provider={"google"}
+        // provider={"google"}
         style={styles.map}
         initialRegion={userLocation}
       >
