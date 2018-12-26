@@ -33,7 +33,7 @@ export default class LocationDetail extends Component {
     this.state = {
       loading: true,
       locationDetail: {},
-      reviews: 0,
+      reviews: [],
     };
   }
 
@@ -330,7 +330,7 @@ export default class LocationDetail extends Component {
                     </Button>
                   ) : null}
                 </View>
-                {reviews ? (
+                {reviews.length > 0 ? (
                   <View>
                     <Rating
                       type="star"
