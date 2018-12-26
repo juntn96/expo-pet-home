@@ -13,6 +13,7 @@ export default class ProductDetail extends Component {
     this.state = {
       loading: true,
       productDetail: {},
+      productInOneCategories: ''
     };
   }
 
@@ -26,6 +27,52 @@ export default class ProductDetail extends Component {
     }
   }
 
+  _renderProduct = ({ item }) => {
+    return (
+      <TouchableOpacity
+        key={item._id}
+        styleName="flexible"
+        onPress={() => this._onPressProduct(item)}
+      >
+        <Card style={styles.cardProduct}>
+          <View
+            style={{
+              width: height / 3,
+              height: height / 3 - 50,
+            }}
+          >
+            <Image
+              style={{
+                flex: 1,
+                alignSelf: "stretch",
+                width: undefined,
+                height: undefined,
+              }}
+              source={{ uri: item.images[0] }}
+              borderRadius="5"
+            />
+          </View>
+          <View
+            style={{
+              paddingLeft: 10,
+              height: 50,
+            }}
+          >
+            <View styleName="horizontal v-center space-between">
+              <Subtitle numberOfLines={1}>{item.name}</Subtitle>
+            </View>
+            <View styleName="horizontal v-center space-between">
+              <View styleName="horizontal">
+                <Caption styleName="md-gutter-right">
+                  Giá: {item.price}đ
+                </Caption>
+              </View>
+            </View>
+          </View>
+        </Card>
+      </TouchableOpacity>
+    );
+  };
   _requestGetProduct = async () => {
     const { navigation } = this.props;
     const item = navigation.getParam('item', 'NO-ID');
@@ -33,7 +80,14 @@ export default class ProductDetail extends Component {
       const result = await ProductServices.getProductDetail({
         id: item._id
       });
-      this.setState({ productDetail: result , loading: !this.state.loading});
+      const productInOneCategories = await ProductServices.getProductInOneCategories({
+        typeId: result.typeId
+      });
+      this.setState({ 
+        productDetail: result , 
+        productInOneCategories: productInOneCategories,
+        loading: !this.state.loading
+      });
     } catch (error) {
       throw error;
     }
@@ -70,8 +124,18 @@ export default class ProductDetail extends Component {
     );  
   }
 
+  _onPressProduct = item => {
+    this.props.navigation.navigate({
+      routeName: 'ProductDetail',
+      params: { 
+        item: item,
+      },
+      key: 'ProductDetail' + item._id
+    });
+  };
+  
   render() {
-    const { loading, productDetail } = this.state;
+    const { loading, productDetail, productInOneCategories } = this.state;
     let images = []
     if(loading) {
       return (
@@ -222,11 +286,45 @@ export default class ProductDetail extends Component {
                 }}>
                 <Subtitle>Loại</Subtitle>
                 <Caption style={{paddingRight: 10}}>
-                  {productDetail.typeId.name}đ
+                  {productDetail.typeId.name}
                 </Caption>
               </View>
-            </View> 
-            
+            </View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                marginTop: 20,
+                padding: 10,
+              }}>
+              <Image 
+                source={require('../../../../assets/icons/iconfinder_tagging.png')}
+                style={{ 
+                  marginLeft: 20,
+                  marginRight: 20,
+                  width: 25,
+                  height: 25
+                  }}/>
+              <View style={{
+                marginRight: 10, 
+                paddingRight: 60, 
+                }}>
+                <Subtitle>Sản phẩm/ dịch vụ cùng loại</Subtitle>
+              </View>
+            </View>  
+            {productInOneCategories.length > 0 ? (
+              <FlatList
+                data={productInOneCategories}
+                keyExtractor={(item, index) => index.toString()}
+                showsHorizontalScrollIndicator={false}
+                renderItem={this._renderProduct}
+                horizontal
+                style={{ 
+                  marginBottom: 20, 
+                  marginTop: 20,
+                  padding: 10, }}
+              />
+            ) : <Subtitle>Không có sản phẩm nào cùng loại</Subtitle>}           
           </ScrollView>
         </Screen>
       </Container>

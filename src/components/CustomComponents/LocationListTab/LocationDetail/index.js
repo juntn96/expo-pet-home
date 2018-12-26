@@ -287,13 +287,13 @@ export default class LocationDetail extends Component {
                 flex: 1,
                 flexDirection: "row",
                 marginTop: 20,
-                padding: 10,
+                padding: 20,
               }}
             >
               <Image
                 source={require("../../../../assets/icons/iconfinder_ic_stars.png")}
                 style={{
-                  // marginLeft: 10,
+                  marginLeft: 10,
                   marginRight: 10,
                   width: 25,
                   height: 25,
@@ -312,6 +312,7 @@ export default class LocationDetail extends Component {
                   <View
                     style={{
                       flex: 1,
+                      marginLeft: 10
                     }}
                   >
                     <Subtitle>Đánh giá</Subtitle>

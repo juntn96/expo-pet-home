@@ -10,6 +10,7 @@ import {
   Alert,
 } from "react-native";
 import { Container, Header, Button, Icon } from "native-base";
+import { Image } from '@shoutem/ui';
 import PostItem from "../CustomComponents/PostList/PostItem";
 import ReportModal from "../CustomComponents/PostOptionModal/ReportModal";
 import EditPostModal from "../CustomComponents/EditPostModal";
@@ -185,7 +186,15 @@ class SearchPostTab extends Component {
                 alignItems: "center",
               }}
             >
-              <Text>Không có bài viết</Text>
+              <Image
+                styleName="medium-square"
+                source={require("../../assets/icons/find-icon.png")}
+              />
+              <Text style={{
+                marginTop: 10,
+                fontWeight: "bold",
+                color: '#615c70'
+              }}> Không có bài viết nào </Text>
             </TouchableOpacity>
           )}
         </View>
