@@ -205,7 +205,7 @@ export default class LocationDetail extends Component {
           userData={userData}
           toast={this.props.toast}
         />
-        <Screen style={{ backgroundColor: "#FCFCFC" }}>
+        <Screen style={{ backgroundColor: "#ffffff" }}>
           <ScrollView>
             {locationDetail.images.length > 0 ? (
               <FlatList
@@ -342,7 +342,7 @@ export default class LocationDetail extends Component {
                     <View
                       style={{
                         flex: 1,
-                        backgroundColor: "#FCFCFC",
+                        backgroundColor: "#ffffff",
                         padding: 10,
                         marginBottom: 10,
                         marginTop: 6,

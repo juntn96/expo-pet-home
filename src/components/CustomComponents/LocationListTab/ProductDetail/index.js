@@ -221,6 +221,9 @@ export default class ProductDetail extends Component {
                 paddingRight: 60, 
                 }}>
                 <Subtitle>Loại</Subtitle>
+                <Caption style={{paddingRight: 10}}>
+                  {productDetail.typeId.name}đ
+                </Caption>
               </View>
             </View> 
             
