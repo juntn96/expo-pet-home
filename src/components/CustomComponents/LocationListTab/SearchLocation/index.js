@@ -243,7 +243,14 @@ class SearchLocation extends Component {
           </TouchableOpacity>
           {listLocations.length === 0 ? 
           <View style={{flex: 1, justifyContent: 'center',alignItems: 'center'}}>
-            <Text> Không có kết quả nào </Text>
+            <Image
+              styleName="medium-square"
+              source={require("../../../../assets/icons/find-icon.png")}
+            />
+            <Text style={{
+              marginTop: 10,
+              fontWeight: "bold"
+            }}> Không có kết quả nào </Text>
           </View> : 
           <LocationList data={this.state.listLocations} navigation={this.props.navigation}/> }
         </Screen>

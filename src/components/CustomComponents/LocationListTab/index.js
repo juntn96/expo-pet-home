@@ -29,7 +29,7 @@ class LocationListTab extends Component {
       textSearch: "",
       showCancel: false,
       loading: true,
-      listSuggestLocation: [],
+      listSuggestLocation: '',
       refreshing: false,
     };
   }
