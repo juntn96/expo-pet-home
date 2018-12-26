@@ -247,7 +247,11 @@ class SearchLocation extends Component {
           </View> : 
           <LocationList data={this.state.listLocations} navigation={this.props.navigation}/> }
         </Screen>
-        <FilterModal listPrivateCategories={listPrivateCategories} listPublicCategories={listPublicCategories} onPressFilter={(selectedStar, selectedAll) => this._onPressFilter(selectedStar, selectedAll)} ref={ref => (this.filterModal = ref)} />       
+        <FilterModal 
+          listPrivateCategories={listPrivateCategories} 
+          listPublicCategories={listPublicCategories} 
+          onPressFilter={(selectedStar, selectedAll) => this._onPressFilter(selectedStar, selectedAll)} 
+          ref={ref => (this.filterModal = ref)} />       
       </Container>
     );
   }

@@ -136,7 +136,7 @@ class Map extends Component {
                     borderRadius: 5,
                   }}
                 >
-                  <Image
+                  {/* <Image
                     source={require("../../../assets/images/bg3.png")}
                     style={{
                       width: Dimensions.get("window").width / 2.5,
@@ -145,7 +145,7 @@ class Map extends Component {
                       marginBottom: 10,
                       borderRadius: 5,
                     }}
-                  />
+                  /> */}
                   <Text
                     numberOfLines={1}
                     lineBreakMode="tail"
