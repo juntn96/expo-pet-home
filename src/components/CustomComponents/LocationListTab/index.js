@@ -255,7 +255,7 @@ class LocationListTab extends Component {
                   flexDirection: "row",
                 }}
               >
-                <TouchableOpacity styleName="flexible">
+                {/* <TouchableOpacity styleName="flexible"> */}
                   <Card style={styles.card1}>
                     <View
                       style={{
@@ -283,8 +283,8 @@ class LocationListTab extends Component {
                       <Subtitle>Công viên, địa điểm công cộng</Subtitle>
                     </View>
                   </Card>
-                </TouchableOpacity>
-                <TouchableOpacity styleName="flexible">
+                {/* </TouchableOpacity> */}
+                {/* <TouchableOpacity styleName="flexible"> */}
                   <Card style={styles.card2}>
                     <View
                       style={{
@@ -312,7 +312,7 @@ class LocationListTab extends Component {
                       <Subtitle>Shop thú cưng, dịch vụ</Subtitle>
                     </View>
                   </Card>
-                </TouchableOpacity>
+                {/* </TouchableOpacity> */}
               </View>
 
               <Text
@@ -431,7 +431,7 @@ class LocationListTab extends Component {
                 flexDirection: "row",
               }}
             >
-              <TouchableOpacity styleName="flexible">
+              {/* <TouchableOpacity styleName="flexible"> */}
                 <Card style={styles.card1}>
                   <View
                     style={{
@@ -459,8 +459,8 @@ class LocationListTab extends Component {
                     <Subtitle>Công viên, địa điểm công cộng</Subtitle>
                   </View>
                 </Card>
-              </TouchableOpacity>
-              <TouchableOpacity styleName="flexible">
+              {/* </TouchableOpacity>
+              <TouchableOpacity styleName="flexible"> */}
                 <Card style={styles.card2}>
                   <View
                     style={{
@@ -488,7 +488,7 @@ class LocationListTab extends Component {
                     <Subtitle>Shop thú cưng, dịch vụ</Subtitle>
                   </View>
                 </Card>
-              </TouchableOpacity>
+              {/* </TouchableOpacity> */}
             </View>
 
             <Text
@@ -538,8 +538,6 @@ const styles = {
     marginLeft: 8,
     borderRadius: 5,
     backgroundColor: "#FCFCFC",
-    // borderColor: '#A3A3A3',
-    // borderWidth: 0.5,
   },
   card2: {
     width: (width - 28) / 2,
@@ -548,8 +546,6 @@ const styles = {
     marginLeft: 4,
     borderRadius: 5,
     backgroundColor: "#FCFCFC",
-    // borderColor: '#A3A3A3',
-    // borderWidth: 0.5,
   },
   card3: {
     width: width * 0.75,
@@ -559,8 +555,6 @@ const styles = {
     marginRight: 8,
     borderRadius: 5,
     backgroundColor: "#FCFCFC",
-    // borderColor: '#A3A3A3',
-    // borderWidth: 0.5,
   },
   searchBar: {
     flex: 1,

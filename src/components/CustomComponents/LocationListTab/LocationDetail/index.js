@@ -278,8 +278,8 @@ export default class LocationDetail extends Component {
               </View>
             </View>
             <MapCard
-              lat={locationDetail.lat}
-              long={locationDetail.long}
+              lat={locationDetail.coordinate.latitude}
+              long={locationDetail.coordinate.longitude}
               name={locationDetail.name}
             />
             <View
