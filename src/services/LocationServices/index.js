@@ -53,13 +53,10 @@ const getLocationByCategory = async data => {
 };
 
 const searchLocation = async data => {
-  console.log(data.typeIdArray)
   let newtypeIdArray = []
   if(data.typeIdArray.length > 0) {
     newtypeIdArray = data.typeIdArray.map(item => {return {typeId: item._id}});
   }
-  console.log("newtypeIdArray");
-  console.log(newtypeIdArray);
   try {
     const url = API_URL + "location/searchAllLocations";
     const result = await axios.get(url, {

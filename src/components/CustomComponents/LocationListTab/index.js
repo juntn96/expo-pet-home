@@ -571,7 +571,7 @@ const styles = {
     width: (width - 28) / 2,
     height: height / 3,
     marginTop: 10,
-    marginLeft: 4,
+    marginLeft: 10,
     borderRadius: 5,
     backgroundColor: "#FCFCFC",
   },

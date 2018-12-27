@@ -13,7 +13,6 @@ class SearchLocation extends Component {
     super(props);
     const { navigation } = this.props;
     const textSearch = navigation.getParam('textSearch', 'NO-ID');
-    console.log(textSearch);
     this.state = {
       textSearch: textSearch,
       loading: true,
@@ -131,8 +130,6 @@ class SearchLocation extends Component {
 
   _onPressFilter = (selectedStar, selectedAll) => {
     this._requestGetLocationWithFilter(selectedStar, selectedAll);
-    // console.log(selectedStar);
-    // console.log(selectedAll);
   }
 
   render() {
