@@ -12,6 +12,7 @@ export default class extends Component {
     super(props);
     this.state = {
       postData: undefined,
+      userData: undefined,
     };
   }
 
@@ -21,13 +22,14 @@ export default class extends Component {
 
   componentDidMount() {
     this._getPostById();
+    const userData = this.props.navigation.getParam("userData");
+    this.setState({ userData });
   }
 
   _getPostById = async () => {
     try {
       const postId = this.props.navigation.getParam("postId");
       const result = await PostServices.getPostById(postId);
-      console.log("post data: ", result);
       this.setState({ postData: result });
     } catch (error) {
       throw error;
@@ -35,8 +37,7 @@ export default class extends Component {
   };
 
   render() {
-    const { userData } = this.props;
-    const { postData } = this.state;
+    const { postData, userData } = this.state;
     if (!postData) return null;
     return (
       <Container>
@@ -63,7 +64,7 @@ export default class extends Component {
         {userData ? (
           <Footer
             postData={postData}
-            userData={this.props.userData}
+            userData={this.state.userData}
             sendCommentCallback={this._sendCommentCallback}
           />
         ) : null}

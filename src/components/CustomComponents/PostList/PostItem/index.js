@@ -132,7 +132,7 @@ class PostItem extends Component {
               voteCallback={this._voteCallback}
               userData={userData}
             />
-            <Comment postData={postData} navigation={this.props.navigation} />
+            <Comment postData={postData} navigation={this.props.navigation} userData={userData} />
           </Left>
           <Right>
             <Vote
