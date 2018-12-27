@@ -26,8 +26,6 @@ class SearchLocation extends Component {
       ratingLt: '',
       typeIdArray: [],
       listLocationCategories: '',
-      listPrivateCategories: [],
-      listPublicCategories: [],
     };
   }
 
@@ -37,7 +35,7 @@ class SearchLocation extends Component {
         "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
       );
     } else {
-      this._requestGetLocationCategoriesWithType();
+      // this._requestGetLocationCategoriesWithType();
       if(this.state.textSearch === ''){
         this._requestGetAllLocation();
       } else {
@@ -72,27 +70,27 @@ class SearchLocation extends Component {
     }
   };
 
-  _requestGetLocationCategoriesWithType = async () => {
-    try {
-      const result = await LocationServices.getLocationCategoryWithType();
-      const listPrivate = result.listPrivates.map(item => ({
-        ...item,
-        checked: false
-      }));
-      const listPublic = result.listPublics.map(item => ({
-        ...item,
-        checked: false
-      }));
-      this.setState({ 
-        listLocationCategories: result, 
-        loadingCategory: !this.state.loadingCategory,
-        listPrivateCategories: listPrivate,
-        listPublicCategories: listPublic
-      });
-    } catch (error) {
-      throw error;
-    }
-  };
+  // _requestGetLocationCategoriesWithType = async () => {
+  //   try {
+  //     const result = await LocationServices.getLocationCategoryWithType();
+  //     const listPrivate = result.listPrivates.map(item => ({
+  //       ...item,
+  //       checked: false
+  //     }));
+  //     const listPublic = result.listPublics.map(item => ({
+  //       ...item,
+  //       checked: false
+  //     }));
+  //     this.setState({ 
+  //       listLocationCategories: result, 
+  //       loadingCategory: !this.state.loadingCategory,
+  //       listPrivateCategories: listPrivate,
+  //       listPublicCategories: listPublic
+  //     });
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // };
 
   _onChangeText = text => {
     this.setState({textSearch: text});
@@ -255,8 +253,6 @@ class SearchLocation extends Component {
           <LocationList data={this.state.listLocations} navigation={this.props.navigation}/> }
         </Screen>
         <FilterModal 
-          listPrivateCategories={listPrivateCategories} 
-          listPublicCategories={listPublicCategories} 
           onPressFilter={(selectedStar, selectedAll) => this._onPressFilter(selectedStar, selectedAll)} 
           ref={ref => (this.filterModal = ref)} />       
       </Container>

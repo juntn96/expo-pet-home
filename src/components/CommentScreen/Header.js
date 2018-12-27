@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import {
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { Thumbnail, Text, Icon } from "native-base";
 
 class Header extends Component {
@@ -38,7 +35,7 @@ class Header extends Component {
               paddingRight: 20,
             }}
           >
-            <Icon name="ios-arrow-back-outline" />
+            <Icon name="ios-arrow-back-outline" style={{ color: "#EC466A" }} />
           </TouchableOpacity>
         </View>
         <View
@@ -47,18 +44,16 @@ class Header extends Component {
             flexDirection: "row",
           }}
         >
-          <Thumbnail
-            small
-            source={{uri: postData.ownerId.avatar}}
-            circular
-          />
+          <Thumbnail small source={{ uri: postData.ownerId.avatar }} circular />
           <View
             style={{
               justifyContent: "center",
               marginLeft: 10,
             }}
           >
-            <Text style={{ fontWeight: "500" }}>{postData.ownerId.appName}</Text>
+            <Text style={{ fontWeight: "500" }}>
+              {postData.ownerId.appName}
+            </Text>
             <Text note style={{ fontSize: 12, alignSelf: "flex-start" }}>
               {date.toLocaleDateString()}
             </Text>

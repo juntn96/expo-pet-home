@@ -29,6 +29,7 @@ const SCREENS = [
 export default class extends Component {
   state = {
     tabIndex: 0,
+    renderTab: true,
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -40,6 +41,8 @@ export default class extends Component {
   }
 
   _showTabBar = show => {
+    if (!this.tabBar) return;
+
     if (!show) {
       this.tabBar.animateHide();
     } else {
@@ -52,7 +55,24 @@ export default class extends Component {
     this.tabs.scrollTo({
       x: index * SCREEN_WIDTH,
       y: 0,
-      animated: false,
+      animated: true,
+    });
+  };
+
+  _onDirectionPress = locationItem => {
+    console.log(locationItem)
+    this.setState({ renderTab: false });
+    this.props.navigation.navigate({
+      routeName: "LocationMapTab",
+      params: {
+        type: "navigation",
+        locationItem,
+        onNavigationBackPress: () => {
+          this.setState({ renderTab: true });
+        },
+        onDirectionPress: this._onDirectionPress,
+      },
+      key: "locationMapTab" + locationItem._id
     });
   };
 
@@ -65,6 +85,7 @@ export default class extends Component {
               navigation={this.props.navigation}
               userData={this.props.userData}
               toast={this.props.toast}
+              onDirectionPress={this._onDirectionPress}
             />
           </TabContainer>
         );
@@ -73,11 +94,13 @@ export default class extends Component {
         return (
           <TabContainer key={value.index}>
             <LocationMapTab
+              onDirectionPress={this._onDirectionPress}
               showTabBar={this._showTabBar}
               locationData={locationData}
               navigation={this.props.navigation}
               userData={this.props.userData}
               toast={this.props.toast}
+              ref={ref => (this.locationMapTab = ref)}
             />
           </TabContainer>
         );
@@ -112,11 +135,13 @@ export default class extends Component {
         >
           {this._renderTab()}
         </ScrollView>
-        <TabBar
-          ref={ref => (this.tabBar = ref)}
-          onTabPress={this._onTabPress}
-          tabIndex={this.state.tabIndex}
-        />
+        {this.state.renderTab === true ? (
+          <TabBar
+            ref={ref => (this.tabBar = ref)}
+            onTabPress={this._onTabPress}
+            tabIndex={this.state.tabIndex}
+          />
+        ) : null}
       </Container>
     );
   }

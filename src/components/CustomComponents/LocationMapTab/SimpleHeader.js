@@ -6,7 +6,16 @@ import {
   Modal,
   TextInput,
 } from "react-native";
-import { Header, Body, Left, Right, Icon, Title, Button, Text } from "native-base";
+import {
+  Header,
+  Body,
+  Left,
+  Right,
+  Icon,
+  Title,
+  Button,
+  Text,
+} from "native-base";
 
 const transAnimation = (animated, value) => {
   Animated.timing(animated, {
@@ -49,6 +58,7 @@ class SimpleHeader extends Component {
     let transform = [{ translateY: transY }];
 
     const { locationItem } = this.state;
+    const { isNavigation } = this.props;
 
     return (
       <Animated.View
@@ -88,9 +98,21 @@ class SimpleHeader extends Component {
               <Button
                 transparent
                 iconRight
-                onPress={() => this.props.navigation.openDrawer()}
+                onPress={() => {
+                  if (isNavigation === true) {
+                    this.props.navigation.goBack();
+                    this.props.onNavigationBackPress()
+                  } else {
+                    this.props.navigation.openDrawer();
+                  }
+                }}
               >
-                <Icon name="md-menu" style={{ color: "#EC466A" }} />
+                <Icon
+                  name={
+                    isNavigation === true ? "ios-arrow-back-outline" : "md-menu"
+                  }
+                  style={{ color: "#EC466A" }}
+                />
               </Button>
             )}
             <TouchableOpacity

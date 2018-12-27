@@ -30,8 +30,8 @@ class Vote extends Component {
         transparent
         textStyle={{ color: "#00E7C3" }}
         onPress={() => {
-          this.props.navigation.navigate("Comment", {
-            postData: this.props.postData,
+          this.props.navigation.navigate("CommentScreen", {
+            postId: this.props.postData._id,
           });
         }}
       >

@@ -6,19 +6,38 @@ import CommentList from "./CommentList";
 import Header from "./Header";
 import PostGridImage from "../CustomComponents/PostGridImage";
 import ReadMoreText from "../CustomComponents/ReadMoreText";
+import PostServices from "../../services/PostServices";
 export default class extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      postData: undefined,
+    };
   }
 
   _sendCommentCallback = () => {
     this.commentList._requestGetComments();
   };
 
+  componentDidMount() {
+    this._getPostById();
+  }
+
+  _getPostById = async () => {
+    try {
+      const postId = this.props.navigation.getParam("postId");
+      const result = await PostServices.getPostById(postId);
+      console.log("post data: ", result);
+      this.setState({ postData: result });
+    } catch (error) {
+      throw error;
+    }
+  };
+
   render() {
     const { userData } = this.props;
-    const { postData } = this.props.navigation.state.params;
+    const { postData } = this.state;
+    if (!postData) return null;
     return (
       <Container>
         <Header navigation={this.props.navigation} postData={postData} />
