@@ -32,6 +32,7 @@ class Vote extends Component {
         onPress={() => {
           this.props.navigation.navigate("CommentScreen", {
             postId: this.props.postData._id,
+            userData: this.props.userData
           });
         }}
       >

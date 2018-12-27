@@ -50,6 +50,7 @@ class NotificationList extends Component {
         routeName: "CommentScreen",
         params: {
           postId: item.content.post._id,
+          userData: this.props.auth.userData
         },
       });
       this.props.onItemPress();
