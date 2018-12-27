@@ -8,7 +8,7 @@ import {
   Platform,
   RefreshControl,
 } from "react-native";
-import { Container, Header, Text } from "native-base";
+import { Container, Header, Text, Button, Icon } from "native-base";
 import {
   Card,
   Screen,
@@ -210,6 +210,13 @@ class LocationListTab extends Component {
                       marginLeft: 20,
                     }}
                   >
+                    <Button
+                      transparent
+                      iconRight
+                      onPress={() => this.props.navigation.openDrawer()}
+                    >
+                      <Icon name="md-menu" style={{ color: "#EC466A" }} />
+                    </Button>
                     <TextInput
                       placeholder="Tìm kiếm địa điểm"
                       clearButtonMode={"while-editing"}
@@ -371,6 +378,13 @@ class LocationListTab extends Component {
               }}
             >
               <View style={styles.searchBar}>
+              <Button
+                    transparent
+                    iconRight
+                    onPress={() => this.props.navigation.openDrawer()}
+                  >
+                    <Icon name="md-menu" style={{ color: "#EC466A" }} />
+                  </Button>
                 <View
                   style={{
                     flex: 1,
