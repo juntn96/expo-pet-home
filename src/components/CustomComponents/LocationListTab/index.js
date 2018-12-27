@@ -173,7 +173,20 @@ class LocationListTab extends Component {
   render() {
     console.disableYellowBox = true;
     const { loading, listSuggestLocation } = this.state;
-    if (listSuggestLocation.length === 0) {
+    if(loading) {
+      return (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#FCFCFC",
+          }}
+        >
+          <Spinner />
+        </View>
+      )
+    } else if (listSuggestLocation.length === 0) {
       return (
         <Container>
           <Screen style={{ backgroundColor: "#FCFCFC" }}>
