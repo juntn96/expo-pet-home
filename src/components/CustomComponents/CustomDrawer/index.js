@@ -89,7 +89,8 @@ class CustomDrawer extends Component {
             loginRequired={false}
             style={styles.buttonBody}
             onCustomPress={() => {
-              this.props.navigation.navigate("LocationRoute");
+              this.props.navigation.closeDrawer();
+              this.props.navigation.navigate("LocationHome");
             }}
           >
             <Icon name="ios-map-outline" style={styles.iconBody} />
@@ -135,6 +136,7 @@ class CustomDrawer extends Component {
           ref={ref => {
             this.activityModal = ref;
           }}
+          navigation={this.props.navigation}
         />
       </View>
     );

@@ -55,7 +55,7 @@ export default class extends Component {
     this.tabs.scrollTo({
       x: index * SCREEN_WIDTH,
       y: 0,
-      animated: false,
+      animated: true,
     });
   };
 

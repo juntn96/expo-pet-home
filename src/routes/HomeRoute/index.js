@@ -47,7 +47,7 @@ const HomeTabRoute = createBottomTabNavigator(
 const HomeRoute = createStackNavigator(
   {
     Home: HomeTabRoute,
-    Comment: CommentScreen,
+    // CommentScreen: CommentScreen,
   },
   {
     initialRouteName: "Home",

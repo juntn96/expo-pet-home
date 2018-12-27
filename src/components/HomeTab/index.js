@@ -76,7 +76,7 @@ class HomeTab extends Component {
           userData={userData}
           toast={toast}
         />
-        <ActivityModal ref={ref => (this.activityModal = ref)} />
+        <ActivityModal ref={ref => (this.activityModal = ref)} navigation={this.props.navigation} />
         <CustomHeader
           title="Pet Home"
           buttonLeft="menu"

@@ -9,7 +9,7 @@ class LocationHome extends Component {
     super(props);
     this.state = {};
   }
-
+  
   render() {
     return (
       <LocationHomeScreen
