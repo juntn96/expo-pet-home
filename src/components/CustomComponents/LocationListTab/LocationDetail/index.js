@@ -73,7 +73,6 @@ export default class LocationDetail extends Component {
         _id: _id,
         ownerId: ownerId,
       });
-      console.log((">>>>> ", result))
       const rv = await this._requestGetReview(_id);
       this.setState({
         locationDetail: result,

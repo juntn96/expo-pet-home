@@ -113,11 +113,16 @@ export default class extends Component {
   _onCalloutPress = locationItem => {
     // this.detailModal.setModalVisible(true, locationItem);
     // console.log(locationItem);
-    this.props.navigation.navigate("LocationDetail", {
-      _id: locationItem._id,
-      ownerId: locationItem.ownerId,
-      userData: this.props.userData,
-      onDirectionPress: this.props.onDirectionPress
+    const onDirectionPress = this.props.navigation.getParam("onDirectionPress");
+    this.props.navigation.navigate({
+      routeName: "LocationDetail",
+      params: {
+        _id: locationItem._id,
+        ownerId: locationItem.ownerId,
+        userData: this.props.userData,
+        onDirectionPress: onDirectionPress ? onDirectionPress : this.props.onDirectionPress,
+      },
+      key: "locationDetail" + locationItem._id,
     });
   };
 
@@ -200,7 +205,7 @@ export default class extends Component {
     this.directionHeader.setDestinationLocation(location);
     this.simpleHeader.setLocationItem(location);
     let tmp = this.state.listLocations;
-    const index = tmp.findIndex(item => item._id === location._id)
+    const index = tmp.findIndex(item => item._id === location._id);
     if (index === -1) {
       tmp.push(location);
     }
@@ -216,6 +221,9 @@ export default class extends Component {
 
   render() {
     const { userLocation, listLocations } = this.state;
+    const onNavigationBackPress = this.props.navigation.getParam(
+      "onNavigationBackPress"
+    );
     return (
       <View style={styles.container}>
         <LocationDetailModal ref={ref => (this.detailModal = ref)} />
@@ -241,6 +249,7 @@ export default class extends Component {
           onBackPress={this._clearLocationItem}
           onSearchPress={this._onSearchPress}
           isNavigation={this.state.isNavigation}
+          onNavigationBackPress={onNavigationBackPress}
         />
         {userLocation ? (
           <DirectionHeader

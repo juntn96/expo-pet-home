@@ -42,9 +42,13 @@ class NotificationList extends Component {
     this.setState({ loading });
   };
 
+  _onItemPress = (item) => {
+    console.log(item)
+  }
+
   _renderItem = ({ item }) => {
     return (
-      <ListItem thumbnail>
+      <ListItem thumbnail onPress={() => this._onItemPress(item)} >
         <Left>
           <Thumbnail circular source={{ uri: item.sender.avatar }} />
         </Left>

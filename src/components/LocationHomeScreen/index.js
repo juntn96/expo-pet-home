@@ -60,10 +60,19 @@ export default class extends Component {
   };
 
   _onDirectionPress = locationItem => {
+    console.log(locationItem)
     this.setState({ renderTab: false });
-    this.props.navigation.navigate("LocationMapTab", {
-      type: "navigation",
-      locationItem,
+    this.props.navigation.navigate({
+      routeName: "LocationMapTab",
+      params: {
+        type: "navigation",
+        locationItem,
+        onNavigationBackPress: () => {
+          this.setState({ renderTab: true });
+        },
+        onDirectionPress: this._onDirectionPress,
+      },
+      key: "locationMapTab" + locationItem._id
     });
   };
 

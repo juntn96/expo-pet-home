@@ -101,6 +101,7 @@ class SimpleHeader extends Component {
                 onPress={() => {
                   if (isNavigation === true) {
                     this.props.navigation.goBack();
+                    this.props.onNavigationBackPress()
                   } else {
                     this.props.navigation.openDrawer();
                   }
