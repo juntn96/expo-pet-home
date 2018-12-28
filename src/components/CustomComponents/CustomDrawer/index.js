@@ -10,24 +10,14 @@ import { setLoading } from "../../../redux/actions/UIActions";
 import UserServices from "../../../services/UserServices";
 import { Notifications } from "expo";
 
+import {
+  pushNotification,
+  clearNotification,
+} from "../../../redux/actions/NotificationActions";
+
 import NoticeIcon from "./NoticeIcon";
 
 class CustomDrawer extends Component {
-  state = {
-    notificationType: "",
-  };
-
-  componentDidMount() {
-    this.notificationListener = Notifications.addListener(
-      this._handleNotification
-    );
-  }
-
-  _handleNotification = notification => {
-    console.log(notification);
-    this.setState({ notificationType: notification.data.type });
-  };
-
   _onPressProfile = () => {
     this.props.navigation.navigate("ProfileRoute");
   };
@@ -65,6 +55,7 @@ class CustomDrawer extends Component {
 
   render() {
     const { userData } = this.props.auth;
+    const { notification } = this.props;
     return (
       <View style={styles.container}>
         <CustomTouchable
@@ -106,15 +97,23 @@ class CustomDrawer extends Component {
           </CustomTouchable>
           <NoticeIcon
             name="ios-notifications-outline"
-            notification={this.state.notificationType === "activity"}
+            notification={
+              notification
+                ? notification.type === "post" ||
+                  notification.type === "post-comment"
+                : false
+            }
             onPress={() => {
+              this.props.clearNotification();
               this.props.navigation.closeDrawer();
               this.activityModal.setVisible(true, 0);
             }}
           />
           <NoticeIcon
             name="ios-chatbubbles-outline"
-            notification={this.state.notificationType === "message"}
+            notification={
+              notification ? notification.type === "message" : false
+            }
             onPress={() => {
               this.props.navigation.closeDrawer();
               this.activityModal.setVisible(true, 1);
@@ -182,6 +181,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     auth: state.auth,
+    notification: state.notification,
   };
 };
 
@@ -192,6 +192,12 @@ const mapDispatchToProps = dispatch => {
     },
     setLoading: loading => {
       dispatch(setLoading(loading));
+    },
+    // pushNotification: notification => {
+    //   dispatch(pushNotification(notification));
+    // },
+    clearNotification: () => {
+      dispatch(clearNotification());
     },
   };
 };

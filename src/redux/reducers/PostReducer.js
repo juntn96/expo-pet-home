@@ -9,6 +9,22 @@ const initialState = {
 
 const postReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case PostActionTypes.ADD_POST: {
+      let tmp = [payload];
+      tmp = tmp.concat(state.postData);
+      return {
+        ...state,
+        postData: tmp,
+      };
+    }
+    case PostActionTypes.EDIT_POST: {
+      let tmp = state.postData;
+      tmp[tmp.findIndex(item => item._id === payload._id)] = payload;
+      return {
+        ...state,
+        postData: tmp,
+      };
+    }
     case PostActionTypes.GET_POST: {
       return {
         ...state,

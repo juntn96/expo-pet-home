@@ -101,6 +101,11 @@ class ProfileScreen extends React.Component {
           ref={ref => (this.editPostModal = ref)}
           userData={userData}
           toast={toast}
+          onEditSuccess={post => {
+            let tmp = this.state.postData;
+            tmp[tmp.findIndex(item => item._id === post._id)] = post;
+            this.setState({ postData: tmp });
+          }}
         />
         <AnimatedHeader
           userData={userData}

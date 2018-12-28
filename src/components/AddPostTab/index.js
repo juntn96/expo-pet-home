@@ -17,6 +17,9 @@ import PhotoItem from "./PhotoItem";
 import PostServices from "../../services/PostServices";
 import ToastModal from "../CustomComponents/ToastModal";
 
+import { connect } from "react-redux";
+import { addPost, editPost } from "../../redux/actions/PostActions";
+
 class AddPostTab extends Component {
   constructor(props) {
     super(props);
@@ -143,11 +146,18 @@ class AddPostTab extends Component {
             },
           ],
         };
-        await PostServices.editPost(data);
+        const rs = await PostServices.editPost(data);
+        const editedPost = await PostServices.getPostById(rs._id);
+        this.props.editPost(editedPost);
+        if (this.props.onEditSuccess) {
+          this.props.onEditSuccess(editedPost);
+        }
         toast({ message: "Sửa bài viết thành công", duration: 4000 });
       } else {
         const data = { title, images, typeId, status, ownerId };
-        await PostServices.createPost(data);
+        const rs = await PostServices.createPost(data);
+        const newPost = await PostServices.getPostById(rs._id);
+        this.props.addPost(newPost);
         toast({ message: "Đăng bài viết thành công", duration: 3000 });
         this.props.navigation.navigate("Home");
       }
@@ -346,4 +356,22 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddPostTab;
+const mapStateToProps = state => {
+  return {};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    addPost: post => {
+      dispatch(addPost(post));
+    },
+    editPost: post => {
+      dispatch(editPost(post));
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddPostTab);

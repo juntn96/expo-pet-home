@@ -45,7 +45,7 @@ class NotificationList extends Component {
   _onItemPress = item => {
     // console.log(item);
     // console.log(this.props.navigation);
-    if (item.type === "post") {
+    if (item.type === "post" || item.type === "post-comment") {
       this.props.navigation.navigate({
         routeName: "CommentScreen",
         params: {

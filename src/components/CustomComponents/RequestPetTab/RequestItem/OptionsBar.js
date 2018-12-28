@@ -141,36 +141,39 @@ class OptionsBar extends Component {
       <View
         style={{
           paddingTop: 6,
+          alignItems: "center",
+          flexDirection: "row",
         }}
       >
-        <Text>
-          <Text style={{ color: "#2ecc71", fontSize: 12 }}>
-            {userData._id === item.sender._id
-              ? "Lời mời đã được chấp nhận. "
-              : "Bạn đã chấp nhận lời mời này. "}
-          </Text>
-          <Text
-            style={{ fontWeight: "bold", color: "#2ecc71", fontSize: 13 }}
-            onPress={async () => {
-              try {
-                const users = [
-                  {
-                    user: item.sender._id,
-                  },
-                  {
-                    user: item.receiver._id,
-                  },
-                ];
-                const data = await MessageServices.createConversation(users);
-                this.props.onChatPress(data);
-              } catch (error) {
-                throw error;
-              }
-            }}
-          >
+        <Text style={{ color: "#2ecc71", fontSize: 12 }}>
+          {userData._id === item.sender._id
+            ? "Lời mời đã được chấp nhận "
+            : "Bạn đã chấp nhận lời mời này "}
+        </Text>
+        <Button
+          small
+          success
+          onPress={async () => {
+            try {
+              const users = [
+                {
+                  user: item.sender._id,
+                },
+                {
+                  user: item.receiver._id,
+                },
+              ];
+              const data = await MessageServices.createConversation(users);
+              this.props.onChatPress(data);
+            } catch (error) {
+              throw error;
+            }
+          }}
+        >
+          <Text style={{ fontWeight: "bold", color: "#FFF", fontSize: 13 }}>
             Liên lạc ngay nào
           </Text>
-        </Text>
+        </Button>
       </View>
     );
   };

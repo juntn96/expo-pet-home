@@ -29,7 +29,6 @@ class Footer extends Component {
       "keyboardWillHide",
       this._keyboardWillHide
     );
-
   }
 
   componentWillUnmount() {
@@ -64,11 +63,25 @@ class Footer extends Component {
         postId: postData._id,
         userCommentId: userData._id,
         content: commentContent,
+        notification: {
+          tokens: [postData.ownerId.expoToken],
+          data: {
+            message: `${userData.appName} đã bình luận bài viết của bạn`,
+            content: {
+              post: {
+                _id: postData._id,
+              },
+            },
+            sender: userData._id,
+            receiver: postData.ownerId._id,
+            type: "post-comment",
+          },
+        },
       };
       await PostServices.addComment(data);
-      sendCommentCallback && sendCommentCallback()
+      sendCommentCallback && sendCommentCallback();
     } catch (error) {}
-    this.setState({commentContent: ''})
+    this.setState({ commentContent: "" });
     Keyboard.dismiss();
   };
 

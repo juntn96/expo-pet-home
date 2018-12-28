@@ -26,3 +26,17 @@ export const deletePost = post => {
     payload: post,
   };
 };
+
+export const addPost = post => {
+  return {
+    type: PostActionTypes.ADD_POST,
+    payload: post,
+  };
+};
+
+export const editPost = post => {
+  return {
+    type: PostActionTypes.EDIT_POST,
+    payload: post,
+  };
+};
