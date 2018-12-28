@@ -70,6 +70,7 @@ class AnimatedAvatar extends Component {
             bottom: 0,
             borderWidth: 3,
             borderColor: "#FFF",
+            backgroundColor: "#7DDFEA",
           }}
         >
           <Image

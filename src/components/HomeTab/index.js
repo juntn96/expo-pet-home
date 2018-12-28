@@ -87,6 +87,7 @@ class HomeTab extends Component {
           actionRight={() => {
             this.activityModal.setVisible(true);
           }}
+          badgeNumberRight={1}
         />
         <View style={{ zIndex: 2 }}>
           <PostCategories />

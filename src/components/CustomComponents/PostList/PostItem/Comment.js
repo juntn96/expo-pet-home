@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View } from "react-native";
 import { Button, Icon, Text } from "native-base";
+import { Notifications } from "expo";
 import PostServices from "../../../../services/PostServices";
 class Vote extends Component {
   constructor(props) {
@@ -8,11 +9,25 @@ class Vote extends Component {
     this.state = {
       comments: [],
     };
+    this.notificationListener = Notifications.addListener(
+      this._notificationHandle
+    );
   }
 
   async componentDidMount() {
     await this._requestGetComments();
   }
+
+  _notificationHandle = async notification => {
+    try {
+      const { userData, postData } = this.props;
+      if (postData._id === notification.data.content.post._id) {
+        this._requestGetComments();
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
 
   _requestGetComments = async () => {
     try {
@@ -32,7 +47,7 @@ class Vote extends Component {
         onPress={() => {
           this.props.navigation.navigate("CommentScreen", {
             postId: this.props.postData._id,
-            userData: this.props.userData
+            userData: this.props.userData,
           });
         }}
       >

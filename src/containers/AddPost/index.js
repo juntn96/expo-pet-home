@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import AddPostTab from "../../components/AddPostTab";
 import { connect } from "react-redux";
 import { toggle } from "../../redux/actions/UIActions";
+import { addPost, editPost } from "../../redux/actions/PostActions";
 class AddPost extends Component {
   constructor(props) {
     super(props);
@@ -24,6 +25,8 @@ class AddPost extends Component {
         userData={this.props.auth.userData}
         toast={this.props.toast}
         postData={null}
+        // addPost={this.props.addPost}
+        // editPost={this.props.editPost}
       />
     );
   }
@@ -49,6 +52,12 @@ const mapDispatchToProps = dispatch => {
     toast: toast => {
       dispatch(toggle(toast));
     },
+    // addPost: post => {
+    //   dispatch(addPost(post));
+    // },
+    // editPost: post => {
+    //   dispatch(editPost(post));
+    // },
   };
 };
 

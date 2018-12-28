@@ -11,3 +11,5 @@ const notificationReducer = (state = null, { type, payload }) => {
     }
   }
 };
+
+export default notificationReducer;

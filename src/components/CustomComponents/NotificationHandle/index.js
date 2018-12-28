@@ -4,6 +4,10 @@ import { Thumbnail } from "native-base";
 import { Notifications } from "expo";
 import { connect } from "react-redux";
 import UserServices from "../../../services/UserServices";
+import {
+  pushNotification,
+  clearNotification,
+} from "../../../redux/actions/NotificationActions";
 
 const animatedValue = new Animated.Value(1);
 
@@ -11,15 +15,12 @@ class NotificationHandle extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      notification: undefined,
+      canRender: false,
     };
-
     this.notificationListener = Notifications.addListener(
       this._notificationHandle
     );
   }
-
-  componentDidMount() {}
 
   _hide = duration => {
     animatedValue.stopAnimation();
@@ -27,18 +28,22 @@ class NotificationHandle extends Component {
       toValue: 0,
       duration,
       useNativeDriver: true,
-    }).start(() => this.setState({ notification: undefined }));
+    }).start(() => this.setState({ canRender: false }));
   };
 
   _notificationHandle = async notification => {
-    console.log(notification);
-    const sender = await this._getSender(notification.data.sender);
-    this.setState({
-      notification: {
-        message: notification.data.message,
-        sender,
-      },
-    });
+    try {
+      console.log(notification);
+      const { userData } = this.props;
+      const sender = await this._getSender(notification.data.sender);
+      this.props.pushNotification(notification.data);
+      this.setState({ canRender: true });
+      if (sender._id !== userData._id) {
+        //check don't send notification myself
+      }
+    } catch (error) {
+      throw error;
+    }
   };
 
   _getSender = async userId => {
@@ -52,13 +57,15 @@ class NotificationHandle extends Component {
   };
 
   render() {
-    const { notification } = this.state;
+    const { notification } = this.props;
 
     const animOpacity = animatedValue.interpolate({
       inputRange: [0, 0.1, 1],
       outputRange: [0, 1, 1],
       extrapolate: "clamp",
     });
+
+    if (this.state.canRender === false) return null;
 
     if (!notification) return null;
 
@@ -98,4 +105,25 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NotificationHandle;
+const mapStateToProps = state => {
+  return {
+    userData: state.auth.userData,
+    notification: state.notification,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    pushNotification: notification => {
+      dispatch(pushNotification(notification));
+    },
+    clearNotification: () => {
+      dispatch(clearNotification());
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NotificationHandle);

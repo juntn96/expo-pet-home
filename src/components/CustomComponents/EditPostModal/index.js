@@ -44,6 +44,7 @@ class EditPostModal extends Component {
             toast={this.props.toast}
             type="edit"
             closeModal={() => this.setModalVisible(false)}
+            onEditSuccess={this.props.onEditSuccess}
           />
         ) : null}
       </Modal>
