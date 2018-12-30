@@ -19,7 +19,7 @@ const getSuggestLocation = async () => {
   try {
     const url = API_URL + "location/getAllActiveLocation";
     const result = await axios.get(url);
-    return result.data.locations;
+    return result.data.activeLocations;
   } catch (error) {
     throw error;
   }
