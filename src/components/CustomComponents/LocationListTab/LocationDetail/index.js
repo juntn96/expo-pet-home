@@ -8,6 +8,7 @@ import {
   Button,
   Left,
   Text,
+  Body,
 } from "native-base";
 import {
   Divider,
@@ -195,9 +196,11 @@ export default class LocationDetail extends Component {
               <Icon name="arrow-back" />
             </Button>
           </Left>
-          <View style={styles.nameLocation}>
-            <Title>{locationDetail.name}</Title>
-          </View>
+          <Body>
+            <View style={styles.nameLocation}>
+              <Title>{locationDetail.name}</Title>
+            </View>
+          </Body>
           <Right>
             <Button
               transparent
@@ -217,6 +220,7 @@ export default class LocationDetail extends Component {
         />
         <Screen style={{ backgroundColor: "#ffffff" }}>
           <ScrollView>
+            
             {locationDetail.images.length > 0 ? (
               <FlatList
                 data={locationDetail.images}
@@ -226,6 +230,36 @@ export default class LocationDetail extends Component {
                 horizontal
               />
             ) : null}
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                marginTop: 20,
+                padding: 10,
+              }}
+            >
+              <Image
+                source={require("../../../../assets/icons/name.png")}
+                style={{
+                  marginLeft: 20,
+                  marginRight: 20,
+                  width: 25,
+                  height: 25,
+                }}
+              />
+              <View
+                style={{
+                  marginRight: 10,
+                  paddingRight: 60,
+                }}
+              >
+                <Subtitle>Tên của hàng / dịch vụ</Subtitle>
+                <Caption style={{ paddingRight: 10 }}>
+                  {locationDetail.name}
+                </Caption>
+                <Divider styleName="line" />
+              </View>
+            </View>
             <View
               style={{
                 flex: 1,
