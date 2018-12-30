@@ -19,14 +19,6 @@ const HomeTabRoute = createBottomTabNavigator(
         ),
       }),
     },
-    Search: {
-      screen: SearchPost,
-      navigationOptions: () => ({
-        tabBarIcon: ({ tintColor }) => (
-          <Icon name="md-search" style={{ color: tintColor }} />
-        ),
-      }),
-    },
     Add: {
       screen: AddPost,
       navigationOptions: () => ({
@@ -35,6 +27,15 @@ const HomeTabRoute = createBottomTabNavigator(
         ),
       }),
     },
+    Search: {
+      screen: SearchPost,
+      navigationOptions: () => ({
+        tabBarIcon: ({ tintColor }) => (
+          <Icon name="md-search" style={{ color: tintColor }} />
+        ),
+      }),
+    },
+    
   },
   {
     tabBarOptions: {

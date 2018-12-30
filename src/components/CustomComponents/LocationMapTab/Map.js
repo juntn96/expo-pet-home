@@ -167,7 +167,7 @@ class Map extends Component {
           <Polyline
             coordinates={coords}
             strokeWidth={6}
-            strokeColor="#CA9DF7"
+            strokeColor="#00cc99"
           />
         ) : null}
       </MapView>

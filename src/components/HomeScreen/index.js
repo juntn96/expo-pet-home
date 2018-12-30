@@ -47,23 +47,6 @@ export default class extends Component {
                   backgroundColor: "#FFFFFF",
                 }}
               >
-                <Icon name="ios-search" style={{ color: "#EC466A" }} />
-              </TabHeading>
-            }
-          >
-            <SearchPostTab
-              navigation={this.props.navigation}
-              userData={this.props.userData}
-              toast={this.props.toast}
-            />
-          </Tab>
-          <Tab
-            heading={
-              <TabHeading
-                style={{
-                  backgroundColor: "#FFFFFF",
-                }}
-              >
                 <Icon
                   name="ios-add-circle-outline"
                   style={{ color: "#EC466A" }}
@@ -76,6 +59,23 @@ export default class extends Component {
               userData={this.props.userData}
               toast={this.props.toast}
               onCreateDone={this._onCreateDone}
+            />
+          </Tab>
+          <Tab
+            heading={
+              <TabHeading
+                style={{
+                  backgroundColor: "#FFFFFF",
+                }}
+              >
+                <Icon name="ios-search" style={{ color: "#EC466A" }} />
+              </TabHeading>
+            }
+          >
+            <SearchPostTab
+              navigation={this.props.navigation}
+              userData={this.props.userData}
+              toast={this.props.toast}
             />
           </Tab>
         </Tabs>
