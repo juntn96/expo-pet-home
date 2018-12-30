@@ -47,6 +47,8 @@ class LocationListTab extends Component {
   _requestGetLocation = async () => {
     try {
       const result = await LocationServices.getSuggestLocation();
+      console.log("===================");
+      console.log(result);
       this.setState({
         listSuggestLocation: result,
         loading: false,
