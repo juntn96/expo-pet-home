@@ -13,6 +13,7 @@ class ChatModal extends Component {
     this.state = {
       modalVisible: false,
       messages: [],
+      conversationTitle: "",
     };
     this.socket = null;
   }
@@ -63,6 +64,11 @@ class ChatModal extends Component {
   setModalVisible = (visible, conversation) => {
     this.conversation = conversation;
     if (visible) {
+      const { userData } = this.props;
+      const receivers = conversation.users.filter(
+        item => item.user._id !== userData._id
+      );
+      this.setState({ conversationTitle: receivers[0].user.appName });
       this._requestGetMessages(conversation);
       this._connectSocket(conversation);
     } else {
@@ -78,7 +84,7 @@ class ChatModal extends Component {
 
   _onSend = async (messages = []) => {
     const { userData } = this.props;
-    console.log(messages[0].user._id)
+    console.log(messages[0].user._id);
     const data = {
       conversationId: this.conversation._id,
       message: messages[0],
@@ -103,7 +109,7 @@ class ChatModal extends Component {
         onDismiss={this._onDismiss}
       >
         <CustomHeader
-          title=""
+          title={this.state.conversationTitle}
           buttonLeft="md-close"
           actionLeft={() => {
             this.setModalVisible(false);
