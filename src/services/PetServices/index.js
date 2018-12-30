@@ -113,6 +113,7 @@ const ignore = async (petId, userId) => {
 
 const requestMatch = async data => {
   try {
+    console.log(data)
     const url = `app/notification/add`;
     const method = "POST";
     const result = await ApiServices.requestOption(method, url, data);
