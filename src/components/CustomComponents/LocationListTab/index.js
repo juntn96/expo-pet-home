@@ -86,9 +86,18 @@ class LocationListTab extends Component {
     });
   };
 
-  _onRefresh = () => {
+  _onRefresh = async () => {
     this.setState({ refreshing: true });
-    this._requestGetLocation();
+    try {
+      const result = await LocationServices.getSuggestLocation();
+      this.setState({
+        listSuggestLocation: result,
+        loading: false,
+        refreshing: false,
+      });
+    } catch (error) {
+      throw error;
+    }
   };
 
   _renderItem = ({ item }) => (
