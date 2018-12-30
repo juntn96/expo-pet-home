@@ -63,7 +63,7 @@ class ListPopup extends Component {
       // console.log("my item: ", item);
       // console.log("pet item: ", requestPet);
       const { userData } = this.props;
-      const receiver = await this._getReceiverInfo(requestPet.ownerId);
+      const receiver = await this._getReceiverInfo(requestPet.ownerId._id);
       const notification = {
         tokens: [receiver.expoToken],
         data: {
@@ -80,7 +80,7 @@ class ListPopup extends Component {
           type: "pet",
         },
       };
-      await UserServices.sendNotification(notification);
+      const rs = await UserServices.sendNotification(notification);
       this.props.toast({
         message: "Đã gửi yêu cầu ghép cặp",
         duration: 3000,

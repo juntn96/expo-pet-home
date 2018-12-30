@@ -125,15 +125,15 @@ class CustomHeader extends Component {
           marginTop: 10,
         }}
       >
-        <Left style={{ flex: 1 }}>{this._buttonLeft()}</Left>
+        <Left style={{}}>{this._buttonLeft()}</Left>
         <Body
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={{ justifyContent: "center", alignItems: "center" }}
         >
           <Title style={{ color: "#EC466A", textAlign: "center" }}>
             {title}
           </Title>
         </Body>
-        <Right style={{ flex: 1 }}>{this._buttonRight()}</Right>
+        <Right style={{}}>{this._buttonRight()}</Right>
       </Header>
     );
   }
