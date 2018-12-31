@@ -53,6 +53,7 @@ const getLocationByCategory = async data => {
 };
 
 const searchLocation = async data => {
+  console.log(">> ", data)
   let newtypeIdArray = []
   if(data.typeIdArray.length > 0) {
     newtypeIdArray = data.typeIdArray.map(item => {return {typeId: item._id}});

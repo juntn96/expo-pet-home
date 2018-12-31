@@ -19,7 +19,9 @@ class PostGridImage extends Component {
 
   _renderOne = () => {
     const { images } = this.props;
+    if (images.length === 0) return null;
     return images.map(image => {
+      if (!image) return null;
       return (
         <Image key={image._id} source={{ uri: image.url }} style={styles.one} />
       );
@@ -28,6 +30,7 @@ class PostGridImage extends Component {
 
   _renderTwo = () => {
     const { images } = this.props;
+    if (images.length === 0) return null;
     const size = images.length;
     return (
       <View>
@@ -39,6 +42,7 @@ class PostGridImage extends Component {
         {
           <View style={styles.list}>
             {images.map((image, index) => {
+              if (!image) return null;
               if (index === 0) return null;
               if (index > 2) return null;
               return (

@@ -7,6 +7,7 @@ import {
   Dimensions,
   StyleSheet,
   FlatList,
+  Keyboard,
 } from "react-native";
 import { Button, Icon, Container, Content, Form, Textarea } from "native-base";
 import { ImagePicker } from "expo";
@@ -19,6 +20,7 @@ import ToastModal from "../CustomComponents/ToastModal";
 
 import { connect } from "react-redux";
 import { addPost, editPost } from "../../redux/actions/PostActions";
+import { setLoading } from "../../redux/actions/UIActions";
 
 class AddPostTab extends Component {
   constructor(props) {
@@ -110,8 +112,13 @@ class AddPostTab extends Component {
   };
 
   _requestCreatePost = async () => {
-    const { toast, type, postData } = this.props;
-    if (!this._validate()) return;
+    const { toast, type, postData, setLoading } = this.props;
+
+    const validate = await this._validate();
+    if (validate === false) return;
+
+    setLoading(true);
+
     try {
       const { title, category, status } = this.state;
       const images = this.uploadImages.map(img => {
@@ -152,6 +159,7 @@ class AddPostTab extends Component {
         if (this.props.onEditSuccess) {
           this.props.onEditSuccess(editedPost);
         }
+        setLoading(false);
         toast({ message: "Sửa bài viết thành công", duration: 4000 });
       } else {
         const data = { title, images, typeId, status, ownerId };
@@ -159,10 +167,10 @@ class AddPostTab extends Component {
         const newPost = await PostServices.getPostById(rs._id);
         this.props.addPost(newPost);
         toast({ message: "Đăng bài viết thành công", duration: 3000 });
+        setLoading(false);
         this.props.navigation.navigate("Home");
       }
 
-      // this.props.onCreateDone();
       this.uploadImages = [];
       this.setState(
         {
@@ -178,14 +186,17 @@ class AddPostTab extends Component {
         }
       );
     } catch (error) {
+      setLoading(false);
       toast({ message: "Có lỗi xảy ra", duration: 3000 });
+      throw error;
     }
   };
 
-  _validate = () => {
+  _validate = async () => {
     const { title, category, images } = this.state;
-    const { toast, type } = this.props;
-    if (title.length === 0) {
+
+    const { toast, type, setLoading } = this.props;
+    if (title.trim().length === 0) {
       if (type === "edit") {
         this.toastModal.show("Hãy viết 1 chút gì đó");
       }
@@ -198,6 +209,29 @@ class AddPostTab extends Component {
       }
       toast({ message: "Bạn chưa chọn loại bài viết", duration: 3000 });
       return false;
+    }
+    if (category) {
+      setLoading(true);
+      try {
+        const postCategory = await PostServices.getPostCategoryById(
+          category._id
+        );
+        if (postCategory.deletionFlag === true) {
+          if (type === "edit") {
+            this.toastModal.show(
+              "Loại bài viết bạn chọn hiện không khả dụng. Vui lòng chọn lại"
+            );
+          }
+          toast({
+            message:
+              "Loại bài viết bạn chọn hiện không khả dụng. Vui lòng chọn lại",
+            duration: 3000,
+          });
+          setLoading(false);
+          return false;
+        }
+      } catch (error) {}
+      setLoading(false);
     }
     if (images.length === 0) {
       if (type === "edit") {
@@ -233,6 +267,7 @@ class AddPostTab extends Component {
           }}
           buttonRight="md-add"
           actionRight={() => {
+            Keyboard.dismiss();
             this._requestCreatePost();
           }}
         />
@@ -367,6 +402,9 @@ const mapDispatchToProps = dispatch => {
     },
     editPost: post => {
       dispatch(editPost(post));
+    },
+    setLoading: loading => {
+      dispatch(setLoading(loading));
     },
   };
 };

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
+  RefreshControl,
 } from "react-native";
 import {
   Header,
@@ -33,6 +34,7 @@ export default class FilterModal extends Component {
       selectedStar: "",
       listPrivateCategories: [],
       listPublicCategories: [],
+      loading: false,
     };
   }
 
@@ -41,12 +43,16 @@ export default class FilterModal extends Component {
   }
 
   setVisibleModal = visible => {
+    // if (visible) {
+    //   this._requestGetLocationCategoriesWithType();
+    // }
     this.setState({
       visibleModal: visible,
     });
   };
 
   _requestGetLocationCategoriesWithType = async () => {
+    this.setState({ loading: true });
     try {
       const result = await LocationServices.getLocationCategoryWithType();
       const listPrivate = result.listPrivates.map(item => ({
@@ -66,6 +72,7 @@ export default class FilterModal extends Component {
     } catch (error) {
       throw error;
     }
+    this.setState({ loading: false });
   };
 
   _onPress = visible => {
@@ -233,7 +240,15 @@ export default class FilterModal extends Component {
             </Right>
           </Header>
           <View style={styles.mainviewStyle}>
-            <ScrollView style={styles.scrollViewStyle}>
+            <ScrollView
+              style={styles.scrollViewStyle}
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.loading}
+                  onRefresh={this._requestGetLocationCategoriesWithType}
+                />
+              }
+            >
               <Text
                 style={{
                   marginLeft: 10,
