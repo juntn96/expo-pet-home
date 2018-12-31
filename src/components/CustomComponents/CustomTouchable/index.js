@@ -25,6 +25,9 @@ class CustomTouchable extends Component {
       setLoading(true);
       try {
         const userData = await loginFb();
+        if (!userData) {
+          setLoading(false);
+        }
         if (userData._id) {
           login(userData);
         } else {

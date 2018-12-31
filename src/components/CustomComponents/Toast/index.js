@@ -49,7 +49,7 @@ class Toast extends PureComponent {
           },
         ]}
       >
-        <Text style={{ color: theme === "light" ? "#2c3e50" : "#FFFFFF" }}>
+        <Text style={{ color: theme === "light" ? "#2c3e50" : "#FFFFFF", textAlign: 'center' }}>
           {message}
         </Text>
       </AnimButton>

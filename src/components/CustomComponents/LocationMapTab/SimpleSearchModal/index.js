@@ -18,8 +18,8 @@ class SimpleSearchModal extends Component {
     this.textSearch = "";
     this.lat = "";
     this.long = "";
-    this.radius = 5000;
-    this.ratingGt = "";
+    this.radius = 100000000000;
+    this.ratingGt = "";                                                                                              
     this.ratingLt = "";
     this.typeIdArray = [];
   }
@@ -53,14 +53,14 @@ class SimpleSearchModal extends Component {
     }
   };
 
-  _requestGetLocationList = async () => {
-    try {
-      const result = await LocationServices.getSuggestLocation();
-      this.locationData = result;
-    } catch (error) {
-      throw error;
-    }
-  };
+  // _requestGetLocationList = async () => {
+  //   try {
+  //     const result = await LocationServices.getSuggestLocation();
+  //     this.locationData = result;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // };
 
   _onSearchQueryChange = text => {
     this.textSearch = text;
@@ -100,15 +100,15 @@ class SimpleSearchModal extends Component {
 
   _requestSearchLocation = async (text, lat, long) => {
     try {
-      console.log(
-        text,
-        lat,
-        long,
-        this.radius,
-        this.ratingGt,
-        this.ratingLt,
-        this.typeIdArray
-      );
+      // console.log(
+      //   text,
+      //   lat,
+      //   long,
+      //   this.radius,
+      //   this.ratingGt,
+      //   this.ratingLt,
+      //   this.typeIdArray
+      // );
       const result = await LocationServices.searchLocation({
         textSearch: text,
         lat,

@@ -1,9 +1,29 @@
 import ApiServices from "../ApiServices";
 import ImageServers from "../ImageServices";
 
-const getPostCategories = async () => {
+const getAllPostCategories = async () => {
   try {
     const url = "post/category/get";
+    const data = await ApiServices.get(url);
+    return data.categories;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getPostCategories = async () => {
+  try {
+    const url = "post/category/getVisible";
+    const data = await ApiServices.get(url);
+    return data.categories;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getPostCategoryById = async id => {
+  try {
+    const url = `post/category/${id}`;
     const data = await ApiServices.get(url);
     return data.categories;
   } catch (error) {
@@ -171,6 +191,8 @@ const deleteComment = async comment => {
 
 export default {
   getPostCategories,
+  getPostCategoryById,
+  getAllPostCategories,
   createPost,
   editPost,
   deletePost,
