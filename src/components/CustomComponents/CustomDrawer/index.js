@@ -71,6 +71,7 @@ class CustomDrawer extends Component {
             loginRequired={false}
             style={styles.buttonBody}
             onCustomPress={() => {
+              this.props.navigation.closeDrawer()
               this.props.navigation.navigate("Home");
             }}
           >
