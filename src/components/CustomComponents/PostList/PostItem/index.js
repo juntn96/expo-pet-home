@@ -63,7 +63,7 @@ class PostItem extends Component {
               users
             );
             this.setState({ renderChatModal: true }, () => {
-              this.chatModal.setModalVisible(true, conversation);
+              this.chatModal.getWrappedInstance().setModalVisible(true, conversation);
             });
           } catch (error) {
             throw error;

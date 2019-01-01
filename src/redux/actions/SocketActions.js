@@ -3,3 +3,9 @@ export const emit = () => {
     type: "EMIT"
   }
 }
+
+export const initSocket = () => {
+  return {
+    type: "INIT"
+  }
+}

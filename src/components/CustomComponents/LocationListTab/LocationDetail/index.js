@@ -26,10 +26,12 @@ import { MapCard } from "../DetailCard/index";
 import { Rating } from "react-native-elements";
 import LocationServices from "../../../../services/LocationServices";
 import LocationReviewModal from "../../LocationReviewModal";
-import { IndicatorViewPager, PagerDotIndicator } from 'rn-viewpager';
+import { IndicatorViewPager, PagerDotIndicator } from "rn-viewpager";
+
+import { connect } from "react-redux";
 
 const { width, height } = Dimensions.get("window");
-export default class LocationDetail extends Component {
+class LocationDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -117,28 +119,26 @@ export default class LocationDetail extends Component {
   //   </TouchableOpacity>
   // );
 
-  _renderLocationImage(item, index){
+  _renderLocationImage(item, index) {
     return (
       <TouchableOpacity
         key={item._id}
         styleName="flexible"
         onPress={this._onPress}
       >
-          <Image
-            style={{
-              flex: 1,
-              resizeMode: 'contain',
-              width: width,
-              height: width *2/3,
-            }}
-            source={{ uri: item.secure_url }}
-            borderRadius="5"
-          />
+        <Image
+          style={{
+            flex: 1,
+            resizeMode: "contain",
+            width: width,
+            height: (width * 2) / 3,
+          }}
+          source={{ uri: item.secure_url }}
+          borderRadius="5"
+        />
       </TouchableOpacity>
-    )
-  };
-
-
+    );
+  }
 
   _renderProduct = ({ item }) => {
     return (
@@ -214,7 +214,7 @@ export default class LocationDetail extends Component {
           transparent
           style={{
             marginTop: 10,
-            backgroundColor: 'transparent'
+            backgroundColor: "transparent",
           }}
         >
           <Left>
@@ -224,7 +224,7 @@ export default class LocationDetail extends Component {
           </Left>
           <Body>
             {/* <View style={styles.nameLocation}> */}
-              <Title>{locationDetail.name}</Title>
+            <Title>{locationDetail.name}</Title>
             {/* </View> */}
           </Body>
           <Right>
@@ -246,7 +246,6 @@ export default class LocationDetail extends Component {
         />
         <Screen style={{ backgroundColor: "#ffffff" }}>
           <ScrollView>
-            
             {locationDetail.images.length > 0 ? (
               // <FlatList
               //   data={locationDetail.images}
@@ -255,16 +254,23 @@ export default class LocationDetail extends Component {
               //   renderItem={this._renderLocationImage}
               //   horizontal
               // />
-              <View style={{flex: 1}}>
+              <View style={{ flex: 1 }}>
                 <IndicatorViewPager
-                  initialPage = { startPage }
-                  indicator = { 
-                  <PagerDotIndicator pageCount = { locationDetail.images.length } style={{ marginBottom: 15}}/> }
-                  style = {{
+                  initialPage={startPage}
+                  indicator={
+                    <PagerDotIndicator
+                      pageCount={locationDetail.images.length}
+                      style={{ marginBottom: 15 }}
+                    />
+                  }
+                  style={{
                     flex: 1,
-                    height: width *2/3
-                  }}>
-                  { locationDetail.images.map((item, index) => this._renderLocationImage(item, index))}
+                    height: (width * 2) / 3,
+                  }}
+                >
+                  {locationDetail.images.map((item, index) =>
+                    this._renderLocationImage(item, index)
+                  )}
                 </IndicatorViewPager>
               </View>
             ) : null}
@@ -394,12 +400,12 @@ export default class LocationDetail extends Component {
                   <View
                     style={{
                       flex: 1,
-                      marginLeft: 10
+                      marginLeft: 10,
                     }}
                   >
                     <Subtitle>Đánh giá</Subtitle>
                   </View>
-                  {userData ? (
+                  {this.props.userData ? (
                     <Button
                       small
                       transparent
@@ -569,3 +575,11 @@ const styles = {
     justifyContent: "center",
   },
 };
+
+const mapStateToProps = state => {
+  return {
+    userData: state.auth.userData,
+  };
+};
+
+export default connect(mapStateToProps)(LocationDetail);

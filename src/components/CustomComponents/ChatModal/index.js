@@ -3,9 +3,8 @@ import { View, Text, Modal } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
 import CustomHeader from "../CustomHeader";
 import MessageServices from "../../../services/MessageServices";
-import SocketClient from "socket.io-client";
-import { SERVER_INFO } from "../../../constants/config";
-const socketIP = SERVER_INFO.PUBLIC_ADDRESS;
+
+import { connect } from "react-redux";
 
 class ChatModal extends Component {
   constructor(props) {
@@ -15,17 +14,16 @@ class ChatModal extends Component {
       messages: [],
       conversationTitle: "",
     };
-    this.socket = null;
   }
 
   componentDidMount() {}
 
   _connectSocket = conversation => {
-    this.socket = SocketClient(`http://${socketIP}:5000`);
-    this.socket.emit("joinConversation", conversation);
-    this.socket.on("sendMessage", data => {
-      console.log("socket id >> ", this.socket.id);
-      console.log("response socket >> ", data);
+    const { socket } = this.props;
+    socket.emit("joinConversation", conversation);
+    socket.on("sendMessage", data => {
+      // console.log("socket id >> ", socket.id);
+      // console.log("response socket >> ", data);
       const mes = {
         _id: data.message._id,
         text: data.message.text,
@@ -62,6 +60,9 @@ class ChatModal extends Component {
   };
 
   setModalVisible = (visible, conversation) => {
+    if (!visible) {
+      this.props.socket.emit("leaveConversation", this.conversation);
+    }
     this.conversation = conversation;
     if (visible) {
       const { userData } = this.props;
@@ -72,7 +73,6 @@ class ChatModal extends Component {
       this._requestGetMessages(conversation);
       this._connectSocket(conversation);
     } else {
-      this.socket.disconnect();
       this.setState({ messages: [] });
     }
     this.setState({
@@ -83,8 +83,8 @@ class ChatModal extends Component {
   _onDismiss = () => {};
 
   _onSend = async (messages = []) => {
-    const { userData } = this.props;
-    console.log(messages[0].user._id);
+    const { userData, socket } = this.props;
+    // console.log(messages[0].user._id);
     const data = {
       conversationId: this.conversation._id,
       message: messages[0],
@@ -94,7 +94,7 @@ class ChatModal extends Component {
         avatar: userData.avatar,
       },
     };
-    this.socket.emit("sendMessage", data);
+    socket.emit("sendMessage", data);
   };
 
   render() {
@@ -131,4 +131,21 @@ class ChatModal extends Component {
   }
 }
 
-export default ChatModal;
+const mapStateToProps = state => {
+  return {
+    socket: state.socket,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {};
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+  null,
+  {
+    withRef: true,
+  }
+)(ChatModal);

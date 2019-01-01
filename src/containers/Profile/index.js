@@ -11,7 +11,10 @@ class Profile extends Component {
   }
 
   render() {
-    if (!this.props.auth.userData) return null;;
+    if (!this.props.auth.userData) {
+      this.props.navigation.navigate("Home");
+      return null;
+    }
     return (
       <ProfileScreen
         navigation={this.props.navigation}

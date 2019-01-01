@@ -21,7 +21,7 @@ class MatchPetTab extends Component {
   }
 
   _onChatPress = async conversation => {
-    this.chatModal.setModalVisible(true, conversation);
+    this.chatModal.getWrappedInstance().setModalVisible(true, conversation);
   };
 
   render() {

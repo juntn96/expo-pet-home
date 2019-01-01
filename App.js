@@ -8,6 +8,7 @@ import configureStore from "./src/redux/configStore";
 import Toast from "./src/components/CustomComponents/Toast";
 import AppSpinner from "./src/components/CustomComponents/AppSpinner";
 import NotificationHandle from "./src/components/CustomComponents/NotificationHandle";
+import SocketHandle from "./src/components/CustomComponents/SocketHandle";
 
 let { Lottie } = DangerZone;
 
@@ -65,7 +66,7 @@ export default class App extends Component {
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "#f8a5c2"
+            backgroundColor: "#f8a5c2",
           }}
         >
           <View
@@ -94,6 +95,7 @@ export default class App extends Component {
             <Toast />
             <AppSpinner />
             <NotificationHandle />
+            <SocketHandle />
           </View>
         </PersistGate>
       </Provider>

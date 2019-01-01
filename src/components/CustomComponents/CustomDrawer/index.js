@@ -101,7 +101,8 @@ class CustomDrawer extends Component {
             notification={
               notification
                 ? notification.type === "post" ||
-                  notification.type === "post-comment"
+                  notification.type === "post-comment" ||
+                  notification.type === "post-vote"
                 : false
             }
             onPress={() => {

@@ -4,6 +4,8 @@ import { Icon, Text } from "native-base";
 import CustomButton from "../../CustomButton";
 import PostServices from "../../../../services/PostServices";
 
+import { connect } from "react-redux";
+
 class Vote extends PureComponent {
   constructor(props) {
     super(props);
@@ -16,6 +18,12 @@ class Vote extends PureComponent {
 
   componentDidMount() {
     this._requestGetVote();
+    const { socket, postData } = this.props;
+    socket.on("votePost", post => {
+      if (post._id === postData._id) {
+        this._requestGetVote();
+      }
+    });
   }
 
   _requestGetVote = async () => {
@@ -37,7 +45,7 @@ class Vote extends PureComponent {
   _requestVote = async () => {
     this._setLoading(true);
     try {
-      const { postData, type, voteCallback, userData } = this.props;
+      const { postData, type, voteCallback, userData, socket } = this.props;
       const data = {
         postId: postData._id,
         voterId: userData._id,
@@ -55,13 +63,12 @@ class Vote extends PureComponent {
             },
             sender: userData._id,
             receiver: postData.ownerId._id,
-            type: "post",
+            type: "post-vote",
           },
         },
       };
       await PostServices.vote(data);
-      this._requestGetVote();
-      voteCallback(type);
+      socket.emit("votePost", postData);
     } catch (error) {
       throw error;
     }
@@ -88,9 +95,10 @@ class Vote extends PureComponent {
 
   render() {
     const { voteCount, loading, voted } = this.state;
-    const { type } = this.props;
+    const { type, socket, postData } = this.props;
     const activeColor = !voted ? "#B5B5B5" : type === 1 ? "#EC466A" : "#FF8EBC";
     const typeIcon = type === 1 ? "md-thumbs-up" : "md-thumbs-down";
+
     return (
       <CustomButton
         transparent
@@ -106,4 +114,21 @@ class Vote extends PureComponent {
   }
 }
 
-export default Vote;
+const mapStateToProps = state => {
+  return {
+    socket: state.socket,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {};
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+  null,
+  {
+    withRef: true,
+  }
+)(Vote);
