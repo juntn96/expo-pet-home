@@ -67,6 +67,7 @@ class PostList extends PureComponent {
         scrollEventThrottle={200}
         showsVerticalScrollIndicator={false}
         data={postData}
+        extraData={postData}
         renderItem={this._renderItem}
         keyExtractor={item => item._id}
         contentContainerStyle={{

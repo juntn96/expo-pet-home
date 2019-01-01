@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Image } from "react-native";
+import { View, Image, ScrollView } from "react-native";
 import { Container, Content, Text } from "native-base";
 import Footer from "./Footer";
 import CommentList from "./CommentList";
@@ -17,7 +17,8 @@ export default class extends Component {
   }
 
   _sendCommentCallback = () => {
-    this.commentList._requestGetComments();
+    // this.commentList._requestGetComments();
+    this.contentView.scrollToEnd();
   };
 
   componentDidMount() {
@@ -42,7 +43,7 @@ export default class extends Component {
     return (
       <Container>
         <Header navigation={this.props.navigation} postData={postData} />
-        <Content style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }} ref={ref => (this.contentView = ref)}>
           <View
             style={{
               marginLeft: 10,
@@ -59,13 +60,17 @@ export default class extends Component {
           <CommentList
             postData={postData}
             ref={ref => (this.commentList = ref)}
+            socket={this.props.socket}
+            userData={this.state.userData}
           />
-        </Content>
+        </ScrollView>
         {userData ? (
           <Footer
             postData={postData}
             userData={this.state.userData}
             sendCommentCallback={this._sendCommentCallback}
+            toast={this.props.toast}
+            socket={this.props.socket}
           />
         ) : null}
       </Container>

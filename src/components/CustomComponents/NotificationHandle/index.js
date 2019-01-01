@@ -57,7 +57,12 @@ class NotificationHandle extends Component {
   };
 
   render() {
-    const { notification } = this.props;
+    const { notifications } = this.props;
+    let notification = null;
+
+    if (notifications.length !== 0) {
+      notification = notifications[notifications.length - 1];
+    }
 
     const animOpacity = animatedValue.interpolate({
       inputRange: [0, 0.1, 1],
@@ -67,7 +72,7 @@ class NotificationHandle extends Component {
 
     if (this.state.canRender === false) return null;
 
-    if (!notification) return null;
+    // if (notification) return null;
 
     this._hide(3000);
 
@@ -108,7 +113,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     userData: state.auth.userData,
-    notification: state.notification,
+    notifications: state.notification,
   };
 };
 

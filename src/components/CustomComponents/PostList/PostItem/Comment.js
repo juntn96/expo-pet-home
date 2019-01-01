@@ -9,25 +9,17 @@ class Vote extends Component {
     this.state = {
       comments: [],
     };
-    this.notificationListener = Notifications.addListener(
-      this._notificationHandle
-    );
   }
 
   async componentDidMount() {
+    const { postData } = this.props;
     await this._requestGetComments();
-  }
-
-  _notificationHandle = async notification => {
-    try {
-      const { userData, postData } = this.props;
-      if (postData._id === notification.data.content.post._id) {
+    this.props.socket.on("commentPost", post => {
+      if (post._id === postData._id) {
         this._requestGetComments();
       }
-    } catch (error) {
-      throw error;
-    }
-  };
+    });
+  }
 
   _requestGetComments = async () => {
     try {

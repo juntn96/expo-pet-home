@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Dimensions } from "react-native";
+import { StyleSheet, View, Dimensions, Image } from "react-native";
 import { Font, AppLoading, DangerZone } from "expo";
 import DrawerRoute from "./src/routes/DrawerRoute";
 import { Provider } from "react-redux";
@@ -44,14 +44,14 @@ export default class App extends Component {
 
   _splash = () => {
     setTimeout(() => {
-      this.animation.reset();
-      this.animation.play();
+      // this.animation.reset();
+      // this.animation.play();
     }, 10);
     setTimeout(() => {
       this.setState({
         renderApp: true,
       });
-    }, 2000);
+    }, 3000);
   };
 
   render() {
@@ -66,21 +66,25 @@ export default class App extends Component {
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "#f8a5c2",
+            backgroundColor: "#FFF",
           }}
         >
           <View
             style={{
-              width: 300,
-              height: 300,
+              width: 100,
+              height: 100,
             }}
           >
-            <Lottie
+            {/* <Lottie
               source={require("./src/assets/icons/dino_dance.json")}
               style={{ width: 300, height: 300 }}
               ref={ref => (this.animation = ref)}
               autoPlay={true}
               loop={true}
+            /> */}
+            <Image
+              source={require("./src/assets/icons/logo.gif")}
+              style={{ width: "100%", height: "100%" }}
             />
           </View>
         </View>

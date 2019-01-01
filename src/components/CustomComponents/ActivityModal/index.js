@@ -30,6 +30,7 @@ class ActivityModal extends Component {
         transparent={false}
         visible={modalVisible}
         onRequestClose={() => {}}
+        presentationStyle="pageSheet"
       >
         <CustomHeader
           title="Hoạt động"

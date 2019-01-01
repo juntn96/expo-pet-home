@@ -32,6 +32,7 @@ class Toast extends PureComponent {
 
   render() {
     const { toast } = this.props;
+
     if (!toast) return null;
 
     const animOpacity = animatedValue.interpolate({

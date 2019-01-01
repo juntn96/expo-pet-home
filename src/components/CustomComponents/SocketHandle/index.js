@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { initSocket } from "../../../redux/actions/SocketActions";
 import { toggle } from "../../../redux/actions/UIActions";
 import { logout } from "../../../redux/actions/AuthActions";
+import { pushNotification } from '../../../redux/actions/NotificationActions';
 
 class SocketHandle extends Component {
   constructor(props) {
@@ -18,8 +19,14 @@ class SocketHandle extends Component {
   }
 
   _subscribe = () => {
-    const { socket, userData, toast, logout } = this.props;
+    const { userData } = this.props;
     if (!userData) return;
+    this._onBanUser();
+    // this._onReceiveMessage();
+  };
+
+  _onBanUser = () => {
+    const { socket, userData, toast, logout } = this.props;
     socket.on("banUser", user => {
       if (user.id === userData._id && user.deletionFlag === true) {
         toast({
@@ -31,6 +38,17 @@ class SocketHandle extends Component {
       }
     });
   };
+
+  // _onReceiveMessage = () => {
+  //   const { socket, userData, toast, logout } = this.props;
+  //   socket.on("sendMessage", data => {
+  //     console.log("message: ", data);
+  //     this.props.pushNotification({
+  //       message: `${data.user.appName}: ${data.message.text}`,
+  //       type: "message",
+  //     });
+  //   });
+  // };
 
   render() {
     const { socket } = this.props;
@@ -60,6 +78,9 @@ const mapDispatchToProps = dispatch => {
     logout: () => {
       dispatch(logout());
     },
+    pushNotification: notification => {
+      dispatch(pushNotification(notification))
+    }
   };
 };
 

@@ -11,7 +11,7 @@ import LocationRoute from "../LocationRoute";
 import CustomDrawer from "../../components/CustomComponents/CustomDrawer";
 import ProfileRoute from "../ProfileRoute";
 import PetRoute from "../PetRoute";
-import CommentScreen from "../../components/CommentScreen";
+import CommentScreen from "../../containers/Comment";
 
 const stackApp = createStackNavigator(
   {

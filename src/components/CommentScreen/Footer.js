@@ -57,6 +57,13 @@ class Footer extends Component {
 
   _requestSendComment = async () => {
     try {
+      const deletionFlag = await this._requestGetDeletionFlag();
+      if (deletionFlag === true) {
+        console.log(this.props.toast);
+        Keyboard.dismiss();
+        this.props.toast({ message: "Bài viết này đã bị cấm", duration: 3000 });
+        return;
+      }
       const { commentContent } = this.state;
       const { postData, userData, sendCommentCallback } = this.props;
       const data = {
@@ -80,9 +87,23 @@ class Footer extends Component {
       };
       await PostServices.addComment(data);
       sendCommentCallback && sendCommentCallback();
+      this.props.socket.emit("commentPost", {
+        ...postData,
+        userCommentId: userData._id,
+      });
     } catch (error) {}
     this.setState({ commentContent: "" });
     Keyboard.dismiss();
+  };
+
+  _requestGetDeletionFlag = async () => {
+    try {
+      const { postData } = this.props;
+      const result = await PostServices.getPostById(postData._id);
+      return result.deletionFlag;
+    } catch (error) {
+      throw error;
+    }
   };
 
   render() {

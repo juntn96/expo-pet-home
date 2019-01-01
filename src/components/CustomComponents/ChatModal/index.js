@@ -5,6 +5,8 @@ import CustomHeader from "../CustomHeader";
 import MessageServices from "../../../services/MessageServices";
 
 import { connect } from "react-redux";
+import { pushNotification } from "../../../redux/actions/NotificationActions";
+import UserServices from "../../../services/UserServices";
 
 class ChatModal extends Component {
   constructor(props) {
@@ -19,11 +21,11 @@ class ChatModal extends Component {
   componentDidMount() {}
 
   _connectSocket = conversation => {
-    const { socket } = this.props;
+    const { socket, userData } = this.props;
     socket.emit("joinConversation", conversation);
-    socket.on("sendMessage", data => {
+    socket.on("sendMessage", async data => {
       // console.log("socket id >> ", socket.id);
-      // console.log("response socket >> ", data);
+      console.log("response socket >> ", data);
       const mes = {
         _id: data.message._id,
         text: data.message.text,
@@ -34,6 +36,15 @@ class ChatModal extends Component {
         messages: GiftedChat.append(previousState.messages, mes),
       }));
     });
+  };
+
+  _getSenderInfo = async id => {
+    try {
+      const info = await UserServices.findUser(id);
+      return info;
+    } catch (error) {
+      throw error;
+    }
   };
 
   _requestGetMessages = async conversation => {
@@ -84,7 +95,13 @@ class ChatModal extends Component {
 
   _onSend = async (messages = []) => {
     const { userData, socket } = this.props;
-    // console.log(messages[0].user._id);
+
+    const receivers = this.conversation.users.filter(
+      item => item.user._id !== userData._id
+    );
+
+    const receiver = receivers[0].user._id;
+
     const data = {
       conversationId: this.conversation._id,
       message: messages[0],
@@ -92,6 +109,11 @@ class ChatModal extends Component {
         _id: messages[0].user._id,
         name: userData.appName,
         avatar: userData.avatar,
+      },
+      notification: {
+        sender: userData._id,
+        receiver: receiver,
+        type: "message",
       },
     };
     socket.emit("sendMessage", data);
@@ -138,7 +160,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+    pushNotification: notification => {
+      dispatch(notification);
+    },
+  };
 };
 
 export default connect(

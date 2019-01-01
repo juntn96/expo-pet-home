@@ -78,28 +78,31 @@ class CustomHeader extends Component {
   };
 
   _buttonRight = () => {
-    const { buttonRight, badgeNumberRight } = this.props;
+    const { buttonRight, badgeNumberRight, notification } = this.props;
     if (!buttonRight) {
       return null;
     }
+
     return (
       <Button vertical badge iconLeft transparent onPress={this._actionRight}>
-        {badgeNumberRight && this.props.notification ? (
+        {badgeNumberRight && this.props.notification.length > 0 ? (
           <View
             style={{
               position: "absolute",
               right: 10,
               top: 4,
-              height: 8,
-              width: 8,
+              height: 16,
+              width: 16,
               zIndex: 3,
               backgroundColor: "red",
-              borderRadius: 8,
+              borderRadius: 16,
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            {/* <Text style={{ fontSize: 8, color: "#FFF" }}>
-              {badgeNumberRight}
-            </Text> */}
+            <Text style={{ fontSize: 10, color: "#FFF" }}>
+              {notification.length > 9 ? "9+" : notification.length}
+            </Text>
           </View>
         ) : null}
         <Icon name={buttonRight} style={{ color: "#EC466A", fontSize: 26 }} />
@@ -108,7 +111,7 @@ class CustomHeader extends Component {
   };
 
   render() {
-    const { title } = this.props;
+    const { title, notification } = this.props;
     return (
       <Header
         noShadow={true}
@@ -126,9 +129,7 @@ class CustomHeader extends Component {
         }}
       >
         <Left style={{}}>{this._buttonLeft()}</Left>
-        <Body
-          style={{ justifyContent: "center", alignItems: "center" }}
-        >
+        <Body style={{ justifyContent: "center", alignItems: "center" }}>
           <Title style={{ color: "#EC466A", textAlign: "center" }}>
             {title}
           </Title>

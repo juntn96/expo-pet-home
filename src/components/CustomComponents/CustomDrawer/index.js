@@ -56,6 +56,7 @@ class CustomDrawer extends Component {
   render() {
     const { userData } = this.props.auth;
     const { notification } = this.props;
+    console.log(">>>>>> ", notification)
     return (
       <View style={styles.container}>
         <CustomTouchable
@@ -71,7 +72,7 @@ class CustomDrawer extends Component {
             loginRequired={false}
             style={styles.buttonBody}
             onCustomPress={() => {
-              this.props.navigation.closeDrawer()
+              this.props.navigation.closeDrawer();
               this.props.navigation.navigate("Home");
             }}
           >
@@ -98,13 +99,12 @@ class CustomDrawer extends Component {
           </CustomTouchable>
           <NoticeIcon
             name="ios-notifications-outline"
-            notification={
-              notification
-                ? notification.type === "post" ||
-                  notification.type === "post-comment" ||
-                  notification.type === "post-vote"
-                : false
-            }
+            notification={notification.some(
+              item =>
+                item.type === "post" ||
+                item.type === "post-comment" ||
+                item.type === "post-vote"
+            )}
             onPress={() => {
               this.props.clearNotification();
               this.props.navigation.closeDrawer();
@@ -113,9 +113,7 @@ class CustomDrawer extends Component {
           />
           <NoticeIcon
             name="ios-chatbubbles-outline"
-            notification={
-              notification ? notification.type === "message" : false
-            }
+            notification={notification.some(item => item.type === "message")}
             onPress={() => {
               this.props.navigation.closeDrawer();
               this.activityModal.setVisible(true, 1);
