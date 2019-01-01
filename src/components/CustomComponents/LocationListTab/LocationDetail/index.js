@@ -26,6 +26,7 @@ import { MapCard } from "../DetailCard/index";
 import { Rating } from "react-native-elements";
 import LocationServices from "../../../../services/LocationServices";
 import LocationReviewModal from "../../LocationReviewModal";
+import { IndicatorViewPager, PagerDotIndicator } from 'rn-viewpager';
 
 const { width, height } = Dimensions.get("window");
 export default class LocationDetail extends Component {
@@ -95,26 +96,49 @@ export default class LocationDetail extends Component {
     }
   };
 
-  _renderLocationImage = ({ item }) => (
-    <TouchableOpacity
-      key={item._id}
-      styleName="flexible"
-      onPress={this._onPress}
-    >
-      <Card style={styles.imageLocation}>
-        <Image
-          style={{
-            flex: 1,
-            alignSelf: "stretch",
-            width: undefined,
-            height: undefined,
-          }}
-          source={{ uri: item.secure_url }}
-          borderRadius="5"
-        />
-      </Card>
-    </TouchableOpacity>
-  );
+  // _renderLocationImage = ({ item }) => (
+  //   <TouchableOpacity
+  //     key={item._id}
+  //     styleName="flexible"
+  //     onPress={this._onPress}
+  //   >
+  //     <Card style={styles.imageLocation}>
+  //       <Image
+  //         style={{
+  //           flex: 1,
+  //           alignSelf: "stretch",
+  //           width: undefined,
+  //           height: undefined,
+  //         }}
+  //         source={{ uri: item.secure_url }}
+  //         borderRadius="5"
+  //       />
+  //     </Card>
+  //   </TouchableOpacity>
+  // );
+
+  _renderLocationImage(item, index){
+    return (
+      <TouchableOpacity
+        key={item._id}
+        styleName="flexible"
+        onPress={this._onPress}
+      >
+          <Image
+            style={{
+              flex: 1,
+              resizeMode: 'contain',
+              width: width,
+              height: width *2/3,
+            }}
+            source={{ uri: item.secure_url }}
+            borderRadius="5"
+          />
+      </TouchableOpacity>
+    )
+  };
+
+
 
   _renderProduct = ({ item }) => {
     return (
@@ -164,6 +188,7 @@ export default class LocationDetail extends Component {
   };
 
   render() {
+    const startPage = 0;
     const { loading, locationDetail, reviews } = this.state;
     const { navigation } = this.props;
     const userData = navigation.getParam("userData", "NO-ID");
@@ -189,6 +214,7 @@ export default class LocationDetail extends Component {
           transparent
           style={{
             marginTop: 10,
+            backgroundColor: 'transparent'
           }}
         >
           <Left>
@@ -197,9 +223,9 @@ export default class LocationDetail extends Component {
             </Button>
           </Left>
           <Body>
-            <View style={styles.nameLocation}>
+            {/* <View style={styles.nameLocation}> */}
               <Title>{locationDetail.name}</Title>
-            </View>
+            {/* </View> */}
           </Body>
           <Right>
             <Button
@@ -222,13 +248,25 @@ export default class LocationDetail extends Component {
           <ScrollView>
             
             {locationDetail.images.length > 0 ? (
-              <FlatList
-                data={locationDetail.images}
-                keyExtractor={(item, index) => index.toString()}
-                showsHorizontalScrollIndicator={false}
-                renderItem={this._renderLocationImage}
-                horizontal
-              />
+              // <FlatList
+              //   data={locationDetail.images}
+              //   keyExtractor={(item, index) => index.toString()}
+              //   showsHorizontalScrollIndicator={false}
+              //   renderItem={this._renderLocationImage}
+              //   horizontal
+              // />
+              <View style={{flex: 1}}>
+                <IndicatorViewPager
+                  initialPage = { startPage }
+                  indicator = { 
+                  <PagerDotIndicator pageCount = { locationDetail.images.length } style={{ marginBottom: 15}}/> }
+                  style = {{
+                    flex: 1,
+                    height: width *2/3
+                  }}>
+                  { locationDetail.images.map((item, index) => this._renderLocationImage(item, index))}
+                </IndicatorViewPager>
+              </View>
             ) : null}
             <View
               style={{
