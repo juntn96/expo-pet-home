@@ -18,8 +18,11 @@ const postReducer = (state = initialState, { type, payload }) => {
       };
     }
     case PostActionTypes.EDIT_POST: {
-      let tmp = state.postData;
-      tmp[tmp.findIndex(item => item._id === payload._id)] = payload;
+      let tmp = [...state.postData];
+      let index = tmp.findIndex(item => item._id === payload._id);
+      if (index > -1) {
+        tmp[index] = payload;
+      }
       return {
         ...state,
         postData: tmp,

@@ -156,6 +156,7 @@ class AddPostTab extends Component {
         const rs = await PostServices.editPost(data);
         const editedPost = await PostServices.getPostById(rs._id);
         this.props.editPost(editedPost);
+        this.props.socket.emit("editPost", editedPost)
         if (this.props.onEditSuccess) {
           this.props.onEditSuccess(editedPost);
         }
@@ -392,7 +393,9 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    socket: state.socket
+  };
 };
 
 const mapDispatchToProps = dispatch => {

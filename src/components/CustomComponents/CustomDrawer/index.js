@@ -56,7 +56,7 @@ class CustomDrawer extends Component {
   render() {
     const { userData } = this.props.auth;
     const { notification } = this.props;
-    console.log(">>>>>> ", notification)
+    console.log(">>>>>> ", notification);
     return (
       <View style={styles.container}>
         <CustomTouchable
@@ -92,6 +92,7 @@ class CustomDrawer extends Component {
             loginRequired={true}
             style={styles.buttonBody}
             onCustomPress={() => {
+              this.props.navigation.closeDrawer();
               this.props.navigation.navigate("PetRoute");
             }}
           >

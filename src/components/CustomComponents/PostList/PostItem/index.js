@@ -70,6 +70,12 @@ class PostItem extends Component {
         }
       });
     }
+    socket.on("editPost", post => {
+      if (postData && post._id === postData._id) {
+        console.log("edit post: ", post);
+        this._requestGetPostData();
+      }
+    });
   };
 
   _onUserPress = () => {
