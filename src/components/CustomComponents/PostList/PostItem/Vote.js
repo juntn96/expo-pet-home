@@ -50,22 +50,25 @@ class Vote extends PureComponent {
         postId: postData._id,
         voterId: userData._id,
         voteType: type,
-        notification: {
-          tokens: [postData.ownerId.expoToken],
-          data: {
-            message: `${userData.appName} đã ${
-              type === 1 ? "up vote" : "down vote"
-            } bài viết của bạn`,
-            content: {
-              post: {
-                _id: postData._id,
-              },
-            },
-            sender: userData._id,
-            receiver: postData.ownerId._id,
-            type: "post-vote",
-          },
-        },
+        notification:
+          postData.ownerId._id !== userData._id
+            ? {
+                tokens: [postData.ownerId.expoToken],
+                data: {
+                  message: `${userData.appName} đã ${
+                    type === 1 ? "up vote" : "down vote"
+                  } bài viết của bạn`,
+                  content: {
+                    post: {
+                      _id: postData._id,
+                    },
+                  },
+                  sender: userData._id,
+                  receiver: postData.ownerId._id,
+                  type: "post-vote",
+                },
+              }
+            : null,
       };
       await PostServices.vote(data);
       socket.emit("votePost", postData);
