@@ -1,4 +1,8 @@
-import { createDrawerNavigator } from "react-navigation";
+import {
+  createDrawerNavigator,
+  createStackNavigator,
+  createSwitchNavigator,
+} from "react-navigation";
 import { Dimensions } from "react-native";
 
 import HomeRoute from "../HomeRoute";
@@ -7,12 +11,13 @@ import LocationRoute from "../LocationRoute";
 import CustomDrawer from "../../components/CustomComponents/CustomDrawer";
 import ProfileRoute from "../ProfileRoute";
 import PetRoute from "../PetRoute";
+import CommentScreen from "../../containers/Comment";
 
-const DrawerRoute = createDrawerNavigator(
+const stackApp = createStackNavigator(
   {
-    AuthRoute: {
-      screen: AuthRoute,
-    },
+    // AuthRoute: {
+    //   screen: AuthRoute,
+    // },
     HomeRoute: {
       screen: HomeRoute,
     },
@@ -25,6 +30,35 @@ const DrawerRoute = createDrawerNavigator(
     PetRoute: {
       screen: PetRoute,
     },
+    CommentScreen: {
+      screen: CommentScreen,
+    },
+  },
+  {
+    // initialRouteName: "HomeRoute",
+    navigationOptions: () => ({
+      header: null,
+      headerStyle: {
+        shadowOpacity: 0,
+        elevation: 0,
+        borderBottomWidth: 0,
+      },
+      headerTitle: "Home",
+      headerTitleStyle: {
+        color: "#000",
+        textAlign: "center",
+        flexGrow: 1,
+        alignSelf: "center",
+      },
+    }),
+  }
+);
+
+const DrawerRoute = createDrawerNavigator(
+  {
+    StackApp: {
+      screen: stackApp,
+    },
   },
   {
     contentComponent: CustomDrawer,
@@ -33,7 +67,7 @@ const DrawerRoute = createDrawerNavigator(
     },
     drawerWidth: Dimensions.get("screen").width / 3.5,
     drawerBackgroundColor: "transparent",
-    initialRouteName: "HomeRoute",
+    initialRouteName: "StackApp",
   }
 );
 

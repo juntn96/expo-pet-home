@@ -1,20 +1,30 @@
 import React, { Component } from "react";
 import { View, Modal, TextInput } from "react-native";
 import { Header, Icon, Button, Container, Content } from "native-base";
-import FilterModal from "../FilterModal";
+
 import LocationList from "./LocationList";
 import GoogleMap from "../../../../services/GoogleMap";
-import { locationData } from "../../../../utils/fakeData";
+import LocationServices from "../../../../services/LocationServices";
+import FilterModal from "../../LocationListTab/FilterModal";
 
 class SimpleSearchModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
-      searchQuery: "",
+      textSearch: "",
       locationData: [],
     };
+    this.textSearch = "";
+    this.lat = "";
+    this.long = "";
+    this.radius = 100000000000;
+    this.ratingGt = "";                                                                                              
+    this.ratingLt = "";
+    this.typeIdArray = [];
   }
+
+  componentDidMount() {}
 
   setModalVisible = (visible, searchType) => {
     this.searchType = searchType;
@@ -22,9 +32,17 @@ class SimpleSearchModal extends Component {
       this.setState(
         {
           modalVisible: visible,
-          locationData: searchType === "start" ? [] : locationData,
+          locationData: searchType === "start" ? [] : this.locationData,
         },
         () => {
+          if (searchType === "destination") {
+            const { userLocation } = this.props;
+            this._requestSearchLocation(
+              "",
+              userLocation.latitude,
+              userLocation.longitude
+            );
+          }
           this.LocationList.show(searchType);
         }
       );
@@ -35,7 +53,17 @@ class SimpleSearchModal extends Component {
     }
   };
 
+  // _requestGetLocationList = async () => {
+  //   try {
+  //     const result = await LocationServices.getSuggestLocation();
+  //     this.locationData = result;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // };
+
   _onSearchQueryChange = text => {
+    this.textSearch = text;
     if (this.searchWaiting) {
       clearTimeout(this.searchWaiting);
     }
@@ -60,17 +88,55 @@ class SimpleSearchModal extends Component {
     }
   };
 
+  _onPressFilter = (selectedStar, selectedAll) => {
+    const { userLocation } = this.props;
+    this.lat = userLocation.latitude;
+    this.long = userLocation.longitude;
+    this.ratingGt = selectedStar;
+    this.ratingLt = selectedStar + 1;
+    this.typeIdArray = selectedAll;
+    this._requestSearchLocation(this.textSearch, this.lat, this.long);
+  };
+
+  _requestSearchLocation = async (text, lat, long) => {
+    try {
+      // console.log(
+      //   text,
+      //   lat,
+      //   long,
+      //   this.radius,
+      //   this.ratingGt,
+      //   this.ratingLt,
+      //   this.typeIdArray
+      // );
+      const result = await LocationServices.searchLocation({
+        textSearch: text,
+        lat,
+        long,
+        radius: this.radius,
+        ratingGt: this.ratingGt,
+        ratingLt: this.ratingLt,
+        typeIdArray: this.typeIdArray,
+      });
+      console.log(">>>> ", result);
+      this.setState({ locationData: result });
+    } catch (error) {
+      throw error;
+    }
+  };
+
   _searchDestinationLocation = (text, nearby) => {
     console.log("destination: ", text, nearby);
+    this._requestSearchLocation(text, nearby.latitude, nearby.longitude);
   };
 
   _onSelectLocation = (location, searchType) => {
     // console.log(location, searchType);
-    const { onLocationChange } = this.props
+    const { onLocationChange } = this.props;
     if (onLocationChange) {
-      onLocationChange(location, searchType)
+      onLocationChange(location, searchType);
     }
-    this.setModalVisible(false)
+    this.setModalVisible(false);
   };
 
   render() {
@@ -121,6 +187,7 @@ class SimpleSearchModal extends Component {
                     borderBottomWidth: 0,
                   }}
                   onChangeText={this._onSearchQueryChange}
+                  clearButtonMode="while-editing"
                 />
               </View>
               <Button
@@ -140,7 +207,12 @@ class SimpleSearchModal extends Component {
             />
           </Content>
         </Container>
-        <FilterModal ref={ref => (this.filterModal = ref)} />
+        <FilterModal
+          ref={ref => (this.filterModal = ref)}
+          onPressFilter={(selectedStar, selectedAll) =>
+            this._onPressFilter(selectedStar, selectedAll)
+          }
+        />
       </Modal>
     );
   }

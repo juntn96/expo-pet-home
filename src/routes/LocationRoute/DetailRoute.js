@@ -1,17 +1,11 @@
 import { createStackNavigator } from "react-navigation";
-import LocationHome from "../../containers/LocationHome";
 import LocationDetail from "../../components/CustomComponents/LocationListTab/LocationDetail";
 import SearchLocation from "../../components/CustomComponents/LocationListTab/SearchLocation";
 import ProductDetail from "../../components/CustomComponents/LocationListTab/ProductDetail";
 import RatingComment from "../../components/CustomComponents/LocationListTab/Rating";
-import LocationMapTab from "../../components/CustomComponents/LocationMapTab";
-import LocationListTab from "../../components/CustomComponents/LocationListTab";
 
-const LocationRoute = createStackNavigator(
+const DetailRoute = createStackNavigator(
   {
-    LocationHome: {
-      screen: LocationHome,
-    },
     LocationDetail: {
       screen: LocationDetail,
     },
@@ -23,12 +17,6 @@ const LocationRoute = createStackNavigator(
     },
     RatingComment: {
       screen: RatingComment,
-    },
-    LocationMapTab: {
-      screen: LocationMapTab,
-    },
-    LocationListTab: {
-      screen: LocationListTab,
     },
   },
   {
@@ -49,4 +37,4 @@ const LocationRoute = createStackNavigator(
   }
 );
 
-export default LocationRoute;
+export default DetailRoute;

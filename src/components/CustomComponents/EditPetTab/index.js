@@ -5,11 +5,13 @@ import {
   Dimensions,
   RefreshControl,
   Alert,
+  Text,
 } from "react-native";
 import EditItem from "./EditItem";
 import CustomHeader from "../CustomHeader";
 import EditModal from "./EditModal";
 import PetServices from "../../../services/PetServices";
+import { Icon } from "native-base";
 
 class EditPetTab extends Component {
   constructor(props) {
@@ -90,31 +92,54 @@ class EditPetTab extends Component {
           actionRight={() => this.editModal.setModalVisible(true)}
           actionLeft={() => this.props.navigation.openDrawer()}
         />
-        <FlatList
-          contentInset={{ bottom: 20 }}
-          data={listPet}
-          keyExtractor={item => item._id}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => {
-            return (
-              <EditItem
-                pet={item}
-                onEditPress={this._onEditPress}
-                onDeletePress={this._onDeletePress}
+        {listPet.length > 0 ? (
+          <FlatList
+            contentInset={{ bottom: 20 }}
+            data={listPet}
+            keyExtractor={item => item._id}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => {
+              return (
+                <EditItem
+                  pet={item}
+                  onEditPress={this._onEditPress}
+                  onDeletePress={this._onDeletePress}
+                />
+              );
+            }}
+            contentContainerStyle={{
+              paddingLeft: 10,
+              paddingRight: 10,
+            }}
+            refreshControl={
+              <RefreshControl
+                refreshing={loading}
+                onRefresh={this._requestGetPet}
               />
-            );
-          }}
-          contentContainerStyle={{
-            paddingLeft: 10,
-            paddingRight: 10,
-          }}
-          refreshControl={
-            <RefreshControl
-              refreshing={loading}
-              onRefresh={this._requestGetPet}
-            />
-          }
-        />
+            }
+          />
+        ) : (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "#2A2E40",
+            }}
+          >
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <Text
+                style={{
+                  color: "#FFF",
+                }}
+              >
+                {`Bạn chưa tạo Pet, ấn `}
+              </Text>
+              <Icon name="md-add" style={{ color: "#EC466A" }} />
+              <Text style={{ color: "#FFF" }}>{` để tạo Pet ngay nào`}</Text>
+            </View>
+          </View>
+        )}
       </View>
     );
   }

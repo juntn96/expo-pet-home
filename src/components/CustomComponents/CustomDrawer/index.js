@@ -10,24 +10,14 @@ import { setLoading } from "../../../redux/actions/UIActions";
 import UserServices from "../../../services/UserServices";
 import { Notifications } from "expo";
 
+import {
+  pushNotification,
+  clearNotification,
+} from "../../../redux/actions/NotificationActions";
+
 import NoticeIcon from "./NoticeIcon";
 
 class CustomDrawer extends Component {
-  state = {
-    notificationType: "",
-  };
-
-  componentDidMount() {
-    this.notificationListener = Notifications.addListener(
-      this._handleNotification
-    );
-  }
-
-  _handleNotification = notification => {
-    console.log(notification);
-    this.setState({ notificationType: notification.data.type });
-  };
-
   _onPressProfile = () => {
     this.props.navigation.navigate("ProfileRoute");
   };
@@ -65,6 +55,8 @@ class CustomDrawer extends Component {
 
   render() {
     const { userData } = this.props.auth;
+    const { notification } = this.props;
+    console.log(">>>>>> ", notification)
     return (
       <View style={styles.container}>
         <CustomTouchable
@@ -80,6 +72,7 @@ class CustomDrawer extends Component {
             loginRequired={false}
             style={styles.buttonBody}
             onCustomPress={() => {
+              this.props.navigation.closeDrawer();
               this.props.navigation.navigate("Home");
             }}
           >
@@ -89,7 +82,8 @@ class CustomDrawer extends Component {
             loginRequired={false}
             style={styles.buttonBody}
             onCustomPress={() => {
-              this.props.navigation.navigate("LocationRoute");
+              this.props.navigation.closeDrawer();
+              this.props.navigation.navigate("LocationHome");
             }}
           >
             <Icon name="ios-map-outline" style={styles.iconBody} />
@@ -105,15 +99,21 @@ class CustomDrawer extends Component {
           </CustomTouchable>
           <NoticeIcon
             name="ios-notifications-outline"
-            notification={this.state.notificationType === "activity"}
+            notification={notification.some(
+              item =>
+                item.type === "post" ||
+                item.type === "post-comment" ||
+                item.type === "post-vote"
+            )}
             onPress={() => {
+              this.props.clearNotification();
               this.props.navigation.closeDrawer();
               this.activityModal.setVisible(true, 0);
             }}
           />
           <NoticeIcon
             name="ios-chatbubbles-outline"
-            notification={this.state.notificationType === "message"}
+            notification={notification.some(item => item.type === "message")}
             onPress={() => {
               this.props.navigation.closeDrawer();
               this.activityModal.setVisible(true, 1);
@@ -135,6 +135,7 @@ class CustomDrawer extends Component {
           ref={ref => {
             this.activityModal = ref;
           }}
+          navigation={this.props.navigation}
         />
       </View>
     );
@@ -180,6 +181,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     auth: state.auth,
+    notification: state.notification,
   };
 };
 
@@ -190,6 +192,12 @@ const mapDispatchToProps = dispatch => {
     },
     setLoading: loading => {
       dispatch(setLoading(loading));
+    },
+    // pushNotification: notification => {
+    //   dispatch(pushNotification(notification));
+    // },
+    clearNotification: () => {
+      dispatch(clearNotification());
     },
   };
 };

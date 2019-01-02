@@ -4,6 +4,10 @@ import { Thumbnail } from "native-base";
 import { Notifications } from "expo";
 import { connect } from "react-redux";
 import UserServices from "../../../services/UserServices";
+import {
+  pushNotification,
+  clearNotification,
+} from "../../../redux/actions/NotificationActions";
 
 const animatedValue = new Animated.Value(1);
 
@@ -11,15 +15,12 @@ class NotificationHandle extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      notification: undefined,
+      canRender: false,
     };
-
     this.notificationListener = Notifications.addListener(
       this._notificationHandle
     );
   }
-
-  componentDidMount() {}
 
   _hide = duration => {
     animatedValue.stopAnimation();
@@ -27,18 +28,28 @@ class NotificationHandle extends Component {
       toValue: 0,
       duration,
       useNativeDriver: true,
-    }).start(() => this.setState({ notification: undefined }));
+    }).start(() => this.setState({ canRender: false }));
   };
 
   _notificationHandle = async notification => {
-    console.log(notification);
-    const sender = await this._getSender(notification.data.sender);
-    this.setState({
-      notification: {
-        message: notification.data.message,
-        sender,
-      },
-    });
+    try {
+      console.log(notification);
+      const { userData, userStates } = this.props;
+      const sender = await this._getSender(notification.data.sender);
+      if (sender._id !== userData._id) {
+        //check don't send notification myself
+        if (
+          notification.data.type === "message" &&
+          notification.data.content.room === userStates.inChatRoom
+        ) {
+          return;
+        }
+        this.props.pushNotification(notification.data);
+        this.setState({ canRender: true });
+      }
+    } catch (error) {
+      throw error;
+    }
   };
 
   _getSender = async userId => {
@@ -52,7 +63,12 @@ class NotificationHandle extends Component {
   };
 
   render() {
-    const { notification } = this.state;
+    const { notifications } = this.props;
+    let notification = null;
+
+    if (notifications.length !== 0) {
+      notification = notifications[notifications.length - 1];
+    }
 
     const animOpacity = animatedValue.interpolate({
       inputRange: [0, 0.1, 1],
@@ -60,7 +76,9 @@ class NotificationHandle extends Component {
       extrapolate: "clamp",
     });
 
-    if (!notification) return null;
+    if (this.state.canRender === false) return null;
+
+    // if (notification) return null;
 
     this._hide(3000);
 
@@ -98,4 +116,26 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NotificationHandle;
+const mapStateToProps = state => {
+  return {
+    userData: state.auth.userData,
+    notifications: state.notification,
+    userStates: state.userStates,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    pushNotification: notification => {
+      dispatch(pushNotification(notification));
+    },
+    clearNotification: () => {
+      dispatch(clearNotification());
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NotificationHandle);

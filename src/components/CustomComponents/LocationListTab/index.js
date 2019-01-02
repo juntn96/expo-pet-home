@@ -8,7 +8,7 @@ import {
   Platform,
   RefreshControl,
 } from "react-native";
-import { Container, Header, Text } from "native-base";
+import { Container, Header, Text, Button, Icon } from "native-base";
 import {
   Card,
   Screen,
@@ -29,7 +29,7 @@ class LocationListTab extends Component {
       textSearch: "",
       showCancel: false,
       loading: true,
-      listSuggestLocation: [],
+      listSuggestLocation: '',
       refreshing: false,
     };
   }
@@ -47,6 +47,8 @@ class LocationListTab extends Component {
   _requestGetLocation = async () => {
     try {
       const result = await LocationServices.getSuggestLocation();
+      console.log("===================");
+      console.log(result);
       this.setState({
         listSuggestLocation: result,
         loading: false,
@@ -80,12 +82,22 @@ class LocationListTab extends Component {
       _id: item._id,
       ownerId: item.ownerId,
       userData: this.props.userData,
+      onDirectionPress: this.props.onDirectionPress
     });
   };
 
-  _onRefresh = () => {
+  _onRefresh = async () => {
     this.setState({ refreshing: true });
-    this._requestGetLocation();
+    try {
+      const result = await LocationServices.getSuggestLocation();
+      this.setState({
+        listSuggestLocation: result,
+        loading: false,
+        refreshing: false,
+      });
+    } catch (error) {
+      throw error;
+    }
   };
 
   _renderItem = ({ item }) => (
@@ -173,7 +185,20 @@ class LocationListTab extends Component {
   render() {
     console.disableYellowBox = true;
     const { loading, listSuggestLocation } = this.state;
-    if (listSuggestLocation.length === 0) {
+    if(loading) {
+      return (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#FCFCFC",
+          }}
+        >
+          <Spinner />
+        </View>
+      )
+    } else if (listSuggestLocation.length === 0) {
       return (
         <Container>
           <Screen style={{ backgroundColor: "#FCFCFC" }}>
@@ -197,6 +222,13 @@ class LocationListTab extends Component {
                       marginLeft: 20,
                     }}
                   >
+                    <Button
+                      transparent
+                      iconRight
+                      onPress={() => this.props.navigation.openDrawer()}
+                    >
+                      <Icon name="md-menu" style={{ color: "#EC466A" }} />
+                    </Button>
                     <TextInput
                       placeholder="Tìm kiếm địa điểm"
                       clearButtonMode={"while-editing"}
@@ -255,7 +287,7 @@ class LocationListTab extends Component {
                   flexDirection: "row",
                 }}
               >
-                <TouchableOpacity styleName="flexible">
+                {/* <TouchableOpacity styleName="flexible"> */}
                   <Card style={styles.card1}>
                     <View
                       style={{
@@ -283,8 +315,8 @@ class LocationListTab extends Component {
                       <Subtitle>Công viên, địa điểm công cộng</Subtitle>
                     </View>
                   </Card>
-                </TouchableOpacity>
-                <TouchableOpacity styleName="flexible">
+                {/* </TouchableOpacity> */}
+                {/* <TouchableOpacity styleName="flexible"> */}
                   <Card style={styles.card2}>
                     <View
                       style={{
@@ -312,7 +344,7 @@ class LocationListTab extends Component {
                       <Subtitle>Shop thú cưng, dịch vụ</Subtitle>
                     </View>
                   </Card>
-                </TouchableOpacity>
+                {/* </TouchableOpacity> */}
               </View>
 
               <Text
@@ -358,6 +390,13 @@ class LocationListTab extends Component {
               }}
             >
               <View style={styles.searchBar}>
+              <Button
+                    transparent
+                    iconRight
+                    onPress={() => this.props.navigation.openDrawer()}
+                  >
+                    <Icon name="md-menu" style={{ color: "#EC466A" }} />
+                  </Button>
                 <View
                   style={{
                     flex: 1,
@@ -431,7 +470,7 @@ class LocationListTab extends Component {
                 flexDirection: "row",
               }}
             >
-              <TouchableOpacity styleName="flexible">
+              {/* <TouchableOpacity styleName="flexible"> */}
                 <Card style={styles.card1}>
                   <View
                     style={{
@@ -459,8 +498,8 @@ class LocationListTab extends Component {
                     <Subtitle>Công viên, địa điểm công cộng</Subtitle>
                   </View>
                 </Card>
-              </TouchableOpacity>
-              <TouchableOpacity styleName="flexible">
+              {/* </TouchableOpacity>
+              <TouchableOpacity styleName="flexible"> */}
                 <Card style={styles.card2}>
                   <View
                     style={{
@@ -488,7 +527,7 @@ class LocationListTab extends Component {
                     <Subtitle>Shop thú cưng, dịch vụ</Subtitle>
                   </View>
                 </Card>
-              </TouchableOpacity>
+              {/* </TouchableOpacity> */}
             </View>
 
             <Text
@@ -538,18 +577,14 @@ const styles = {
     marginLeft: 8,
     borderRadius: 5,
     backgroundColor: "#FCFCFC",
-    // borderColor: '#A3A3A3',
-    // borderWidth: 0.5,
   },
   card2: {
     width: (width - 28) / 2,
     height: height / 3,
     marginTop: 10,
-    marginLeft: 4,
+    marginLeft: 10,
     borderRadius: 5,
     backgroundColor: "#FCFCFC",
-    // borderColor: '#A3A3A3',
-    // borderWidth: 0.5,
   },
   card3: {
     width: width * 0.75,
@@ -559,8 +594,6 @@ const styles = {
     marginRight: 8,
     borderRadius: 5,
     backgroundColor: "#FCFCFC",
-    // borderColor: '#A3A3A3',
-    // borderWidth: 0.5,
   },
   searchBar: {
     flex: 1,

@@ -18,7 +18,7 @@ class PostCategories extends Component {
 
   async componentDidMount() {
     try {
-      const rs = await PostServices.getPostCategories();
+      const rs = await PostServices.getAllPostCategories();
       this.setState({ categories: this.state.categories.concat(rs) });
     } catch (error) {
       throw error;

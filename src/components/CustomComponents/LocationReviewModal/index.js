@@ -120,6 +120,7 @@ class LocationReviewModal extends Component {
             >
               <Text>{`${this.state.rating}/5 điểm`}</Text>
               <Rating
+                style= {{marginTop: 10}}
                 startingValue={0}
                 imageSize={30}
                 onFinishRating={rating => this.setState({ rating })}

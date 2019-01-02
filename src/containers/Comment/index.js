@@ -16,6 +16,7 @@ class Comment extends Component {
         navigation={this.props.navigation}
         userData={this.props.auth.userData}
         toast={this.props.toast}
+        socket={this.props.socket}
       />
     );
   }
@@ -24,6 +25,7 @@ class Comment extends Component {
 const mapStateToProps = state => {
   return {
     auth: state.auth,
+    socket: state.socket
   };
 };
 

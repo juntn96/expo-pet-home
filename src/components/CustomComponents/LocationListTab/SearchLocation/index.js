@@ -13,17 +13,18 @@ class SearchLocation extends Component {
     super(props);
     const { navigation } = this.props;
     const textSearch = navigation.getParam('textSearch', 'NO-ID');
-    console.log(textSearch);
     this.state = {
       textSearch: textSearch,
       loading: true,
+      loadingCategory: true,
       listLocations: [],
       lat: '',
       long: '',
       radius: '',
       ratingGt: '',
       ratingLt: '',
-      typeIdArray: []
+      typeIdArray: [],
+      listLocationCategories: '',
     };
   }
 
@@ -33,6 +34,7 @@ class SearchLocation extends Component {
         "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
       );
     } else {
+      // this._requestGetLocationCategoriesWithType();
       if(this.state.textSearch === ''){
         this._requestGetAllLocation();
       } else {
@@ -67,18 +69,38 @@ class SearchLocation extends Component {
     }
   };
 
+  // _requestGetLocationCategoriesWithType = async () => {
+  //   try {
+  //     const result = await LocationServices.getLocationCategoryWithType();
+  //     const listPrivate = result.listPrivates.map(item => ({
+  //       ...item,
+  //       checked: false
+  //     }));
+  //     const listPublic = result.listPublics.map(item => ({
+  //       ...item,
+  //       checked: false
+  //     }));
+  //     this.setState({ 
+  //       listLocationCategories: result, 
+  //       loadingCategory: !this.state.loadingCategory,
+  //       listPrivateCategories: listPrivate,
+  //       listPublicCategories: listPublic
+  //     });
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // };
+
   _onChangeText = text => {
     this.setState({textSearch: text});
   };
 
   _onBlur = () => {
     this.setState({showCancel: !this.state.showCancel});
-    console.log("_onBlur")
   }
 
   _onFocus = () => {
     this.setState({showCancel: !this.state.showCancel});
-
   }
 
   _onSearch = () => {
@@ -89,18 +111,31 @@ class SearchLocation extends Component {
     this.props.navigation.goBack(null);
   }
 
-  _onSelect = (data) => {
-    console.log(data)
-  }
+  _requestGetLocationWithFilter = async (selectedStar, selectedAll) => { 
+    try {
+      const result = await LocationServices.searchLocation({
+        textSearch: this.state.textSearch,
+        lat: this.state.lat,
+        long: this.state.long,
+        radius: this.state.radius,
+        ratingGt: selectedStar,
+        ratingLt: selectedStar + 1,
+        typeIdArray: selectedAll       
+      });
+      this.setState({ listLocations: result, loading: false });
+    } catch (error) {
+      throw error;
+    }
+  };
 
-  _onPressFilter = (data) => {
-    console.log(data)
+  _onPressFilter = (selectedStar, selectedAll) => {
+    this._requestGetLocationWithFilter(selectedStar, selectedAll);
   }
 
   render() {
     console.disableYellowBox = true; 
-    const { loading, listLocations } = this.state;
-    if (loading) {
+    const { loading, listLocations, loadingCategory, listPrivateCategories, listPublicCategories } = this.state;
+    if (loading && loadingCategory) {
       return (
         <View style={{flex: 1, justifyContent: 'center',alignItems: 'center'}}>
           <Spinner color="#615c70" />
@@ -203,11 +238,20 @@ class SearchLocation extends Component {
           </TouchableOpacity>
           {listLocations.length === 0 ? 
           <View style={{flex: 1, justifyContent: 'center',alignItems: 'center'}}>
-            <Text> Không có kết quả nào </Text>
+            <Image
+              styleName="medium-square"
+              source={require("../../../../assets/icons/find-icon.png")}
+            />
+            <Text style={{
+              marginTop: 10,
+              fontWeight: "bold"
+            }}> Không có kết quả nào </Text>
           </View> : 
           <LocationList data={this.state.listLocations} navigation={this.props.navigation}/> }
         </Screen>
-        <FilterModal onPressFilter={data => this._onPressFilter(data)} onSelect={this._onSelect} ref={ref => (this.filterModal = ref)} />       
+        <FilterModal 
+          onPressFilter={(selectedStar, selectedAll) => this._onPressFilter(selectedStar, selectedAll)} 
+          ref={ref => (this.filterModal = ref)} />       
       </Container>
     );
   }

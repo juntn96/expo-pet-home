@@ -42,9 +42,24 @@ class NotificationList extends Component {
     this.setState({ loading });
   };
 
+  _onItemPress = item => {
+    // console.log(item);
+    // console.log(this.props.navigation);
+    if (item.type === "post" || item.type === "post-comment" || item.type === "post-vote") {
+      this.props.navigation.navigate({
+        routeName: "CommentScreen",
+        params: {
+          postId: item.content.post._id,
+          userData: this.props.auth.userData
+        },
+      });
+      this.props.onItemPress();
+    }
+  };
+
   _renderItem = ({ item }) => {
     return (
-      <ListItem thumbnail>
+      <ListItem thumbnail onPress={() => this._onItemPress(item)}>
         <Left>
           <Thumbnail circular source={{ uri: item.sender.avatar }} />
         </Left>

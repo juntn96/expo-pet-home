@@ -85,11 +85,11 @@ class RequestPetTab extends Component {
   };
 
   _onChatPress = conversation => {
-    this.chatModal.setModalVisible(true, conversation);
+    this.chatModal.getWrappedInstance().setModalVisible(true, conversation);
   };
 
   _onInfoPress = petId => {
-    console.log(petId)
+    console.log(petId);
     this.infoModal.setModalVisible(true, petId);
   };
 

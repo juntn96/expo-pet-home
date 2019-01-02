@@ -46,6 +46,7 @@ class AnimatedBackground extends Component {
           opacity: imageOpacity,
           height: "100%",
           width: "100%",
+          backgroundColor: "#FF8EBC",
         }}
       >
         <Image

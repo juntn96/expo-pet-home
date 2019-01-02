@@ -13,6 +13,7 @@ class Home extends Component {
         userData={this.props.auth.userData}
         toast={this.props.toast}
         deletePost={this.props.deletePost}
+        notifications={this.props.notifications}
       />
     );
   }
@@ -21,6 +22,7 @@ class Home extends Component {
 const mapStateToProps = state => {
   return {
     auth: state.auth,
+    notifications: state.notification,
   };
 };
 

@@ -1,13 +1,15 @@
-const notificationReducer = (state = null, { type, payload }) => {
+const notificationReducer = (state = [], { type, payload }) => {
   switch (type) {
     case "PUSH": {
-      return payload;
+      return [...state, payload]
     }
     case "CLEAR": {
-      return null;
+      return [];
     }
     default: {
       return state;
     }
   }
 };
+
+export default notificationReducer;

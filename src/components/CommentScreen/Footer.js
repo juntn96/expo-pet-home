@@ -29,7 +29,6 @@ class Footer extends Component {
       "keyboardWillHide",
       this._keyboardWillHide
     );
-
   }
 
   componentWillUnmount() {
@@ -58,18 +57,53 @@ class Footer extends Component {
 
   _requestSendComment = async () => {
     try {
+      const deletionFlag = await this._requestGetDeletionFlag();
+      if (deletionFlag === true) {
+        console.log(this.props.toast);
+        Keyboard.dismiss();
+        this.props.toast({ message: "Bài viết này đã bị cấm", duration: 3000 });
+        return;
+      }
       const { commentContent } = this.state;
       const { postData, userData, sendCommentCallback } = this.props;
       const data = {
         postId: postData._id,
         userCommentId: userData._id,
         content: commentContent,
+        notification: {
+          tokens: [postData.ownerId.expoToken],
+          data: {
+            message: `${userData.appName} đã bình luận bài viết của bạn`,
+            content: {
+              post: {
+                _id: postData._id,
+              },
+            },
+            sender: userData._id,
+            receiver: postData.ownerId._id,
+            type: "post-comment",
+          },
+        },
       };
       await PostServices.addComment(data);
-      sendCommentCallback && sendCommentCallback()
+      sendCommentCallback && sendCommentCallback();
+      this.props.socket.emit("commentPost", {
+        ...postData,
+        userCommentId: userData._id,
+      });
     } catch (error) {}
-    this.setState({commentContent: ''})
+    this.setState({ commentContent: "" });
     Keyboard.dismiss();
+  };
+
+  _requestGetDeletionFlag = async () => {
+    try {
+      const { postData } = this.props;
+      const result = await PostServices.getPostById(postData._id);
+      return result.deletionFlag;
+    } catch (error) {
+      throw error;
+    }
   };
 
   render() {

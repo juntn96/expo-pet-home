@@ -11,7 +11,10 @@ class Pet extends Component {
   }
 
   render() {
-    if (!this.props.auth.userData) return null;
+    if (!this.props.auth.userData) {
+      this.props.navigation.navigate("Home");
+      return null;
+    }
     return (
       <PetScreen
         navigation={this.props.navigation}

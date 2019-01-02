@@ -10,22 +10,29 @@ import { connect } from "react-redux";
 import { toggle, clear } from "../../../redux/actions/UIActions";
 
 const animatedValue = new Animated.Value(1);
-const AnimButton = Animated.createAnimatedComponent(TouchableOpacity)
+const AnimButton = Animated.createAnimatedComponent(TouchableOpacity);
 
 class Toast extends PureComponent {
+  state = {
+    toasting: false,
+  };
+
   _timeoutClear = duration => {
     animatedValue.stopAnimation();
+    this.setState({ toasting: true });
     Animated.timing(animatedValue, {
       toValue: 0,
       duration,
       useNativeDriver: true,
     }).start(() => {
+      this.setState({ toasting: false });
       this.props.clear();
     });
   };
 
   render() {
     const { toast } = this.props;
+
     if (!toast) return null;
 
     const animOpacity = animatedValue.interpolate({
@@ -36,7 +43,10 @@ class Toast extends PureComponent {
 
     const { theme, message, duration } = toast;
 
-    this._timeoutClear(duration);
+    if (this.state.toasting === false) {
+      this._timeoutClear(duration);
+    }
+
     return (
       <AnimButton
         activeOpacity={1}
@@ -49,7 +59,12 @@ class Toast extends PureComponent {
           },
         ]}
       >
-        <Text style={{ color: theme === "light" ? "#2c3e50" : "#FFFFFF" }}>
+        <Text
+          style={{
+            color: theme === "light" ? "#2c3e50" : "#FFFFFF",
+            textAlign: "center",
+          }}
+        >
           {message}
         </Text>
       </AnimButton>
@@ -66,7 +81,7 @@ const styles = StyleSheet.create({
     padding: 14,
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 10
+    zIndex: 10,
   },
 });
 

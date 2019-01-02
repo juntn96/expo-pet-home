@@ -8,6 +8,7 @@ import {
   Button,
   Left,
   Text,
+  Body,
 } from "native-base";
 import {
   Divider,
@@ -25,15 +26,18 @@ import { MapCard } from "../DetailCard/index";
 import { Rating } from "react-native-elements";
 import LocationServices from "../../../../services/LocationServices";
 import LocationReviewModal from "../../LocationReviewModal";
+import { IndicatorViewPager, PagerDotIndicator } from "rn-viewpager";
+
+import { connect } from "react-redux";
 
 const { width, height } = Dimensions.get("window");
-export default class LocationDetail extends Component {
+class LocationDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
       locationDetail: {},
-      reviews: 0,
+      reviews: [],
     };
   }
 
@@ -115,6 +119,29 @@ export default class LocationDetail extends Component {
     </TouchableOpacity>
   );
 
+  // _renderLocationImage(item, index){
+  //   return (
+  //     <TouchableOpacity
+  //       key={item._id}
+  //       styleName="flexible"
+  //       onPress={this._onPress}
+  //     >
+  //         <Image
+  //           style={{
+  //             flex: 1,
+  //             resizeMode: 'contain',
+  //             width: width,
+  //             height: height/3,
+  //           }}
+  //           source={{ uri: item.secure_url }}
+  //           borderRadius="5"
+  //         />  
+  //     </TouchableOpacity>
+  //   )
+  // };
+
+
+
   _renderProduct = ({ item }) => {
     return (
       <TouchableOpacity
@@ -163,10 +190,12 @@ export default class LocationDetail extends Component {
   };
 
   render() {
+    const startPage = 0;
     const { loading, locationDetail, reviews } = this.state;
     const { navigation } = this.props;
     const userData = navigation.getParam("userData", "NO-ID");
     const locationId = navigation.getParam("_id", "NO-ID");
+    const onDirectionPress = navigation.getParam("onDirectionPress", "NO-ID");
     if (loading) {
       return (
         <View
@@ -187,6 +216,7 @@ export default class LocationDetail extends Component {
           transparent
           style={{
             marginTop: 10,
+            backgroundColor: "transparent",
           }}
         >
           <Left>
@@ -194,10 +224,21 @@ export default class LocationDetail extends Component {
               <Icon name="arrow-back" />
             </Button>
           </Left>
-          <View style={styles.nameLocation}>
+          <Body>
+            {/* <View style={styles.nameLocation}> */}
             <Title>{locationDetail.name}</Title>
-          </View>
-          <Right />
+            {/* </View> */}
+          </Body>
+          <Right>
+            <Button
+              transparent
+              onPress={() =>
+                onDirectionPress({ ...locationDetail, _id: locationId })
+              }
+            >
+              <Icon name="ios-navigate-outline" />
+            </Button>
+          </Right>
         </Header>
         <LocationReviewModal
           ref={ref => (this.reviewModal = ref)}
@@ -205,7 +246,7 @@ export default class LocationDetail extends Component {
           userData={userData}
           toast={this.props.toast}
         />
-        <Screen style={{ backgroundColor: "#FCFCFC" }}>
+        <Screen style={{ backgroundColor: "#ffffff" }}>
           <ScrollView>
             {locationDetail.images.length > 0 ? (
               <FlatList
@@ -215,7 +256,49 @@ export default class LocationDetail extends Component {
                 renderItem={this._renderLocationImage}
                 horizontal
               />
+              // <View style={{flex: 1}}>
+              //   <IndicatorViewPager
+              //     initialPage = { startPage }
+              //     indicator = { 
+              //     <PagerDotIndicator pageCount = { locationDetail.images.length } style={{ marginBottom: 15}}/> }
+              //     style = {{
+              //       // flex: 1,
+              //       height: height /3
+              //     }}>
+              //     { locationDetail.images.map((item, index) => this._renderLocationImage(item, index))}
+              //   </IndicatorViewPager>
+              // </View>
             ) : null}
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                marginTop: 20,
+                padding: 10,
+              }}
+            >
+              <Image
+                source={require("../../../../assets/icons/name.png")}
+                style={{
+                  marginLeft: 20,
+                  marginRight: 20,
+                  width: 25,
+                  height: 25,
+                }}
+              />
+              <View
+                style={{
+                  marginRight: 10,
+                  paddingRight: 60,
+                }}
+              >
+                <Subtitle>Tên của hàng / dịch vụ</Subtitle>
+                <Caption style={{ paddingRight: 10 }}>
+                  {locationDetail.name}
+                </Caption>
+                <Divider styleName="line" />
+              </View>
+            </View>
             <View
               style={{
                 flex: 1,
@@ -246,7 +329,6 @@ export default class LocationDetail extends Component {
                 <Divider styleName="line" />
               </View>
             </View>
-
             <View
               style={{
                 flex: 1,
@@ -278,8 +360,8 @@ export default class LocationDetail extends Component {
               </View>
             </View>
             <MapCard
-              lat={locationDetail.lat}
-              long={locationDetail.long}
+              lat={locationDetail.coordinate.latitude}
+              long={locationDetail.coordinate.longitude}
               name={locationDetail.name}
             />
             <View
@@ -287,13 +369,13 @@ export default class LocationDetail extends Component {
                 flex: 1,
                 flexDirection: "row",
                 marginTop: 20,
-                padding: 10,
+                padding: 20,
               }}
             >
               <Image
                 source={require("../../../../assets/icons/iconfinder_ic_stars.png")}
                 style={{
-                  // marginLeft: 10,
+                  marginLeft: 10,
                   marginRight: 10,
                   width: 25,
                   height: 25,
@@ -312,11 +394,12 @@ export default class LocationDetail extends Component {
                   <View
                     style={{
                       flex: 1,
+                      marginLeft: 10,
                     }}
                   >
                     <Subtitle>Đánh giá</Subtitle>
                   </View>
-                  {userData ? (
+                  {this.props.userData ? (
                     <Button
                       small
                       transparent
@@ -330,7 +413,7 @@ export default class LocationDetail extends Component {
                     </Button>
                   ) : null}
                 </View>
-                {reviews ? (
+                {reviews.length > 0 ? (
                   <View>
                     <Rating
                       type="star"
@@ -342,7 +425,7 @@ export default class LocationDetail extends Component {
                     <View
                       style={{
                         flex: 1,
-                        backgroundColor: "#FCFCFC",
+                        backgroundColor: "#ffffff",
                         padding: 10,
                         marginBottom: 10,
                         marginTop: 6,
@@ -466,8 +549,8 @@ export default class LocationDetail extends Component {
 
 const styles = {
   imageLocation: {
-    width: height / 4,
-    height: height / 4,
+    width: width,
+    height: height/3,
     marginTop: 10,
     marginLeft: 8,
     borderRadius: 5,
@@ -486,3 +569,11 @@ const styles = {
     justifyContent: "center",
   },
 };
+
+const mapStateToProps = state => {
+  return {
+    userData: state.auth.userData,
+  };
+};
+
+export default connect(mapStateToProps)(LocationDetail);

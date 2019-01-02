@@ -10,6 +10,7 @@ import {
   Alert,
 } from "react-native";
 import { Container, Header, Button, Icon } from "native-base";
+import { Image } from '@shoutem/ui';
 import PostItem from "../CustomComponents/PostList/PostItem";
 import ReportModal from "../CustomComponents/PostOptionModal/ReportModal";
 import EditPostModal from "../CustomComponents/EditPostModal";
@@ -110,22 +111,35 @@ class SearchPostTab extends Component {
         >
           <View
             style={{
+              // flex: 1,
+              // flexDirection: "row",
+              // alignItems: "center",
+              // borderWidth: 1.4,
+              // borderColor: "#00000035",
+              // borderRadius: 10,
+              // shadowColor: "#00000070",
+              // shadowOffset: { width: 0, height: 2 },
+              // shadowOpacity: 1,
+              // shadowRadius: 1,
+              // borderTopWidth: 0.4,
+              // borderTopColor: "#00000010",
+              // borderRightWidth: 0.4,
+              // borderRightColor: "#00000020",
+              // borderLeftWidth: 0.8,
+              // borderLeftColor: "#00000030",
               flex: 1,
               flexDirection: "row",
               alignItems: "center",
-              borderWidth: 1.4,
-              borderColor: "#00000035",
-              borderRadius: 10,
-              shadowColor: "#00000070",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 1,
-              shadowRadius: 1,
-              borderTopWidth: 0.4,
-              borderTopColor: "#00000010",
-              borderRightWidth: 0.4,
-              borderRightColor: "#00000020",
-              borderLeftWidth: 0.8,
-              borderLeftColor: "#00000030",
+              backgroundColor: 'white',
+              marginLeft: 2,
+              borderRadius: 5,
+              shadowColor: "#CACACA",
+              shadowOpacity: 0.5,
+              shadowRadius: 2,
+              shadowOffset: {
+                height: 2,
+                width: 0,
+              },
             }}
           >
             <View
@@ -172,7 +186,15 @@ class SearchPostTab extends Component {
                 alignItems: "center",
               }}
             >
-              <Text>Không có bài viết</Text>
+              <Image
+                styleName="medium-square"
+                source={require("../../assets/icons/find-icon.png")}
+              />
+              <Text style={{
+                marginTop: 10,
+                fontWeight: "bold",
+                color: '#615c70'
+              }}> Không có bài viết nào </Text>
             </TouchableOpacity>
           )}
         </View>

@@ -69,7 +69,7 @@ class LocationList extends Component {
             data={this.props.locationData}
             extraData={this.props.locationData}
             showsVerticalScrollIndicator={false}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item._id}
             renderItem={this._renderItem}
           />
         </Animated.View>

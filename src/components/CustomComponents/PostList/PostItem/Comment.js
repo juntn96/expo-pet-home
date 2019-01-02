@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View } from "react-native";
 import { Button, Icon, Text } from "native-base";
+import { Notifications } from "expo";
 import PostServices from "../../../../services/PostServices";
 class Vote extends Component {
   constructor(props) {
@@ -11,7 +12,13 @@ class Vote extends Component {
   }
 
   async componentDidMount() {
+    const { postData } = this.props;
     await this._requestGetComments();
+    this.props.socket.on("commentPost", post => {
+      if (post._id === postData._id) {
+        this._requestGetComments();
+      }
+    });
   }
 
   _requestGetComments = async () => {
@@ -30,8 +37,9 @@ class Vote extends Component {
         transparent
         textStyle={{ color: "#00E7C3" }}
         onPress={() => {
-          this.props.navigation.navigate("Comment", {
-            postData: this.props.postData,
+          this.props.navigation.navigate("CommentScreen", {
+            postId: this.props.postData._id,
+            userData: this.props.userData,
           });
         }}
       >

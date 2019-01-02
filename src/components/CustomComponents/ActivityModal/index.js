@@ -4,7 +4,7 @@ import { Tabs, Tab } from "native-base";
 import CustomHeader from "../CustomHeader";
 import NotificationList from "../NotificationList";
 import MessageList from "../MessageList";
-import { Notifications } from "expo"
+import { Notifications } from "expo";
 
 class ActivityModal extends Component {
   constructor(props) {
@@ -30,6 +30,7 @@ class ActivityModal extends Component {
         transparent={false}
         visible={modalVisible}
         onRequestClose={() => {}}
+        presentationStyle="pageSheet"
       >
         <CustomHeader
           title="Hoạt động"
@@ -47,7 +48,10 @@ class ActivityModal extends Component {
             activeTextStyle={{ color: "#EC466A" }}
             tabStyle={{ backgroundColor: "#FFFFFF" }}
           >
-            <NotificationList />
+            <NotificationList
+              navigation={this.props.navigation}
+              onItemPress={() => this.setVisible(false)}
+            />
           </Tab>
 
           <Tab

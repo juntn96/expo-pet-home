@@ -17,14 +17,33 @@ import PostGridImage from "../../PostGridImage";
 import ReadMoreText from "../../ReadMoreText";
 import ChatModal from "../../ChatModal";
 import MessageServices from "../../../../services/MessageServices";
+import PostServices from "../../../../services/PostServices";
+
+import { connect } from "react-redux";
+import { toggle } from "../../../../redux/actions/UIActions";
 
 class PostItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
       renderChatModal: false,
+      postData: undefined,
     };
   }
+
+  componentDidMount() {
+    this._requestGetPostData();
+  }
+
+  _requestGetPostData = async () => {
+    try {
+      const { postData } = this.props;
+      const result = await PostServices.getPostById(postData._id);
+      this.setState({ postData: result });
+    } catch (error) {
+      throw error;
+    }
+  };
 
   _optionPress = () => {
     const { optionPress, postData } = this.props;
@@ -41,8 +60,21 @@ class PostItem extends Component {
     }
   };
 
+  _subscribeHidePost = () => {
+    const { socket, userData } = this.props;
+    const { postData } = this.state;
+    if (userData) {
+      socket.on("hidePost", post => {
+        if (postData && post.id === postData._id) {
+          this._requestGetPostData();
+        }
+      });
+    }
+  };
+
   _onUserPress = () => {
     const { postData, userData } = this.props;
+
     ActionSheetIOS.showActionSheetWithOptions(
       {
         options: ["Bỏ qua", "Gửi tin nhắn"],
@@ -63,7 +95,9 @@ class PostItem extends Component {
               users
             );
             this.setState({ renderChatModal: true }, () => {
-              this.chatModal.setModalVisible(true, conversation);
+              this.chatModal
+                .getWrappedInstance()
+                .setModalVisible(true, conversation);
             });
           } catch (error) {
             throw error;
@@ -74,12 +108,36 @@ class PostItem extends Component {
   };
 
   render() {
-    const { postData, userData } = this.props;
+    const { userData, socket, toast } = this.props;
+    const { postData } = this.state;
+
+    if (socket) {
+      this._subscribeHidePost();
+    }
+
+    if (!postData) return null;
+
     const date = new Date(postData.createdAt);
     return (
       <Card>
         {this.state.renderChatModal === true ? (
           <ChatModal ref={ref => (this.chatModal = ref)} userData={userData} />
+        ) : null}
+        {postData.deletionFlag === true ? (
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={{
+              position: "absolute",
+              zIndex: 1,
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
+            onPress={() => {
+              toast({ message: "Bài viết này đã bị cấm", duration: 5000 });
+            }}
+          />
         ) : null}
         <CardItem>
           <Left>
@@ -132,7 +190,12 @@ class PostItem extends Component {
               voteCallback={this._voteCallback}
               userData={userData}
             />
-            <Comment postData={postData} navigation={this.props.navigation} />
+            <Comment
+              postData={postData}
+              navigation={this.props.navigation}
+              userData={userData}
+              socket={this.props.socket}
+            />
           </Left>
           <Right>
             <Vote
@@ -149,4 +212,21 @@ class PostItem extends Component {
   }
 }
 
-export default PostItem;
+const mapStateToProps = state => {
+  return {
+    socket: state.socket,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    toast: toast => {
+      dispatch(toggle(toast));
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PostItem);

@@ -10,13 +10,14 @@ import {
   Icon,
   Badge,
 } from "native-base";
+import { Notifications } from "expo";
+import {
+  pushNotification,
+  clearNotification,
+} from "../../../redux/actions/NotificationActions";
+import { connect } from "react-redux";
 
 class CustomHeader extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   _actionLeft = () => {
     const { actionLeft } = this.props;
     if (actionLeft) {
@@ -25,7 +26,10 @@ class CustomHeader extends Component {
   };
 
   _actionRight = () => {
-    const { actionRight } = this.props;
+    const { actionRight, badgeNumberRight } = this.props;
+    if (badgeNumberRight && this.props.notification) {
+      this.props.clearNotification();
+    }
     if (actionRight) {
       actionRight();
     }
@@ -45,18 +49,27 @@ class CustomHeader extends Component {
       return null;
     }
     return (
-      <Button vertical badge iconRight transparent onPress={this._actionLeft} style={{marginLeft: 4}} >
+      <Button
+        vertical
+        badge
+        iconRight
+        transparent
+        onPress={this._actionLeft}
+        style={{ marginLeft: 4 }}
+      >
         {badgeNumberLeft ? (
           <Badge
             style={{
-              position: 'absolute',
+              position: "absolute",
               left: 0,
               top: 0,
               width: 16,
-              height: 16
+              height: 16,
             }}
           >
-            <Text style={{fontSize: 8, color: '#FFF'}} >{badgeNumberLeft}</Text>
+            <Text style={{ fontSize: 8, color: "#FFF" }}>
+              {badgeNumberLeft}
+            </Text>
           </Badge>
         ) : null}
         <Icon name={buttonLeft} style={{ color: "#EC466A", fontSize: 26 }} />
@@ -65,23 +78,32 @@ class CustomHeader extends Component {
   };
 
   _buttonRight = () => {
-    const { buttonRight, badgeNumberRight } = this.props;
+    const { buttonRight, badgeNumberRight, notification } = this.props;
     if (!buttonRight) {
       return null;
     }
+
     return (
       <Button vertical badge iconLeft transparent onPress={this._actionRight}>
-        {badgeNumberRight ? (
-          <Badge
+        {badgeNumberRight && this.props.notification.length > 0 ? (
+          <View
             style={{
-              position: 'absolute',
+              position: "absolute",
               right: 10,
-              top: 0,
-              height: 16
+              top: 4,
+              height: 16,
+              width: 16,
+              zIndex: 3,
+              backgroundColor: "red",
+              borderRadius: 16,
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <Text style={{fontSize: 8, color: '#FFF'}} >{badgeNumberRight}</Text>
-          </Badge>
+            <Text style={{ fontSize: 10, color: "#FFF" }}>
+              {notification.length > 9 ? "9+" : notification.length}
+            </Text>
+          </View>
         ) : null}
         <Icon name={buttonRight} style={{ color: "#EC466A", fontSize: 26 }} />
       </Button>
@@ -89,7 +111,7 @@ class CustomHeader extends Component {
   };
 
   render() {
-    const { title } = this.props;
+    const { title, notification } = this.props;
     return (
       <Header
         noShadow={true}
@@ -106,16 +128,33 @@ class CustomHeader extends Component {
           marginTop: 10,
         }}
       >
-        <Left style={{flex: 1}} >{this._buttonLeft()}</Left>
-        <Body style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Left style={{}}>{this._buttonLeft()}</Left>
+        <Body style={{ justifyContent: "center", alignItems: "center" }}>
           <Title style={{ color: "#EC466A", textAlign: "center" }}>
             {title}
           </Title>
         </Body>
-        <Right style={{flex: 1}}>{this._buttonRight()}</Right>
+        <Right style={{}}>{this._buttonRight()}</Right>
       </Header>
     );
   }
 }
 
-export default CustomHeader;
+const mapStateToProps = state => {
+  return {
+    notification: state.notification,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    clearNotification: () => {
+      dispatch(clearNotification());
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CustomHeader);

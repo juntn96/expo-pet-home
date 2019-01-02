@@ -49,7 +49,7 @@ class MessageList extends Component {
       <ListItem
         avatar
         onPress={() => {
-          this.chatModel.setModalVisible(true, item);
+          this.chatModel.getWrappedInstance().setModalVisible(true, item);
         }}
       >
         <Left>
@@ -85,7 +85,7 @@ class MessageList extends Component {
     return (
       <View
         style={{
-          flex: 1
+          flex: 1,
         }}
       >
         <ChatModal

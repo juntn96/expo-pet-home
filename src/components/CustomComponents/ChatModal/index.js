@@ -3,9 +3,14 @@ import { View, Text, Modal } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
 import CustomHeader from "../CustomHeader";
 import MessageServices from "../../../services/MessageServices";
-import SocketClient from "socket.io-client";
-import { SERVER_INFO } from "../../../constants/config";
-const socketIP = SERVER_INFO.PUBLIC_ADDRESS;
+
+import { connect } from "react-redux";
+import { pushNotification } from "../../../redux/actions/NotificationActions";
+import {
+  joinChatRoom,
+  leaveChatRoom,
+} from "../../../redux/actions/UserActions";
+import UserServices from "../../../services/UserServices";
 
 class ChatModal extends Component {
   constructor(props) {
@@ -13,18 +18,19 @@ class ChatModal extends Component {
     this.state = {
       modalVisible: false,
       messages: [],
+      conversationTitle: "",
     };
-    this.socket = null;
   }
 
   componentDidMount() {}
 
   _connectSocket = conversation => {
-    this.socket = SocketClient(`http://${socketIP}:5000`);
-    this.socket.emit("joinConversation", conversation);
-    this.socket.on("sendMessage", data => {
-      console.log("socket id >> ", this.socket.id);
-      console.log("response socket >> ", data);
+    const { socket, userData } = this.props;
+    socket.emit("joinConversation", conversation);
+    this.props.joinChatRoom(conversation._id);
+    socket.on("sendMessage", async data => {
+      // console.log("socket id >> ", socket.id);
+      // console.log("response socket >> ", data);
       const mes = {
         _id: data.message._id,
         text: data.message.text,
@@ -35,6 +41,15 @@ class ChatModal extends Component {
         messages: GiftedChat.append(previousState.messages, mes),
       }));
     });
+  };
+
+  _getSenderInfo = async id => {
+    try {
+      const info = await UserServices.findUser(id);
+      return info;
+    } catch (error) {
+      throw error;
+    }
   };
 
   _requestGetMessages = async conversation => {
@@ -61,13 +76,20 @@ class ChatModal extends Component {
   };
 
   setModalVisible = (visible, conversation) => {
+    if (!visible) {
+      this.props.socket.emit("leaveConversation", this.conversation);
+      this.props.leaveChatRoom();
+      this.setState({ messages: [] });
+    }
     this.conversation = conversation;
     if (visible) {
+      const { userData } = this.props;
+      const receivers = conversation.users.filter(
+        item => item.user._id !== userData._id
+      );
+      this.setState({ conversationTitle: receivers[0].user.appName });
       this._requestGetMessages(conversation);
       this._connectSocket(conversation);
-    } else {
-      this.socket.disconnect();
-      this.setState({ messages: [] });
     }
     this.setState({
       modalVisible: visible,
@@ -77,8 +99,14 @@ class ChatModal extends Component {
   _onDismiss = () => {};
 
   _onSend = async (messages = []) => {
-    const { userData } = this.props;
-    console.log(messages[0].user._id)
+    const { userData, socket } = this.props;
+
+    const receivers = this.conversation.users.filter(
+      item => item.user._id !== userData._id
+    );
+
+    const receiver = receivers[0].user._id;
+
     const data = {
       conversationId: this.conversation._id,
       message: messages[0],
@@ -87,8 +115,16 @@ class ChatModal extends Component {
         name: userData.appName,
         avatar: userData.avatar,
       },
+      notification: {
+        content: {
+          room: this.conversation._id
+        },
+        sender: userData._id,
+        receiver: receiver,
+        type: "message",
+      },
     };
-    this.socket.emit("sendMessage", data);
+    socket.emit("sendMessage", data);
   };
 
   render() {
@@ -103,7 +139,7 @@ class ChatModal extends Component {
         onDismiss={this._onDismiss}
       >
         <CustomHeader
-          title=""
+          title={this.state.conversationTitle}
           buttonLeft="md-close"
           actionLeft={() => {
             this.setModalVisible(false);
@@ -125,4 +161,28 @@ class ChatModal extends Component {
   }
 }
 
-export default ChatModal;
+const mapStateToProps = state => {
+  return {
+    socket: state.socket,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    joinChatRoom: roomId => {
+      dispatch(joinChatRoom(roomId));
+    },
+    leaveChatRoom: () => {
+      dispatch(leaveChatRoom());
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+  null,
+  {
+    withRef: true,
+  }
+)(ChatModal);

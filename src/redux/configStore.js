@@ -16,7 +16,7 @@ const config = {
   timeout: 0,
   key: "root",
   storage,
-  blacklist: ["ui", "post", "notification"],
+  blacklist: ["ui", "post", "notification", "socket", "userStates"],
 };
 
 const persistedReducer = persistReducer(config, reducers);
