@@ -98,47 +98,49 @@ class LocationDetail extends Component {
     }
   };
 
-  // _renderLocationImage = ({ item }) => (
-  //   <TouchableOpacity
-  //     key={item._id}
-  //     styleName="flexible"
-  //     onPress={this._onPress}
-  //   >
-  //     <Card style={styles.imageLocation}>
-  //       <Image
-  //         style={{
-  //           flex: 1,
-  //           alignSelf: "stretch",
-  //           width: undefined,
-  //           height: undefined,
-  //         }}
-  //         source={{ uri: item.secure_url }}
-  //         borderRadius="5"
-  //       />
-  //     </Card>
-  //   </TouchableOpacity>
-  // );
-
-  _renderLocationImage(item, index) {
-    return (
-      <TouchableOpacity
-        key={item._id}
-        styleName="flexible"
-        onPress={this._onPress}
-      >
+  _renderLocationImage = ({ item }) => (
+    <TouchableOpacity
+      key={item._id}
+      styleName="flexible"
+      onPress={this._onPress}
+    >
+      <Card style={styles.imageLocation}>
         <Image
           style={{
             flex: 1,
-            resizeMode: "contain",
-            width: width,
-            height: (width * 2) / 3,
+            alignSelf: "stretch",
+            width: undefined,
+            height: undefined,
           }}
           source={{ uri: item.secure_url }}
           borderRadius="5"
         />
-      </TouchableOpacity>
-    );
-  }
+      </Card>
+    </TouchableOpacity>
+  );
+
+  // _renderLocationImage(item, index){
+  //   return (
+  //     <TouchableOpacity
+  //       key={item._id}
+  //       styleName="flexible"
+  //       onPress={this._onPress}
+  //     >
+  //         <Image
+  //           style={{
+  //             flex: 1,
+  //             resizeMode: 'contain',
+  //             width: width,
+  //             height: height/3,
+  //           }}
+  //           source={{ uri: item.secure_url }}
+  //           borderRadius="5"
+  //         />  
+  //     </TouchableOpacity>
+  //   )
+  // };
+
+
 
   _renderProduct = ({ item }) => {
     return (
@@ -247,32 +249,25 @@ class LocationDetail extends Component {
         <Screen style={{ backgroundColor: "#ffffff" }}>
           <ScrollView>
             {locationDetail.images.length > 0 ? (
-              // <FlatList
-              //   data={locationDetail.images}
-              //   keyExtractor={(item, index) => index.toString()}
-              //   showsHorizontalScrollIndicator={false}
-              //   renderItem={this._renderLocationImage}
-              //   horizontal
-              // />
-              <View style={{ flex: 1 }}>
-                <IndicatorViewPager
-                  initialPage={startPage}
-                  indicator={
-                    <PagerDotIndicator
-                      pageCount={locationDetail.images.length}
-                      style={{ marginBottom: 15 }}
-                    />
-                  }
-                  style={{
-                    flex: 1,
-                    height: (width * 2) / 3,
-                  }}
-                >
-                  {locationDetail.images.map((item, index) =>
-                    this._renderLocationImage(item, index)
-                  )}
-                </IndicatorViewPager>
-              </View>
+              <FlatList
+                data={locationDetail.images}
+                keyExtractor={(item, index) => index.toString()}
+                showsHorizontalScrollIndicator={false}
+                renderItem={this._renderLocationImage}
+                horizontal
+              />
+              // <View style={{flex: 1}}>
+              //   <IndicatorViewPager
+              //     initialPage = { startPage }
+              //     indicator = { 
+              //     <PagerDotIndicator pageCount = { locationDetail.images.length } style={{ marginBottom: 15}}/> }
+              //     style = {{
+              //       // flex: 1,
+              //       height: height /3
+              //     }}>
+              //     { locationDetail.images.map((item, index) => this._renderLocationImage(item, index))}
+              //   </IndicatorViewPager>
+              // </View>
             ) : null}
             <View
               style={{
@@ -334,7 +329,6 @@ class LocationDetail extends Component {
                 <Divider styleName="line" />
               </View>
             </View>
-
             <View
               style={{
                 flex: 1,
@@ -555,8 +549,8 @@ class LocationDetail extends Component {
 
 const styles = {
   imageLocation: {
-    width: height / 4,
-    height: height / 4,
+    width: width,
+    height: height/3,
     marginTop: 10,
     marginLeft: 8,
     borderRadius: 5,
