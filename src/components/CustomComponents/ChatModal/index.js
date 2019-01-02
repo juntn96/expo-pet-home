@@ -6,6 +6,10 @@ import MessageServices from "../../../services/MessageServices";
 
 import { connect } from "react-redux";
 import { pushNotification } from "../../../redux/actions/NotificationActions";
+import {
+  joinChatRoom,
+  leaveChatRoom,
+} from "../../../redux/actions/UserActions";
 import UserServices from "../../../services/UserServices";
 
 class ChatModal extends Component {
@@ -23,9 +27,10 @@ class ChatModal extends Component {
   _connectSocket = conversation => {
     const { socket, userData } = this.props;
     socket.emit("joinConversation", conversation);
+    this.props.joinChatRoom(conversation._id);
     socket.on("sendMessage", async data => {
       // console.log("socket id >> ", socket.id);
-      console.log("response socket >> ", data);
+      // console.log("response socket >> ", data);
       const mes = {
         _id: data.message._id,
         text: data.message.text,
@@ -73,6 +78,8 @@ class ChatModal extends Component {
   setModalVisible = (visible, conversation) => {
     if (!visible) {
       this.props.socket.emit("leaveConversation", this.conversation);
+      this.props.leaveChatRoom();
+      this.setState({ messages: [] });
     }
     this.conversation = conversation;
     if (visible) {
@@ -83,8 +90,6 @@ class ChatModal extends Component {
       this.setState({ conversationTitle: receivers[0].user.appName });
       this._requestGetMessages(conversation);
       this._connectSocket(conversation);
-    } else {
-      this.setState({ messages: [] });
     }
     this.setState({
       modalVisible: visible,
@@ -111,6 +116,9 @@ class ChatModal extends Component {
         avatar: userData.avatar,
       },
       notification: {
+        content: {
+          room: this.conversation._id
+        },
         sender: userData._id,
         receiver: receiver,
         type: "message",
@@ -161,8 +169,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    pushNotification: notification => {
-      dispatch(notification);
+    joinChatRoom: roomId => {
+      dispatch(joinChatRoom(roomId));
+    },
+    leaveChatRoom: () => {
+      dispatch(leaveChatRoom());
     },
   };
 };

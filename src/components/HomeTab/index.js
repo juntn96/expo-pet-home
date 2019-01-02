@@ -63,7 +63,7 @@ class HomeTab extends Component {
   };
 
   render() {
-    const { userData, toast } = this.props;
+    const { userData, toast, notifications } = this.props;
     return (
       <View style={{ backgroundColor: "#FFFFFF", flex: 1 }}>
         <ReportModal
@@ -76,7 +76,10 @@ class HomeTab extends Component {
           userData={userData}
           toast={toast}
         />
-        <ActivityModal ref={ref => (this.activityModal = ref)} navigation={this.props.navigation} />
+        <ActivityModal
+          ref={ref => (this.activityModal = ref)}
+          navigation={this.props.navigation}
+        />
         <CustomHeader
           title="Pet Home"
           buttonLeft="menu"
@@ -85,7 +88,14 @@ class HomeTab extends Component {
           }}
           buttonRight={userData ? "ios-notifications-outline" : null}
           actionRight={() => {
-            this.activityModal.setVisible(true);
+            let initPage = 0;
+            if (notifications.length > 0) {
+              initPage =
+                notifications[notifications.length - 1].type === "message"
+                  ? 1
+                  : 0;
+            }
+            this.activityModal.setVisible(true, initPage);
           }}
           badgeNumberRight={1}
         />

@@ -34,12 +34,18 @@ class NotificationHandle extends Component {
   _notificationHandle = async notification => {
     try {
       console.log(notification);
-      const { userData } = this.props;
+      const { userData, userStates } = this.props;
       const sender = await this._getSender(notification.data.sender);
-      this.props.pushNotification(notification.data);
-      this.setState({ canRender: true });
       if (sender._id !== userData._id) {
         //check don't send notification myself
+        if (
+          notification.data.type === "message" &&
+          notification.data.content.room === userStates.inChatRoom
+        ) {
+          return;
+        }
+        this.props.pushNotification(notification.data);
+        this.setState({ canRender: true });
       }
     } catch (error) {
       throw error;
@@ -114,6 +120,7 @@ const mapStateToProps = state => {
   return {
     userData: state.auth.userData,
     notifications: state.notification,
+    userStates: state.userStates,
   };
 };
 
