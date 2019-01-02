@@ -120,7 +120,9 @@ export default class extends Component {
         _id: locationItem._id,
         ownerId: locationItem.ownerId,
         userData: this.props.userData,
-        onDirectionPress: onDirectionPress ? onDirectionPress : this.props.onDirectionPress,
+        onDirectionPress: onDirectionPress
+          ? onDirectionPress
+          : this.props.onDirectionPress,
       },
       key: "locationDetail" + locationItem._id,
     });
@@ -181,6 +183,7 @@ export default class extends Component {
   };
 
   _onLocationChange = (location, type) => {
+    console.log(location, type);
     const latitude = location.latitude;
     const longitude = location.longitude;
     const coordinate = { latitude: latitude, longitude: longitude };
@@ -189,6 +192,12 @@ export default class extends Component {
       this.mapView.addSelectLocation(coordinate);
       this.mapView.moveToCoordinate(coordinate);
     } else {
+      let tmp = this.state.listLocations;
+      const index = tmp.findIndex(item => item._id === location._id);
+      if (index === -1) {
+        tmp.push(location);
+      }
+      this.setState({ listLocations: tmp });
       this.directionHeader.setDestinationLocation(location);
       this.mapView.moveToCoordinate({
         latitude: location.coordinate.latitude,

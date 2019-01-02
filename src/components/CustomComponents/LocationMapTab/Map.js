@@ -64,14 +64,18 @@ class Map extends Component {
   showCallout = locationItem => {
     if (locationItem) {
       const marker = this.markers[locationItem._id];
-      marker.showCallout();
+      if (marker) {
+        marker.showCallout();
+      }
     }
   };
 
   hideCallout = locationItem => {
     if (locationItem) {
       const marker = this.markers[locationItem._id];
-      marker.hideCallout();
+      if (marker) {
+        marker.hideCallout();
+      }
     }
   };
 
